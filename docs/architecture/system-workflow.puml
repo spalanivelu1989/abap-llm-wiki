@@ -1,0 +1,78 @@
+@startuml system-workflow
+title ABAP LLM Wiki — Workflow (a meeting transcript becomes queryable knowledge)
+
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam sequenceMessageAlign center
+skinparam roundcorner 8
+skinparam ArrowColor #444444
+skinparam ArrowFontColor #333333
+skinparam NoteBackgroundColor #FFF7E0
+skinparam NoteBorderColor #E0C46C
+
+actor "Team member" as User
+
+participant "OneDrive Inbox" as OD #E8F5E9
+participant "Power Automate" as PA #E3F2FD
+database "abap-vault repo\n(pages · rules · raw/)" as REPO #ECEFF1
+participant "GitHub Actions" as GHA #FFF3E0
+participant "Ingest Script" as PY #F3E5F5
+boundary "Claude API\n(claude-opus-4-8)" as CLAUDE #ECEFF1
+participant "Obsidian\n(local clone)" as OBS #E8F5E9
+participant "Claude Code" as CC #E3F2FD
+
+User -> OD : 1. drops **OTC workshop transcript.pdf**
+
+== Step 1 — The bridge carries the file to GitHub ==
+OD -> PA : "file created" trigger
+activate PA
+PA -> OD : get file content
+OD --> PA : PDF (2.4 MB)
+PA -> REPO : HTTPS PUT → **raw/inbox/** (base64, PAT)
+deactivate PA
+REPO --> REPO : commit lands = **push event**
+
+== Step 2 — The robot wakes up and reads the document ==
+REPO -> GHA : push touched raw/inbox/** → trigger
+activate GHA
+GHA -> PY : checkout vault, run **abap-ingest.py**
+activate PY
+PY -> PY : extract text (pdfplumber),\ndedup check vs **meta/inbox.md**
+
+== Step 3 — Claude turns the transcript into wiki pages ==
+PY -> PY : load **CLAUDE.md** rules + vault index
+PY -> CLAUDE : rules + context + document text
+activate CLAUDE
+CLAUDE --> PY : **page operations**\n(3 updates + 1 new decision page)
+deactivate CLAUDE
+PY -> PY : write pages, append **meta/log.md**,\narchive source to raw/processed/
+PY -> REPO : commit & push **vault updates**
+deactivate PY
+deactivate GHA
+
+== Step 4 — The team syncs and reviews ==
+REPO -> OBS : git pull (5-minute auto-sync)
+OBS -> OBS : curator skims AI-written pages,\nfixes one name
+OBS -> REPO : git push the **curator's fix**
+
+== Step 5 — Anyone can ask the wiki ==
+User -> CC : "What did we decide about the custom BAPI approach?"
+activate CC
+CC -> OBS : read pages + CLAUDE.md\n(from the same local clone)
+OBS --> CC : **Decision page** + linked notes
+CC -> CLAUDE : synthesize a cited answer
+activate CLAUDE
+CLAUDE --> CC : answer + citations
+deactivate CLAUDE
+CC --> User : 📄 **cited answer**\n("Approved 2026-07-15 — see the Decision page")
+deactivate CC
+
+note across
+  One small bridge holds the system together: Power Automate makes a single
+  authenticated HTTPS PUT into raw/inbox/ — the only link between Microsoft 365
+  and GitHub. The commit itself triggers everything downstream, and one
+  API-key-secured call to Claude does the librarian work. Humans only ever
+  touch the wiki through Git sync and plain-English questions.
+end note
+
+@enduml

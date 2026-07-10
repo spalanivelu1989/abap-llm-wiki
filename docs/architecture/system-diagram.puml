@@ -1,0 +1,67 @@
+@startuml system-diagram
+title ABAP LLM Wiki — System Architecture
+
+skinparam backgroundColor #FFFFFF
+skinparam defaultTextAlignment center
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam rectangle {
+  BorderColor #666666
+}
+skinparam database {
+  BorderColor #666666
+}
+skinparam cloud {
+  BackgroundColor #333333
+  FontColor #FFFFFF
+  BorderColor #111111
+}
+skinparam package {
+  BorderColor #888888
+  FontStyle bold
+}
+skinparam ArrowColor #444444
+
+actor "Team member" as User
+
+package "Microsoft 365 tenant" {
+  rectangle "OneDrive Inbox\nABAP_Vault/Inbox" as OD
+  rectangle "Power Automate\nbridge flow" as PA
+}
+
+package "GitHub cloud" {
+  database "abap-vault repository\npages · CLAUDE.md · meta/ · raw/" as REPO
+  rectangle "GitHub Actions\ningest workflow" as GHA
+  rectangle "Ingest Script\nabap-ingest.py (Python 3.11)" as PY
+}
+
+package "Team laptop (per user)" {
+  rectangle "Local clone\nGit working copy" as CLONE
+  rectangle "Obsidian\n+ Git plugin" as OBS
+  rectangle "Claude Code\nCLI" as CC
+}
+
+cloud "Claude API\nclaude-opus-4-8" as CLAUDE
+
+User --> OD : file upload (M365 account)
+OD --> PA : "file created" trigger
+PA --> REPO : HTTPS PUT Contents API\n(fine-grained PAT)
+REPO --> GHA : push to raw/inbox/**\ntriggers workflow
+GHA --> PY : checkout + run\n(GITHUB_TOKEN)
+PY --> CLAUDE : HTTPS POST /v1/messages\n(ANTHROPIC_API_KEY)
+CLAUDE ..> PY : page create/update\ninstructions
+PY --> REPO : commit & push pages,\nlog, archive
+CLONE <--> REPO : git pull/push\nevery 5 min
+OBS --> CLONE : read/edit pages
+CC --> CLONE : read pages + CLAUDE.md
+CC --> CLAUDE : HTTPS (user's Claude auth)
+User --> CC : plain-English question
+CC ..> User : answer with page citations
+
+note bottom of CLAUDE
+  Dark boxes = external systems
+  this system depends on but does
+  not control.
+end note
+
+@enduml
