@@ -577,6 +577,45 @@ Open-source projects worth knowing about — for the wiki itself, and for the br
 
 ---
 
+## Misc · How Claude derives the wikilinks
+
+### How does Claude know which document connects to which document, and which content is related to which content? How does it derive the wikilinks — what actually happens under the hood?
+
+The short answer: there is **no graph algorithm, embedding search, or similarity index** involved. The links come from Claude reading the new document side-by-side with a snapshot of the entire existing vault in one prompt, plus a set of hard rules that force a minimum link structure. The mechanism lives in the pipeline script (`.github/scripts/abap-ingest.py`) and works in four steps.
+
+#### 1 — The pipeline builds a "vault snapshot" as context
+
+Before Claude ever sees your document, `build_prompt_context()` (line 300) assembles four things into the prompt:
+
+- **The constitution** — the first 6,000 characters of `CLAUDE.md`, which contains the linking rules (upward/sideways/forward links, mandatory patterns like "every decision links to the developments it affects").
+- **`meta/index.md`** — the master catalog of what pages exist.
+- **`meta/entities.md`** — the canonical name registry with aliases (OTC = O2C = Order-to-Cash).
+- **Every existing vault page** — the script walks all four zone folders and inlines the first 1,000 characters of each `.md` file (frontmatter + opening content) under an "Existing Pages (do not duplicate these)" heading.
+
+So when your new document arrives, Claude isn't guessing what it might relate to — it's literally reading the beginnings of every page in the vault in the same context window.
+
+#### 2 — Relatedness is derived semantically, not mechanically
+
+This is the "under the hood" part people usually expect to be an algorithm, but it's language understanding. When Claude reads your meeting transcript and sees "the credit auto-release job Anna mentioned," and the Existing Pages section contains `OTC - E-001 - Credit Auto-Release Job.md` with its frontmatter and summary, it recognizes these describe the same thing — the same way a human librarian would. The entity registry sharpens this: "O2C review with Anna" gets normalized to the canonical slugs `OTC` and `Anna Larsen`, so links always land on one canonical page name instead of a second spelling.
+
+#### 3 — Hard rules force a minimum link topology
+
+On top of semantic matching, the prompt (rules 4, 11, 12 in the script) makes certain links non-negotiable, so even a lazy extraction produces a connected graph:
+
+- **Every page must contain at least one wikilink** — floating pages are forbidden; if Claude can't link a new page upward to a parent, it must append to an existing page instead of creating one.
+- **Every Zone 02 page must link to its workstream page `[[OTC]]`** — this is why the workstream page acts as the hub node.
+- **Type-specific mandatory links** — decisions link to the specs/developments they affect, issues to affected developments, patterns to every place they were observed, developments to the standards they follow.
+- **For ABAP code, every referenced object** (tables, function modules, CDS views) becomes a `[[wikilink]]` in the Dependencies section — even if that page doesn't exist yet. These are intentional "forward links": Obsidian shows them as unresolved, and they auto-connect the moment someone ingests that object later.
+
+#### 4 — The links are just text; resolution happens in Obsidian
+
+Claude returns a JSON object of creates and updates with full markdown content; the script writes the files verbatim. A `[[wikilink]]` is only a filename reference. Nothing in the pipeline validates that the target exists — Obsidian (or any wiki renderer) resolves `[[OTC - E-001 - Credit Auto-Release Job]]` to the file with that name at view time. This is also why the strict naming rules matter so much: the link only works if the filename was generated deterministically from the same conventions.
+
+> ⚠️ **One honest caveat worth knowing.**
+> The context snapshot is truncated: 1,000 characters per existing page and 5,000 characters for the whole Existing Pages block (line 365), plus 2,000 for the index. Today with ~15 pages that's fine, but as the vault grows, Claude will see progressively less of each page — and eventually not all pages — which is when it might miss a sideways link or create a near-duplicate. At that point the design leans on `meta/index.md` and `meta/entities.md` staying tight (they're the compressed map), and on the monthly curation rhythm to merge anything that slips through. If link quality degrades later, raising that 5,000-character cap or switching to an index-first, read-pages-on-demand approach would be the fix.
+
+---
+
 **Reusing this guide for future projects:** only Phase 2 (structure design) is real work the second time — everything else is copy, rename, and re-key. Consider keeping a `vault-template` repository with the skeleton, workflow, and script ready to fork.
 
 Live implementation: [github.com/t-labs-buy/abap-wiki](https://github.com/t-labs-buy/abap-wiki). External references: [GitHub Contents API](https://docs.github.com/en/rest/repos/contents) · [Power Automate + SharePoint](https://learn.microsoft.com/en-us/power-automate/sharepoint-overview) · [Anthropic Console](https://console.anthropic.com) · [Obsidian](https://obsidian.md) · [Git](https://git-scm.com).

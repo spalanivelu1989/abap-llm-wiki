@@ -806,6 +806,9 @@
           <a class="tab" href="#resources"
             ><span class="num">9</span>Resources</a
           >
+          <a class="tab" href="#misc"
+            ><span class="num">10</span>Misc — under the hood Q&amp;A</a
+          >
         </nav>
         <div class="content">
           <!-- ============================================================ -->
@@ -2648,6 +2651,149 @@ claude</pre>
                   </td>
                 </tr>
               </table>
+            </div>
+          </section>
+
+          <!-- ============================================================ -->
+          <section class="phase" id="misc">
+            <span class="phase-tag">Misc · Under the hood</span>
+            <h2>How Claude derives the wikilinks</h2>
+            <div class="qa">
+              <p class="q">
+                How does Claude know which document connects to which document,
+                and which content is related to which content? How does it
+                derive the wikilinks — what actually happens under the hood?
+              </p>
+              <p>
+                The short answer: there is
+                <strong
+                  >no graph algorithm, embedding search, or similarity
+                  index</strong
+                >
+                involved. The links come from Claude reading the new document
+                side-by-side with a snapshot of the entire existing vault in one
+                prompt, plus a set of hard rules that force a minimum link
+                structure. The mechanism lives in the pipeline script
+                (<code>.github/scripts/abap-ingest.py</code>) and works in four
+                steps.
+              </p>
+            </div>
+
+            <h3>1 — The pipeline builds a "vault snapshot" as context</h3>
+            <p>
+              Before Claude ever sees your document,
+              <code>build_prompt_context()</code> (line 300) assembles four
+              things into the prompt:
+            </p>
+            <ul>
+              <li>
+                <strong>The constitution</strong> — the first 6,000 characters
+                of <code>CLAUDE.md</code>, which contains the linking rules
+                (upward/sideways/forward links, mandatory patterns like "every
+                decision links to the developments it affects").
+              </li>
+              <li>
+                <strong><code>meta/index.md</code></strong> — the master catalog
+                of what pages exist.
+              </li>
+              <li>
+                <strong><code>meta/entities.md</code></strong> — the canonical
+                name registry with aliases (OTC = O2C = Order-to-Cash).
+              </li>
+              <li>
+                <strong>Every existing vault page</strong> — the script walks
+                all four zone folders and inlines the first 1,000 characters of
+                each <code>.md</code> file (frontmatter + opening content) under
+                an "Existing Pages (do not duplicate these)" heading.
+              </li>
+            </ul>
+            <p>
+              So when your new document arrives, Claude isn't guessing what it
+              might relate to — it's literally reading the beginnings of every
+              page in the vault in the same context window.
+            </p>
+
+            <h3>2 — Relatedness is derived semantically, not mechanically</h3>
+            <p>
+              This is the "under the hood" part people usually expect to be an
+              algorithm, but it's language understanding. When Claude reads your
+              meeting transcript and sees "the credit auto-release job Anna
+              mentioned," and the Existing Pages section contains
+              <code>OTC - E-001 - Credit Auto-Release Job.md</code> with its
+              frontmatter and summary, it recognizes these describe the same
+              thing — the same way a human librarian would. The entity registry
+              sharpens this: "O2C review with Anna" gets normalized to the
+              canonical slugs <code>OTC</code> and <code>Anna Larsen</code>, so
+              links always land on one canonical page name instead of a second
+              spelling.
+            </p>
+
+            <h3>3 — Hard rules force a minimum link topology</h3>
+            <p>
+              On top of semantic matching, the prompt (rules 4, 11, 12 in the
+              script) makes certain links non-negotiable, so even a lazy
+              extraction produces a connected graph:
+            </p>
+            <ul>
+              <li>
+                <strong>Every page must contain at least one wikilink</strong>
+                — floating pages are forbidden; if Claude can't link a new page
+                upward to a parent, it must append to an existing page instead
+                of creating one.
+              </li>
+              <li>
+                <strong
+                  >Every Zone 02 page must link to its workstream page
+                  <code>[[OTC]]</code></strong
+                >
+                — this is why the workstream page acts as the hub node.
+              </li>
+              <li>
+                <strong>Type-specific mandatory links</strong> — decisions link
+                to the specs/developments they affect, issues to affected
+                developments, patterns to every place they were observed,
+                developments to the standards they follow.
+              </li>
+              <li>
+                <strong>For ABAP code, every referenced object</strong>
+                (tables, function modules, CDS views) becomes a
+                <code>[[wikilink]]</code> in the Dependencies section — even if
+                that page doesn't exist yet. These are intentional "forward
+                links": Obsidian shows them as unresolved, and they auto-connect
+                the moment someone ingests that object later.
+              </li>
+            </ul>
+
+            <h3>4 — The links are just text; resolution happens in Obsidian</h3>
+            <p>
+              Claude returns a JSON object of creates and updates with full
+              markdown content; the script writes the files verbatim. A
+              <code>[[wikilink]]</code> is only a filename reference. Nothing in
+              the pipeline validates that the target exists — Obsidian (or any
+              wiki renderer) resolves
+              <code>[[OTC - E-001 - Credit Auto-Release Job]]</code> to the file
+              with that name at view time. This is also why the strict naming
+              rules matter so much: the link only works if the filename was
+              generated deterministically from the same conventions.
+            </p>
+
+            <div class="warn">
+              <span class="label">⚠ One honest caveat worth knowing</span>
+              <p>
+                The context snapshot is truncated: 1,000 characters per existing
+                page and 5,000 characters for the whole Existing Pages block
+                (line 365), plus 2,000 for the index. Today with ~15 pages
+                that's fine, but as the vault grows, Claude will see
+                progressively less of each page — and eventually not all pages —
+                which is when it might miss a sideways link or create a
+                near-duplicate. At that point the design leans on
+                <code>meta/index.md</code> and <code>meta/entities.md</code>
+                staying tight (they're the compressed map), and on the monthly
+                curation rhythm to merge anything that slips through. If link
+                quality degrades later, raising that 5,000-character cap or
+                switching to an index-first, read-pages-on-demand approach would
+                be the fix.
+              </p>
             </div>
           </section>
 
