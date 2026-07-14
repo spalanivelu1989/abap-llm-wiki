@@ -14,7 +14,7 @@ actor "Team member" as User
 
 participant "OneDrive Inbox" as OD #E8F5E9
 participant "Power Automate" as PA #E3F2FD
-database "abap-vault repo\n(pages · rules · raw/)" as REPO #ECEFF1
+database "abap-wiki repo\n(pages · rules · raw/)" as REPO #ECEFF1
 participant "GitHub Actions" as GHA #FFF3E0
 participant "Ingest Script" as PY #F3E5F5
 boundary "Claude API\n(claude-opus-4-8)" as CLAUDE #ECEFF1
@@ -29,6 +29,7 @@ activate PA
 PA -> OD : get file content
 OD --> PA : PDF (2.4 MB)
 PA -> REPO : HTTPS PUT → **raw/inbox/** (base64, PAT)
+PA -> OD : move source → **inbox/sent** ("picked up")
 deactivate PA
 REPO --> REPO : commit lands = **push event**
 

@@ -40,16 +40,97 @@ const NH = 76;
 //  - STAGE_W / STAGE_H = bounding box of (x + NW) / (y + NH) across all
 //    nodes, plus ~20-40px margin.
 const NODES = {
-  USER: { x: 20, y: 350, icon: "👩‍💻", title: "Team member", sub: "drops docs · asks questions", color: "#6366f1", desc: "A member of the ABAP team. The same person can contribute documents and, later, ask the wiki questions — no GitHub knowledge needed." },
-  OD: { x: 300, y: 110, icon: "📥", title: "OneDrive Inbox", sub: "ABAP_Vault/Inbox", color: "#0ea5e9", desc: "The shared SharePoint/OneDrive folder. Dropping any document here (PDF, PPTX, DOCX, XLSX, TXT, VTT) is the only step contributors ever perform." },
-  PA: { x: 580, y: 110, icon: "🔁", title: "Power Automate", sub: "bridge flow", color: "#0284c7", desc: "An automated cloud flow that watches the Inbox and ferries each new file into the GitHub repository via one authenticated Contents-API PUT — the single link between Microsoft 365 and GitHub." },
-  REPO: { x: 860, y: 110, icon: "📚", title: "abap-vault repo", sub: "GitHub · source of truth", color: "#f59e0b", desc: "The private GitHub repository: wiki pages in zone folders, the CLAUDE.md rulebook, meta/ system files and the raw/ pipeline folders. Every change is version-controlled." },
-  GHA: { x: 1140, y: 110, icon: "🤖", title: "GitHub Actions", sub: "ingest workflow", color: "#8b5cf6", desc: "The ingest workflow (abap-vault-ingest.yml). A push into raw/inbox/ wakes it; it checks out the vault, runs the ingest script on a cloud runner and commits the results. A weekly cron acts as a safety net." },
-  PY: { x: 1140, y: 330, icon: "🐍", title: "Ingest Script", sub: "abap-ingest.py", color: "#22c55e", desc: "Python 3.11 script. Extracts text from each document, dedups against meta/inbox.md, sends the content to Claude with the CLAUDE.md rules, writes the returned pages, logs the run and archives the source." },
-  CLAUDE: { x: 1140, y: 550, icon: "✨", title: "Claude API", sub: "claude-opus-4-8", color: "#d97706", external: true, desc: "Anthropic's Claude API — the librarian. An external dependency, paid per use, authenticated with the ANTHROPIC_API_KEY repository secret (ingestion) or the user's own Claude auth (queries)." },
-  CLONE: { x: 580, y: 350, icon: "💻", title: "Local clone", sub: "per-user working copy", color: "#64748b", desc: "Each team member's local Git copy of the vault. The Obsidian Git plugin syncs it with GitHub every five minutes, in both directions." },
-  OBS: { x: 400, y: 570, icon: "💎", title: "Obsidian", sub: "team reading room", color: "#a855f7", desc: "Renders the wiki with clickable [[wikilinks]], graph view and instant search. Also where the curator reviews and corrects AI-written pages." },
-  CC: { x: 760, y: 570, icon: "💬", title: "Claude Code", sub: "ask the wiki", color: "#ec4899", desc: "Claude Code launched inside the vault folder. It reads CLAUDE.md on startup and answers plain-English questions with citations to the exact wiki pages." },
+  USER: {
+    x: 20,
+    y: 350,
+    icon: "👩‍💻",
+    title: "Team member",
+    sub: "drops docs · asks questions",
+    color: "#6366f1",
+    desc: "A member of the ABAP team. The same person can contribute documents and, later, ask the wiki questions — no GitHub knowledge needed.",
+  },
+  OD: {
+    x: 300,
+    y: 110,
+    icon: "📥",
+    title: "OneDrive Inbox",
+    sub: "abap_wiki/inbox",
+    color: "#0ea5e9",
+    desc: "The drop folder in the flow owner's personal OneDrive for Business (abap_wiki/inbox). Dropping any document here (PDF, PPTX, DOCX, XLSX, TXT, VTT) is the only step contributors ever perform; picked-up files are archived to inbox/sent.",
+  },
+  PA: {
+    x: 580,
+    y: 110,
+    icon: "🔁",
+    title: "Power Automate",
+    sub: "bridge flow",
+    color: "#0284c7",
+    desc: "The 'ABAP Wiki Inbox to GitHub' cloud flow. It watches the inbox, ferries each new file into the GitHub repository via one authenticated Contents-API PUT — the single link between Microsoft 365 and GitHub — then moves the source file to inbox/sent as a picked-up marker.",
+  },
+  REPO: {
+    x: 860,
+    y: 110,
+    icon: "📚",
+    title: "abap-wiki repo",
+    sub: "GitHub · source of truth",
+    color: "#f59e0b",
+    desc: "The private GitHub repository (t-labs-buy/abap-wiki): wiki pages in zone folders, the CLAUDE.md rulebook, meta/ system files and the raw/ pipeline folders. Every change is version-controlled.",
+  },
+  GHA: {
+    x: 1140,
+    y: 110,
+    icon: "🤖",
+    title: "GitHub Actions",
+    sub: "ingest workflow",
+    color: "#8b5cf6",
+    desc: "The ingest workflow (abap-wiki-ingest.yml). A push into raw/inbox/ wakes it; it checks out the vault, runs the ingest script on a cloud runner and commits the results. A weekly cron acts as a safety net.",
+  },
+  PY: {
+    x: 1140,
+    y: 330,
+    icon: "🐍",
+    title: "Ingest Script",
+    sub: "abap-ingest.py",
+    color: "#22c55e",
+    desc: "Python 3.11 script. Extracts text from each document, dedups against meta/inbox.md, sends the content to Claude with the CLAUDE.md rules, writes the returned pages, logs the run and archives the source.",
+  },
+  CLAUDE: {
+    x: 1140,
+    y: 550,
+    icon: "✨",
+    title: "Claude API",
+    sub: "claude-opus-4-8",
+    color: "#d97706",
+    external: true,
+    desc: "Anthropic's Claude API — the librarian. An external dependency, paid per use, authenticated with the ANTHROPIC_API_KEY repository secret (ingestion) or the user's own Claude auth (queries).",
+  },
+  CLONE: {
+    x: 580,
+    y: 350,
+    icon: "💻",
+    title: "Local clone",
+    sub: "per-user working copy",
+    color: "#64748b",
+    desc: "Each team member's local Git copy of the vault. The Obsidian Git plugin syncs it with GitHub every five minutes, in both directions.",
+  },
+  OBS: {
+    x: 400,
+    y: 570,
+    icon: "💎",
+    title: "Obsidian",
+    sub: "team reading room",
+    color: "#a855f7",
+    desc: "Renders the wiki with clickable [[wikilinks]], graph view and instant search. Also where the curator reviews and corrects AI-written pages.",
+  },
+  CC: {
+    x: 760,
+    y: 570,
+    icon: "💬",
+    title: "Claude Code",
+    sub: "ask the wiki",
+    color: "#ec4899",
+    desc: "Claude Code launched inside the vault folder. It reads CLAUDE.md on startup and answers plain-English questions with citations to the exact wiki pages.",
+  },
 };
 
 const center = (n) => ({ x: NODES[n].x + NW / 2, y: NODES[n].y + NH / 2 });
@@ -83,28 +164,239 @@ const center = (n) => ({ x: NODES[n].x + NW / 2, y: NODES[n].y + NH / 2 });
 // BIDIRECTIONAL set below (pairKey-sorted, e.g. ['A','B'].sort().join('|')),
 // or the return-arrow won't render.
 const STEPS = [
-  { f: "USER", t: "OD", ph: 0, k: "call", route: "Team member → OneDrive", m: "A meeting transcript is dropped into the shared Inbox folder — the only step the contributor performs.", chat: [["USER", "Dropping today's OTC workshop transcript here."], ["OD", "File received in ABAP_Vault/Inbox."]] },
-  { f: "OD", t: "PA", ph: 1, k: "call", roundTrip: true, route: "Power Automate ⇄ OneDrive", m: "The bridge flow detects the new file and fetches its content.", chat: [["PA", "New file detected — give me its content."], ["OD", "Here you go: transcript.pdf, 2.4 MB."]] },
-  { f: "PA", t: "REPO", ph: 1, k: "call", route: "Power Automate → GitHub", m: "One HTTPS PUT to the Contents API commits the file into raw/inbox/ (base64 body, fine-grained PAT).", chat: [["PA", "PUT /contents/raw/inbox/transcript.pdf"], ["REPO", "Committed to raw/inbox/ — that is a push event."]] },
-  { f: "REPO", t: "GHA", ph: 2, k: "call", route: "GitHub → Actions", m: "The push touching raw/inbox/** triggers the ingest workflow — no polling, no second integration.", chat: [["REPO", "Push touched raw/inbox/** — wake the ingest workflow."], ["GHA", "Spinning up an ubuntu runner…"]] },
-  { f: "GHA", t: "PY", ph: 2, k: "call", route: "Actions → Ingest Script", m: "The runner checks out the vault and runs abap-ingest.py with the ANTHROPIC_API_KEY secret in its environment.", chat: [["GHA", "Vault checked out. Run abap-ingest.py."], ["PY", "Scanning raw/inbox/ for unprocessed files…"]] },
-  { f: "PY", t: "PY", ph: 2, k: "work", route: "Ingest Script", m: "Text is extracted with pdfplumber; the dedup table in meta/inbox.md confirms this file has never been processed.", chat: [["PY", "14 pages extracted. Not in the dedup table — this is new."]] },
-  { f: "PY", t: "PY", ph: 3, k: "work", route: "Ingest Script", m: "The script loads the CLAUDE.md rulebook plus the vault index and entity registry as context for Claude.", chat: [["PY", "Loading CLAUDE.md rules + meta/index + entity registry…"]] },
-  { f: "CLAUDE", t: "PY", ph: 3, k: "call", roundTrip: true, route: "Ingest Script ⇄ Claude API", m: "One HTTPS call: rules + vault context + document text go in; page create/update instructions come back.", chat: [["PY", "Here are the rules, the index and the transcript. File it."], ["CLAUDE", "3 page updates + 1 new decision page, per the constitution."]] },
-  { f: "PY", t: "PY", ph: 3, k: "work", route: "Ingest Script", m: "Pages are written into the zones, meta/log.md gets an entry, and the source file moves to raw/processed/.", chat: [["PY", "Pages written. Log appended. Source archived."]] },
-  { f: "PY", t: "REPO", ph: 3, k: "call", route: "Ingest Script → GitHub", m: "The workflow commits and pushes every change back to the vault — full history preserved.", chat: [["PY", "git add -A · commit · pull --rebase · push"], ["REPO", "Vault updated. Every change is in the history."]] },
-  { f: "REPO", t: "CLONE", ph: 4, k: "data", roundTrip: true, route: "Local clone ⇄ GitHub", m: "The Obsidian Git plugin runs its 5-minute sync and pulls the new pages down to every laptop.", chat: [["CLONE", "Five-minute sync — anything new upstream?"], ["REPO", "Yes: one new decision page and three updates."]] },
-  { f: "CLONE", t: "OBS", ph: 4, k: "data", route: "Local clone → Obsidian", m: "The new pages appear in Obsidian for the whole team, linked into the rest of the wiki.", chat: [["OBS", "New page: Decision — OTC custom BAPI approach."]] },
-  { f: "OBS", t: "OBS", ph: 4, k: "work", route: "Obsidian", m: "The curator skims the AI-written pages and fixes one wrong name — two minutes of human review.", chat: [["OBS", "Curator check: accurate. One stakeholder name fixed."]] },
-  { f: "REPO", t: "CLONE", ph: 4, k: "call", roundTrip: true, route: "Local clone ⇄ GitHub", m: "The curator's fix syncs back up, so everyone gets the corrected page on their next pull.", chat: [["CLONE", "Pushing the curator's fix."], ["REPO", "Merged — everyone gets it on their next sync."]] },
-  { f: "USER", t: "CC", ph: 5, k: "call", route: "Team member → Claude Code", m: "Weeks later, a teammate asks the wiki a question instead of hunting through folders.", chat: [["USER", "What did we decide about the custom BAPI approach?"], ["CC", "Checking the vault…"]] },
-  { f: "CLONE", t: "CC", ph: 5, k: "data", roundTrip: true, route: "Claude Code ⇄ Local clone", m: "Claude Code reads CLAUDE.md and the relevant pages from the local clone — synthesized pages only, never raw files.", chat: [["CC", "Reading the OTC decision page + linked meeting note…"], ["CLONE", "Three pages match, joined by [[wikilinks]]."]] },
-  { f: "CLAUDE", t: "CC", ph: 5, k: "call", roundTrip: true, route: "Claude Code ⇄ Claude API", m: "The model synthesizes a cited answer from the retrieved pages.", chat: [["CC", "Summarize these pages; cite every claim."], ["CLAUDE", "Answer ready, citing the exact vault pages."]] },
-  { f: "CC", t: "USER", ph: 5, k: "data", route: "Claude Code → Team member", m: "The answer arrives with citations to the exact wiki pages it came from. The loop is closed.", chat: [["CC", "Approved 2026-07-15: custom BAPI wrapper — see the Decision page."], ["USER", "From a dropped file to a cited answer. No manual filing."]] }
+  {
+    f: "USER",
+    t: "OD",
+    ph: 0,
+    k: "call",
+    route: "Team member → OneDrive",
+    m: "A meeting transcript is dropped into the shared Inbox folder — the only step the contributor performs.",
+    chat: [
+      ["USER", "Dropping today's OTC workshop transcript here."],
+      ["OD", "File received in abap_wiki/inbox."],
+    ],
+  },
+  {
+    f: "OD",
+    t: "PA",
+    ph: 1,
+    k: "call",
+    roundTrip: true,
+    route: "Power Automate ⇄ OneDrive",
+    m: "The bridge flow detects the new file and fetches its content.",
+    chat: [
+      ["PA", "New file detected — give me its content."],
+      ["OD", "Here you go: transcript.pdf, 2.4 MB."],
+    ],
+  },
+  {
+    f: "PA",
+    t: "REPO",
+    ph: 1,
+    k: "call",
+    route: "Power Automate → GitHub",
+    m: "One HTTPS PUT to the Contents API commits the file into raw/inbox/ (base64 body, URL-encoded filename, fine-grained PAT).",
+    chat: [
+      ["PA", "PUT /contents/raw/inbox/transcript.pdf"],
+      ["REPO", "Committed to raw/inbox/ — that is a push event."],
+    ],
+  },
+  {
+    f: "PA",
+    t: "OD",
+    ph: 1,
+    k: "call",
+    route: "Power Automate → OneDrive",
+    m: "The flow moves the source file to inbox/sent — a picked-up marker that can never re-trigger the flow, because the trigger watches only the inbox folder itself, not subfolders.",
+    chat: [
+      ["PA", "Upload confirmed — moving transcript.pdf to inbox/sent."],
+      ["OD", "Archived in inbox/sent. The inbox stays empty."],
+    ],
+  },
+  {
+    f: "REPO",
+    t: "GHA",
+    ph: 2,
+    k: "call",
+    route: "GitHub → Actions",
+    m: "The push touching raw/inbox/** triggers the ingest workflow — no polling, no second integration.",
+    chat: [
+      ["REPO", "Push touched raw/inbox/** — wake the ingest workflow."],
+      ["GHA", "Spinning up an ubuntu runner…"],
+    ],
+  },
+  {
+    f: "GHA",
+    t: "PY",
+    ph: 2,
+    k: "call",
+    route: "Actions → Ingest Script",
+    m: "The runner checks out the vault and runs abap-ingest.py with the ANTHROPIC_API_KEY secret in its environment.",
+    chat: [
+      ["GHA", "Vault checked out. Run abap-ingest.py."],
+      ["PY", "Scanning raw/inbox/ for unprocessed files…"],
+    ],
+  },
+  {
+    f: "PY",
+    t: "PY",
+    ph: 2,
+    k: "work",
+    route: "Ingest Script",
+    m: "Text is extracted with pdfplumber; the dedup table in meta/inbox.md confirms this file has never been processed.",
+    chat: [["PY", "14 pages extracted. Not in the dedup table — this is new."]],
+  },
+  {
+    f: "PY",
+    t: "PY",
+    ph: 3,
+    k: "work",
+    route: "Ingest Script",
+    m: "The script loads the CLAUDE.md rulebook plus the vault index and entity registry as context for Claude.",
+    chat: [["PY", "Loading CLAUDE.md rules + meta/index + entity registry…"]],
+  },
+  {
+    f: "CLAUDE",
+    t: "PY",
+    ph: 3,
+    k: "call",
+    roundTrip: true,
+    route: "Ingest Script ⇄ Claude API",
+    m: "One HTTPS call: rules + vault context + document text go in; page create/update instructions come back.",
+    chat: [
+      ["PY", "Here are the rules, the index and the transcript. File it."],
+      ["CLAUDE", "3 page updates + 1 new decision page, per the constitution."],
+    ],
+  },
+  {
+    f: "PY",
+    t: "PY",
+    ph: 3,
+    k: "work",
+    route: "Ingest Script",
+    m: "Pages are written into the zones, meta/log.md gets an entry, and the source file moves to raw/processed/.",
+    chat: [["PY", "Pages written. Log appended. Source archived."]],
+  },
+  {
+    f: "PY",
+    t: "REPO",
+    ph: 3,
+    k: "call",
+    route: "Ingest Script → GitHub",
+    m: "The workflow commits and pushes every change back to the vault — full history preserved.",
+    chat: [
+      ["PY", "git add -A · commit · pull --rebase · push"],
+      ["REPO", "Vault updated. Every change is in the history."],
+    ],
+  },
+  {
+    f: "REPO",
+    t: "CLONE",
+    ph: 4,
+    k: "data",
+    roundTrip: true,
+    route: "Local clone ⇄ GitHub",
+    m: "The Obsidian Git plugin runs its 5-minute sync and pulls the new pages down to every laptop.",
+    chat: [
+      ["CLONE", "Five-minute sync — anything new upstream?"],
+      ["REPO", "Yes: one new decision page and three updates."],
+    ],
+  },
+  {
+    f: "CLONE",
+    t: "OBS",
+    ph: 4,
+    k: "data",
+    route: "Local clone → Obsidian",
+    m: "The new pages appear in Obsidian for the whole team, linked into the rest of the wiki.",
+    chat: [["OBS", "New page: Decision — OTC custom BAPI approach."]],
+  },
+  {
+    f: "OBS",
+    t: "OBS",
+    ph: 4,
+    k: "work",
+    route: "Obsidian",
+    m: "The curator skims the AI-written pages and fixes one wrong name — two minutes of human review.",
+    chat: [["OBS", "Curator check: accurate. One stakeholder name fixed."]],
+  },
+  {
+    f: "REPO",
+    t: "CLONE",
+    ph: 4,
+    k: "call",
+    roundTrip: true,
+    route: "Local clone ⇄ GitHub",
+    m: "The curator's fix syncs back up, so everyone gets the corrected page on their next pull.",
+    chat: [
+      ["CLONE", "Pushing the curator's fix."],
+      ["REPO", "Merged — everyone gets it on their next sync."],
+    ],
+  },
+  {
+    f: "USER",
+    t: "CC",
+    ph: 5,
+    k: "call",
+    route: "Team member → Claude Code",
+    m: "Weeks later, a teammate asks the wiki a question instead of hunting through folders.",
+    chat: [
+      ["USER", "What did we decide about the custom BAPI approach?"],
+      ["CC", "Checking the vault…"],
+    ],
+  },
+  {
+    f: "CLONE",
+    t: "CC",
+    ph: 5,
+    k: "data",
+    roundTrip: true,
+    route: "Claude Code ⇄ Local clone",
+    m: "Claude Code reads CLAUDE.md and the relevant pages from the local clone — synthesized pages only, never raw files.",
+    chat: [
+      ["CC", "Reading the OTC decision page + linked meeting note…"],
+      ["CLONE", "Three pages match, joined by [[wikilinks]]."],
+    ],
+  },
+  {
+    f: "CLAUDE",
+    t: "CC",
+    ph: 5,
+    k: "call",
+    roundTrip: true,
+    route: "Claude Code ⇄ Claude API",
+    m: "The model synthesizes a cited answer from the retrieved pages.",
+    chat: [
+      ["CC", "Summarize these pages; cite every claim."],
+      ["CLAUDE", "Answer ready, citing the exact vault pages."],
+    ],
+  },
+  {
+    f: "CC",
+    t: "USER",
+    ph: 5,
+    k: "data",
+    route: "Claude Code → Team member",
+    m: "The answer arrives with citations to the exact wiki pages it came from. The loop is closed.",
+    chat: [
+      [
+        "CC",
+        "Approved 2026-07-15: custom BAPI wrapper — see the Decision page.",
+      ],
+      ["USER", "From a dropped file to a cited answer. No manual filing."],
+    ],
+  },
 ];
 
 // One label per phase index used in STEPS. Shown in the toolbar's phase tag.
-const PHASES = ["Drop the document", "Bridge to GitHub", "The robot wakes up", "Claude writes the wiki", "Sync to the team", "Ask the wiki"];
+const PHASES = [
+  "Drop the document",
+  "Bridge to GitHub",
+  "The robot wakes up",
+  "Claude writes the wiki",
+  "Sync to the team",
+  "Ask the wiki",
+];
 
 function buildPath(f, t) {
   const a = center(f);
@@ -147,7 +439,13 @@ function nodeInfo(id) {
 // Pairs that need arrowheads on BOTH ends because the flow is a
 // request/response round-trip along one edge, not two distinct steps.
 // Must exactly match every pairKey(f, t) used with roundTrip: true above.
-const BIDIRECTIONAL = new Set(["OD|PA", "CLAUDE|PY", "CLONE|REPO", "CC|CLONE", "CC|CLAUDE"]);
+const BIDIRECTIONAL = new Set([
+  "OD|PA",
+  "CLAUDE|PY",
+  "CLONE|REPO",
+  "CC|CLONE",
+  "CC|CLAUDE",
+]);
 
 // OPTIONAL: dramatize one "persistence save" step (file-transfer console +
 // flying particles) — nice for a moment like "the run is written to the
@@ -159,7 +457,14 @@ const DB_INGEST_FROM = "PY"; // node id, e.g. 'API', or null
 const DB_INGEST_TO = "REPO"; // node id, e.g. 'DB', or null
 const DB_INGEST_ICON = "🐍 ➔ 📚"; // e.g. '🖥️ ➔ 🗄️'
 const DB_INGEST_TITLE = "Committing vault updates to GitHub…"; // e.g. 'Saving run to PostgreSQL...'
-const DB_INGEST_FILES = [{ name: "Decision - OTC Custom BAPI.md", size: "4 KB" }, { name: "Meeting - OTC Workshop.md", size: "6 KB" }, { name: "Pattern - IDoc error handling.md", size: "3 KB" }, { name: "meta/log.md", size: "1 KB" }, { name: "meta/inbox.md", size: "1 KB" }, { name: "transcript.pdf → processed/", size: "2.4 MB" }]; // [{name,size}, ...] cosmetic file list
+const DB_INGEST_FILES = [
+  { name: "Decision - OTC Custom BAPI.md", size: "4 KB" },
+  { name: "Meeting - OTC Workshop.md", size: "6 KB" },
+  { name: "Pattern - IDoc error handling.md", size: "3 KB" },
+  { name: "meta/log.md", size: "1 KB" },
+  { name: "meta/inbox.md", size: "1 KB" },
+  { name: "transcript.pdf → processed/", size: "2.4 MB" },
+]; // [{name,size}, ...] cosmetic file list
 // Place the console in genuinely empty canvas space near DB_INGEST_TO — check
 // your NODES layout for a gap, don't just guess.
 const DB_INGEST_CONSOLE_X = 640;
@@ -174,7 +479,8 @@ const DB_INGEST_PARTICLE_PATH = {
 };
 
 const TITLE = "ABAP LLM Wiki — Live Architecture Demo";
-const SUBTITLE = "One meeting transcript travels from a OneDrive drop to a cited answer in Claude Code.";
+const SUBTITLE =
+  "One meeting transcript travels from a OneDrive drop to a cited answer in Claude Code.";
 
 // ---- Saved layout persistence (ABAP demo addition) ----
 // The viewer can drag node cards, press "Save layout", and get the same
@@ -197,7 +503,6 @@ try {
   /* storage unavailable — demo still works, layout just is not persisted */
 }
 
-
 // ============================================================================
 // ArchFlow ENGINE — do not modify below this line.
 // ============================================================================
@@ -216,7 +521,6 @@ export function AbapVaultDemoFlow() {
   // "Save layout" button feedback ("✓ Layout saved" / "⚠ Could not save").
   const [layoutMsg, setLayoutMsg] = useState(null);
 
-
   const stageRef = useRef(null);
   const logRef = useRef(null);
   const scrubTrackRef = useRef(null);
@@ -232,7 +536,6 @@ export function AbapVaultDemoFlow() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const containerRef = useRef(null);
 
-  
   // Persist the current (possibly dragged) node positions; restore on reload.
   const saveLayout = () => {
     const layout = {};
@@ -1196,8 +1499,18 @@ export function AbapVaultDemoFlow() {
           >
             {theme === "dark" ? "☀ Light" : "🌙 Dark"}
           </button>
-          <button onClick={saveLayout} title="Save the current node positions — the demo reopens with this layout">{layoutMsg || "💾 Save layout"}</button>
-          <button onClick={resetLayout} title="Forget the saved layout and restore the original">↺ Reset</button>
+          <button
+            onClick={saveLayout}
+            title="Save the current node positions — the demo reopens with this layout"
+          >
+            {layoutMsg || "💾 Save layout"}
+          </button>
+          <button
+            onClick={resetLayout}
+            title="Forget the saved layout and restore the original"
+          >
+            ↺ Reset
+          </button>
           <button
             onClick={toggleFullscreen}
             title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
@@ -1375,7 +1688,14 @@ export function AbapVaultDemoFlow() {
           </span>
         </div>
         <p>
-          One small bridge holds the whole system together: <b>Power Automate makes a single authenticated HTTPS PUT</b> into the repo's raw/inbox/ folder — the only link between the Microsoft 365 world and GitHub. The commit itself is the trigger: GitHub's own <b>push event</b> starts the ingest workflow, and one <b>API-key-secured call to Claude</b> does the librarian work. Humans never touch the pipeline — they meet the wiki through 5-minute Git sync (Obsidian) and plain-English questions (Claude Code).
+          One small bridge holds the whole system together:{" "}
+          <b>Power Automate makes a single authenticated HTTPS PUT</b> into the
+          repo's raw/inbox/ folder — the only link between the Microsoft 365
+          world and GitHub. The commit itself is the trigger: GitHub's own{" "}
+          <b>push event</b> starts the ingest workflow, and one{" "}
+          <b>API-key-secured call to Claude</b> does the librarian work. Humans
+          never touch the pipeline — they meet the wiki through 5-minute Git
+          sync (Obsidian) and plain-English questions (Claude Code).
         </p>
       </footer>
     </div>

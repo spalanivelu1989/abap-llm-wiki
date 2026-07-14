@@ -117,9 +117,8 @@
         margin: 0;
       }
       main {
-        max-width: 1100px;
-        margin: 0 auto;
-        padding: 2.5rem 1.5rem 6rem;
+        margin: 0;
+        padding: 2.5rem clamp(1rem, 3vw, 3rem) 6rem;
       }
 
       h1,
@@ -204,34 +203,127 @@
         font-weight: 600;
       }
 
-      nav.toc {
+      .layout {
+        display: flex;
+        gap: 1.75rem;
+        align-items: flex-start;
+      }
+      nav.sidebar {
+        position: sticky;
+        top: 1.25rem;
+        flex: none;
+        width: 256px;
         background: var(--card);
         border: 1px solid var(--border);
-        border-radius: 10px;
-        padding: 1.1rem 1.4rem;
-        margin-bottom: 3rem;
-        font-size: 0.92rem;
+        border-radius: 12px;
+        padding: 0.9rem;
+        font-size: 0.87rem;
       }
-      nav.toc .label {
+      nav.sidebar .label {
         text-transform: uppercase;
         letter-spacing: 0.12em;
         font-size: 0.7rem;
         font-weight: 600;
         color: var(--muted);
         display: block;
-        margin-bottom: 0.5rem;
+        margin: 0.2rem 0 0.6rem 0.4rem;
       }
-      nav.toc ol {
-        margin: 0;
-        padding-left: 1.3rem;
-        display: grid;
-        gap: 0.3rem;
-      }
-      nav.toc a {
+      nav.sidebar a.tab {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.5rem 0.65rem;
+        border-radius: 8px;
         text-decoration: none;
+        color: var(--ink);
+        line-height: 1.3;
+        margin-bottom: 2px;
       }
-      nav.toc a:hover {
-        text-decoration: underline;
+      nav.sidebar a.tab .num {
+        flex: none;
+        width: 1.5rem;
+        height: 1.5rem;
+        border-radius: 50%;
+        border: 1px solid var(--border);
+        background: var(--code-bg);
+        color: var(--muted);
+        font-size: 0.72rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      nav.sidebar a.tab:hover {
+        background: var(--accent-soft);
+      }
+      nav.sidebar a.tab.active {
+        background: var(--accent);
+        color: #fff;
+      }
+      nav.sidebar a.tab.active .num {
+        background: rgba(255, 255, 255, 0.2);
+        border-color: transparent;
+        color: #fff;
+      }
+      .content {
+        flex: 1;
+        min-width: 0;
+      }
+      section.phase {
+        display: none;
+      }
+      section.phase.active {
+        display: block;
+      }
+      .pager {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-top: 1.5rem;
+      }
+      .pager button {
+        font-family: "Avenir Next", "Segoe UI", system-ui, sans-serif;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--accent);
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 0.55rem 1rem;
+        cursor: pointer;
+        max-width: 48%;
+        text-align: left;
+      }
+      .pager button:hover {
+        border-color: var(--accent);
+      }
+      .pager button:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+      .pager button:disabled {
+        visibility: hidden;
+      }
+      @media (max-width: 900px) {
+        .layout {
+          flex-direction: column;
+        }
+        nav.sidebar {
+          position: static;
+          width: 100%;
+          display: flex;
+          overflow-x: auto;
+          gap: 4px;
+          padding: 0.6rem;
+        }
+        nav.sidebar .label {
+          display: none;
+        }
+        nav.sidebar a.tab {
+          flex: none;
+          white-space: nowrap;
+          margin-bottom: 0;
+        }
       }
 
       section.phase {
@@ -472,6 +564,142 @@
         }
       }
 
+      .phase-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        margin: -0.4rem 0 1.3rem;
+      }
+      .chip {
+        font-family: "Avenir Next", "Segoe UI", system-ui, sans-serif;
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        color: var(--muted);
+        background: var(--code-bg);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 0.2rem 0.75rem;
+      }
+      .chip strong {
+        color: var(--accent);
+      }
+
+      .step-h {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+        font-family: "Avenir Next", "Segoe UI", system-ui, sans-serif;
+        font-size: 1rem;
+        font-weight: 700;
+        margin: 2.1rem 0 0.8rem;
+        padding-top: 1.4rem;
+        border-top: 1px dashed var(--border);
+      }
+      .step-h .n {
+        flex: none;
+        width: 1.75rem;
+        height: 1.75rem;
+        border-radius: 50%;
+        background: var(--accent);
+        color: var(--card);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+      }
+
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 0.8rem;
+        margin: 1rem 0 1.5rem;
+      }
+      .card {
+        background: var(--why-bg);
+        border: 1px solid var(--border);
+        border-left: 4px solid var(--accent);
+        border-radius: 8px;
+        padding: 0.9rem 1rem;
+        font-size: 0.92rem;
+      }
+      .card .card-title {
+        display: block;
+        font-family: "Avenir Next", "Segoe UI", system-ui, sans-serif;
+        font-size: 0.82rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--accent);
+        margin-bottom: 0.4rem;
+      }
+
+      .qa {
+        background: var(--code-bg);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 1.25rem 1.4rem 1.1rem;
+        margin: 2rem 0 1.5rem;
+      }
+      .qa .q {
+        font-family: "Avenir Next", "Segoe UI", system-ui, sans-serif;
+        font-size: 1.05rem;
+        font-weight: 700;
+        margin: 0 0 0.6rem;
+      }
+      .qa .q::before {
+        content: "Q — ";
+        color: var(--accent);
+      }
+      .qa > :last-child {
+        margin-bottom: 0;
+      }
+
+      .choice {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.8rem;
+        margin: 1rem 0 1.5rem;
+      }
+      @media (max-width: 720px) {
+        .choice {
+          grid-template-columns: 1fr;
+        }
+      }
+      .choice-box {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 0.9rem 1rem;
+        font-size: 0.92rem;
+      }
+      .choice-box.a {
+        border-top: 4px solid var(--accent);
+      }
+      .choice-box.b {
+        border-top: 4px solid var(--warn-border);
+      }
+      .choice-box .ct {
+        display: block;
+        font-family: "Avenir Next", "Segoe UI", system-ui, sans-serif;
+        font-size: 0.82rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-bottom: 0.4rem;
+      }
+      .choice-box.a .ct {
+        color: var(--accent);
+      }
+      .choice-box.b .ct {
+        color: var(--warn-border);
+      }
+      .win ol:last-child,
+      .why ol:last-child,
+      .warn ol:last-child {
+        margin-bottom: 0;
+      }
+
       footer {
         color: var(--muted);
         font-size: 0.85rem;
@@ -489,13 +717,18 @@
           background: #fff;
         }
         section.phase {
+          display: block !important;
           border: none;
           padding: 0;
           margin-bottom: 1.5rem;
           break-inside: avoid-page;
         }
-        nav.toc {
-          border: none;
+        .layout {
+          display: block;
+        }
+        nav.sidebar,
+        .pager {
+          display: none;
         }
       }
     </style>
@@ -515,8 +748,8 @@
       <h1>Setting up an LLM Wiki for the ABAP project</h1>
       <p class="lede">
         A start-to-finish walkthrough for building an AI-maintained knowledge
-        vault — modelled on the iVolve vault, written so that anyone in the
-        organization can follow it for ABAP or any future project.
+        vault — written so that anyone in the organization can follow it for
+        ABAP or any future project.
       </p>
 
       <div class="meta-strip">
@@ -529,436 +762,494 @@
           ><strong>Stack</strong> — GitHub · OneDrive · Power Automate · Claude
           API · Obsidian</span
         >
+        <span
+          ><strong>Repo</strong> —
+          <a href="https://github.com/t-labs-buy/abap-wiki"
+            >t-labs-buy/abap-wiki</a
+          ></span
+        >
       </div>
 
-      <nav class="toc" aria-label="Table of contents">
-        <span class="label">The journey — eight phases, eight wins</span>
-        <ol>
-          <li>
-            <a href="#part0">Understand what you're building (read first)</a>
-          </li>
-          <li><a href="#phase1">Create the GitHub repository</a></li>
-          <li>
-            <a href="#phase2"
-              >Design the knowledge structure &amp; write the constitution</a
-            >
-          </li>
-          <li><a href="#phase3">Build the vault skeleton</a></li>
-          <li><a href="#phase4">Set up Obsidian for reading and editing</a></li>
-          <li><a href="#phase5">Build the AI ingestion pipeline</a></li>
-          <li><a href="#phase6">Connect OneDrive with Power Automate</a></li>
-          <li><a href="#phase7">Query the wiki with Claude Code</a></li>
-          <li><a href="#phase8">Onboard the team &amp; keep it alive</a></li>
-        </ol>
-      </nav>
-
-      <!-- ============================================================ -->
-      <section class="phase" id="part0">
-        <span class="phase-tag">Part 0 · Orientation</span>
-        <h2>What an "LLM Wiki" actually is</h2>
-        <p>
-          Despite the fancy name, an LLM wiki is four ordinary things working
-          together:
-        </p>
-        <ol class="steps">
-          <li>
-            <strong>A folder of Markdown text files</strong> — the wiki itself.
-            Plain text pages about your project (standards, decisions, meeting
-            outcomes, lessons learned), organized into a strict folder structure
-            and linked to each other.
-          </li>
-          <li>
-            <strong>A rulebook for an AI</strong> — a single file called
-            <code>CLAUDE.md</code> that tells Claude (the AI) exactly how to
-            file, name, link, and de-duplicate knowledge. This is the secret
-            sauce: the AI does the librarian work so humans don't have to.
-          </li>
-          <li>
-            <strong>An automated pipeline</strong> — anyone drops a raw document
-            (a transcript, a deck, a spec) into a OneDrive folder. Within
-            minutes, an automated job sends it to Claude, which extracts the
-            durable knowledge and updates the right wiki pages.
-          </li>
-          <li>
-            <strong>Two ways for humans to use it</strong> — Obsidian (a free
-            app that displays the wiki beautifully and shows links between
-            pages) for reading and light editing, and Claude Code (a terminal
-            tool) for asking the wiki questions in plain English.
-          </li>
-        </ol>
-
-        <div class="flow">
-          <div class="flow-col">
-            <div class="flow-role">Contributor</div>
-            <div class="flow-box">
-              <strong>OneDrive Inbox</strong>
-              <span
-                >A teammate drops in any document — a transcript, a deck, a
-                spec.</span
-              >
+      <div class="layout">
+        <nav class="sidebar" aria-label="Sections">
+          <span class="label">The journey</span>
+          <a class="tab" href="#part0"
+            ><span class="num">0</span>Understand what you're building (read
+            first)</a
+          >
+          <a class="tab" href="#phase1"
+            ><span class="num">1</span>Create the GitHub repository</a
+          >
+          <a class="tab" href="#phase2"
+            ><span class="num">2</span>Design the knowledge structure &amp;
+            write the constitution</a
+          >
+          <a class="tab" href="#phase3"
+            ><span class="num">3</span>Build the vault skeleton</a
+          >
+          <a class="tab" href="#phase4"
+            ><span class="num">4</span>Set up Obsidian for reading and
+            editing</a
+          >
+          <a class="tab" href="#phase5"
+            ><span class="num">5</span>Build the AI ingestion pipeline</a
+          >
+          <a class="tab" href="#phase6"
+            ><span class="num">6</span>Connect OneDrive with Power Automate</a
+          >
+          <a class="tab" href="#phase7"
+            ><span class="num">7</span>Query the wiki with Claude Code</a
+          >
+          <a class="tab" href="#phase8"
+            ><span class="num">8</span>Onboard the team &amp; keep it alive</a
+          >
+          <a class="tab" href="#resources"
+            ><span class="num">9</span>Resources</a
+          >
+        </nav>
+        <div class="content">
+          <!-- ============================================================ -->
+          <section class="phase" id="part0">
+            <span class="phase-tag">Part 0 · Orientation</span>
+            <h2>What an "LLM Wiki" actually is</h2>
+            <div class="phase-meta">
+              <span class="chip">Who — <strong>everyone</strong></span>
+              <span class="chip">Time — <strong>10-minute read</strong></span>
             </div>
-          </div>
-          <div class="flow-arrow a1">
-            <span class="lbl">Power Automate carries the file over</span>
-          </div>
-          <div class="flow-col flow-main">
-            <div class="flow-role">Automation</div>
-            <div class="flow-box">
-              <strong>GitHub repository</strong>
-              <ol>
-                <li>
-                  The file lands in the wiki's <code>raw/inbox/</code> folder
-                </li>
-                <li>The GitHub Actions robot wakes up</li>
-                <li>The script sends the document to Claude</li>
-                <li>Claude updates the right wiki pages</li>
-                <li>Every change is saved, with full history</li>
-              </ol>
+            <p>
+              Despite the fancy name, an LLM wiki is four ordinary things
+              working together:
+            </p>
+            <ol class="steps">
+              <li>
+                <strong>A folder of Markdown text files</strong> — the wiki
+                itself. Plain text pages about your project (standards,
+                decisions, meeting outcomes, lessons learned), organized into a
+                strict folder structure and linked to each other.
+              </li>
+              <li>
+                <strong>A rulebook for an AI</strong> — a single file called
+                <code>CLAUDE.md</code> that tells Claude (the AI) exactly how to
+                file, name, link, and de-duplicate knowledge. This is the secret
+                sauce: the AI does the librarian work so humans don't have to.
+              </li>
+              <li>
+                <strong>An automated pipeline</strong> — anyone drops a raw
+                document (a transcript, a deck, a spec) into a OneDrive folder.
+                Within minutes, an automated job sends it to Claude, which
+                extracts the durable knowledge and updates the right wiki pages.
+              </li>
+              <li>
+                <strong>Two ways for humans to use it</strong> — Obsidian (a
+                free app that displays the wiki beautifully and shows links
+                between pages) for reading and light editing, and Claude Code (a
+                terminal tool) for asking the wiki questions in plain English.
+              </li>
+            </ol>
+
+            <div class="flow">
+              <div class="flow-col">
+                <div class="flow-role">Contributor</div>
+                <div class="flow-box">
+                  <strong>OneDrive Inbox</strong>
+                  <span
+                    >A teammate drops in any document — a transcript, a deck, a
+                    spec.</span
+                  >
+                </div>
+              </div>
+              <div class="flow-arrow a1">
+                <span class="lbl">Power Automate carries the file over</span>
+              </div>
+              <div class="flow-col flow-main">
+                <div class="flow-role">Automation</div>
+                <div class="flow-box">
+                  <strong>GitHub repository</strong>
+                  <ol>
+                    <li>
+                      The file lands in the wiki's
+                      <code>raw/inbox/</code> folder
+                    </li>
+                    <li>The GitHub Actions robot wakes up</li>
+                    <li>The script sends the document to Claude</li>
+                    <li>Claude updates the right wiki pages</li>
+                    <li>Every change is saved, with full history</li>
+                  </ol>
+                </div>
+              </div>
+              <div class="flow-arrow a2">
+                <span class="lbl">Syncs both ways every 5 minutes</span>
+              </div>
+              <div class="flow-col">
+                <div class="flow-role">Team</div>
+                <div class="flow-box">
+                  <strong>Obsidian</strong>
+                  <span>Read pages, follow links, fix any mistakes.</span>
+                </div>
+                <div class="flow-box">
+                  <strong>Claude Code</strong>
+                  <span
+                    >Ask in plain English: "What did we decide about X last
+                    month?"</span
+                  >
+                </div>
+              </div>
             </div>
-          </div>
-          <div class="flow-arrow a2">
-            <span class="lbl">Syncs both ways every 5 minutes</span>
-          </div>
-          <div class="flow-col">
-            <div class="flow-role">Team</div>
-            <div class="flow-box">
-              <strong>Obsidian</strong>
-              <span>Read pages, follow links, fix any mistakes.</span>
+
+            <h3>Every technology, and why it's there</h3>
+            <p>
+              You'll touch seven tools. None is optional, but each does exactly
+              one job:
+            </p>
+            <div class="tablewrap">
+              <table>
+                <tr>
+                  <th>Technology</th>
+                  <th>What it is, in plain terms</th>
+                  <th>Why the wiki needs it</th>
+                </tr>
+                <tr>
+                  <td>Markdown</td>
+                  <td>
+                    The format the wiki pages are written in: simple text files,
+                    like a Word document stripped down to its bare essentials —
+                    a few symbols mark the headings and bold text.
+                  </td>
+                  <td>
+                    Because it's just text, every tool in this setup — and every
+                    human — can open and read it. No special software, no
+                    licenses, nothing that breaks when the company changes
+                    tools. A page written today will still open in twenty years.
+                  </td>
+                </tr>
+                <tr>
+                  <td>Git &amp; GitHub</td>
+                  <td>
+                    Git is "Track Changes" for an entire folder: it remembers
+                    every version of every file, who changed it, and when.
+                    GitHub is the shared home on the internet where that folder
+                    lives — a shared drive with a perfect memory.
+                  </td>
+                  <td>
+                    Many people <em>and</em> an AI all edit the same wiki. With
+                    Git, nothing is ever lost or overwritten: any mistake —
+                    human or AI — can be undone in one step. GitHub is also
+                    where our automation robot lives (next row).
+                  </td>
+                </tr>
+                <tr>
+                  <td>GitHub Actions</td>
+                  <td>
+                    A robot assistant built into GitHub. You leave it a written
+                    instruction — "whenever a new file appears in the inbox
+                    folder, run this processing job" — and it carries it out on
+                    a borrowed cloud computer, then goes back to sleep.
+                  </td>
+                  <td>
+                    This is what makes the wiki <em>self-maintaining</em>.
+                    Nobody has to notice a new document, read it, and file its
+                    contents by hand — the robot does it within minutes, around
+                    the clock, and there is no server for us to buy or maintain.
+                  </td>
+                </tr>
+                <tr>
+                  <td>Claude API</td>
+                  <td>
+                    The same Claude AI many people use as a chat website — but
+                    here our robot's script talks to it instead of a person, and
+                    we pay only for what we use, like a metered utility.
+                  </td>
+                  <td>
+                    Claude is the librarian. For every dropped document it reads
+                    the whole thing, pulls out the decisions, facts, and open
+                    questions, and writes them onto the right wiki pages
+                    following our rulebook. Done by hand, that's an hour of
+                    tedious work per document; Claude does it in minutes for
+                    cents.
+                  </td>
+                </tr>
+                <tr>
+                  <td>OneDrive + Power Automate</td>
+                  <td>
+                    OneDrive/SharePoint is the file sharing your organization
+                    already uses every day. Power Automate is Microsoft's "when
+                    this happens, do that" service — here it acts as a courier
+                    watching one folder.
+                  </td>
+                  <td>
+                    Contributors shouldn't have to learn GitHub — and with this
+                    bridge they never see it. They drop a file into a familiar
+                    OneDrive folder exactly as they always do; the courier picks
+                    it up and delivers it into the wiki's inbox automatically.
+                  </td>
+                </tr>
+                <tr>
+                  <td>Obsidian</td>
+                  <td>
+                    A free app that opens the wiki on your own computer like a
+                    private Wikipedia: pages link to each other, search is
+                    instant, and you can even see a visual map of how topics
+                    connect.
+                  </td>
+                  <td>
+                    This is the team's reading room. It makes the wiki pleasant
+                    to browse and easy to correct, and its sync add-on quietly
+                    keeps everyone's copy up to date every five minutes — no
+                    technical steps after the one-time setup.
+                  </td>
+                </tr>
+                <tr>
+                  <td>Claude Code</td>
+                  <td>
+                    Claude running on your own computer with permission to read
+                    the wiki folder — like a librarian who has read every single
+                    page and always cites their sources.
+                  </td>
+                  <td>
+                    Instead of hunting through pages, anyone can simply ask —
+                    "What did we decide about the custom BAPI approach?" — and
+                    get a direct answer pointing to the exact wiki pages it came
+                    from.
+                  </td>
+                </tr>
+              </table>
             </div>
-            <div class="flow-box">
-              <strong>Claude Code</strong>
-              <span
-                >Ask in plain English: "What did we decide about X last
-                month?"</span
-              >
-            </div>
-          </div>
-        </div>
 
-        <h3>Every technology, and why it's there</h3>
-        <p>
-          You'll touch seven tools. None is optional, but each does exactly one
-          job:
-        </p>
-        <div class="tablewrap">
-          <table>
-            <tr>
-              <th>Technology</th>
-              <th>What it is, in plain terms</th>
-              <th>Why the wiki needs it</th>
-            </tr>
-            <tr>
-              <td>Markdown</td>
-              <td>
-                The format the wiki pages are written in: simple text files,
-                like a Word document stripped down to its bare essentials — a
-                few symbols mark the headings and bold text.
-              </td>
-              <td>
-                Because it's just text, every tool in this setup — and every
-                human — can open and read it. No special software, no licenses,
-                nothing that breaks when the company changes tools. A page
-                written today will still open in twenty years.
-              </td>
-            </tr>
-            <tr>
-              <td>Git &amp; GitHub</td>
-              <td>
-                Git is "Track Changes" for an entire folder: it remembers every
-                version of every file, who changed it, and when. GitHub is the
-                shared home on the internet where that folder lives — a shared
-                drive with a perfect memory.
-              </td>
-              <td>
-                Many people <em>and</em> an AI all edit the same wiki. With Git,
-                nothing is ever lost or overwritten: any mistake — human or AI —
-                can be undone in one step. GitHub is also where our automation
-                robot lives (next row).
-              </td>
-            </tr>
-            <tr>
-              <td>GitHub Actions</td>
-              <td>
-                A robot assistant built into GitHub. You leave it a written
-                instruction — "whenever a new file appears in the inbox folder,
-                run this processing job" — and it carries it out on a borrowed
-                cloud computer, then goes back to sleep.
-              </td>
-              <td>
-                This is what makes the wiki <em>self-maintaining</em>. Nobody
-                has to notice a new document, read it, and file its contents by
-                hand — the robot does it within minutes, around the clock, and
-                there is no server for us to buy or maintain.
-              </td>
-            </tr>
-            <tr>
-              <td>Claude API</td>
-              <td>
-                The same Claude AI many people use as a chat website — but here
-                our robot's script talks to it instead of a person, and we pay
-                only for what we use, like a metered utility.
-              </td>
-              <td>
-                Claude is the librarian. For every dropped document it reads the
-                whole thing, pulls out the decisions, facts, and open questions,
-                and writes them onto the right wiki pages following our
-                rulebook. Done by hand, that's an hour of tedious work per
-                document; Claude does it in minutes for cents.
-              </td>
-            </tr>
-            <tr>
-              <td>OneDrive + Power Automate</td>
-              <td>
-                OneDrive/SharePoint is the file sharing your organization
-                already uses every day. Power Automate is Microsoft's "when this
-                happens, do that" service — here it acts as a courier watching
-                one folder.
-              </td>
-              <td>
-                Contributors shouldn't have to learn GitHub — and with this
-                bridge they never see it. They drop a file into a familiar
-                OneDrive folder exactly as they always do; the courier picks it
-                up and delivers it into the wiki's inbox automatically.
-              </td>
-            </tr>
-            <tr>
-              <td>Obsidian</td>
-              <td>
-                A free app that opens the wiki on your own computer like a
-                private Wikipedia: pages link to each other, search is instant,
-                and you can even see a visual map of how topics connect.
-              </td>
-              <td>
-                This is the team's reading room. It makes the wiki pleasant to
-                browse and easy to correct, and its sync add-on quietly keeps
-                everyone's copy up to date every five minutes — no technical
-                steps after the one-time setup.
-              </td>
-            </tr>
-            <tr>
-              <td>Claude Code</td>
-              <td>
-                Claude running on your own computer with permission to read the
-                wiki folder — like a librarian who has read every single page
-                and always cites their sources.
-              </td>
-              <td>
-                Instead of hunting through pages, anyone can simply ask — "What
-                did we decide about the custom BAPI approach?" — and get a
-                direct answer pointing to the exact wiki pages it came from.
-              </td>
-            </tr>
-          </table>
-        </div>
+            <h3>What you need before you start</h3>
+            <ul>
+              <li>
+                <strong>A GitHub account</strong> (free) — and ideally an
+                organization account so the repo isn't owned by one person.
+              </li>
+              <li>
+                <strong>An Anthropic API account</strong> with billing enabled —
+                <a href="https://console.anthropic.com">console.anthropic.com</a
+                >. This is separate from a Claude.ai subscription.
+              </li>
+              <li>
+                <strong>Access to Power Automate</strong> in your Microsoft 365
+                tenant, with the ability to use the HTTP action (a "premium"
+                connector — most enterprise M365 plans include it; check with
+                your IT admin).
+              </li>
+              <li>
+                <strong>A OneDrive/SharePoint folder</strong> you can share with
+                the team.
+              </li>
+              <li>
+                <strong>One named owner</strong> for the pipeline — the person
+                who holds the API key, watches for failed runs, and curates
+                quality.
+              </li>
+            </ul>
 
-        <h3>What you need before you start</h3>
-        <ul>
-          <li>
-            <strong>A GitHub account</strong> (free) — and ideally an
-            organization account so the repo isn't owned by one person.
-          </li>
-          <li>
-            <strong>An Anthropic API account</strong> with billing enabled —
-            <a href="https://console.anthropic.com">console.anthropic.com</a>.
-            This is separate from a Claude.ai subscription.
-          </li>
-          <li>
-            <strong>Access to Power Automate</strong> in your Microsoft 365
-            tenant, with the ability to use the HTTP action (a "premium"
-            connector — most enterprise M365 plans include it; check with your
-            IT admin).
-          </li>
-          <li>
-            <strong>A OneDrive/SharePoint folder</strong> you can share with the
-            team.
-          </li>
-          <li>
-            <strong>One named owner</strong> for the pipeline — the person who
-            holds the API key, watches for failed runs, and curates quality. For
-            iVolve this role exists explicitly; give ABAP one too.
-          </li>
-        </ul>
-
-        <div class="why">
-          <span class="label">Tip — you have a working reference</span>
-          <p>
-            The <code>ivolve-vault</code> repository is a live, working example
-            of everything in this guide. When a step feels abstract, open the
-            corresponding file there (its <code>CLAUDE.md</code>, its
-            <code>.github/workflows/ivolve-vault-ingest.yml</code>, its
-            <code>.github/scripts/ivolve-ingest.py</code>) and see the real
-            thing.
-          </p>
-        </div>
-      </section>
-
-      <!-- ============================================================ -->
-      <section class="phase" id="phase1">
-        <span class="phase-tag">Phase 1 · Foundation</span>
-        <h2>Create the GitHub repository</h2>
-        <p>
-          The repository is the single home for everything: wiki pages, the AI
-          rulebook, and the automation code.
-        </p>
-        <ol class="steps">
-          <li>
-            Sign in to GitHub and click
-            <strong>New repository</strong> (github.com/new).
-          </li>
-          <li>
-            Owner: your organization (not a personal account, if you can avoid
-            it). Name: <code>abap-vault</code>.
-          </li>
-          <li>
-            Visibility: <strong>Private</strong>. This wiki will contain
-            internal project knowledge.
-          </li>
-          <li>
-            Tick <strong>Add a README file</strong> so the repo isn't empty,
-            then click <strong>Create repository</strong>.
-          </li>
-          <li>
-            Invite your teammates: repo →
-            <strong>Settings → Collaborators → Add people</strong>. Everyone who
-            will read or edit through Obsidian needs <em>Write</em> access.
-          </li>
-          <li>
-            Confirm Actions are allowed:
-            <strong>Settings → Actions → General → Allow all actions</strong>,
-            and under <em>Workflow permissions</em> select
-            <strong>Read and write permissions</strong> (the pipeline must be
-            able to commit the pages it writes).
-          </li>
-        </ol>
-        <div class="win">
-          <span class="label">✓ Win #1</span>
-          <p>
-            You have a private repository named <code>abap-vault</code>, your
-            team is invited, and Actions can write to it. The wiki has a home.
-          </p>
-        </div>
-      </section>
-
-      <!-- ============================================================ -->
-      <section class="phase" id="phase2">
-        <span class="phase-tag">Phase 2 · The brain</span>
-        <h2>Design the knowledge structure &amp; write the constitution</h2>
-        <p>
-          This is the most important phase, and the only one that is genuinely
-          <em>design</em> work rather than setup work. The
-          <code>CLAUDE.md</code> file at the root of the repo is the AI's
-          operating manual — every time the pipeline runs, Claude reads it and
-          follows it literally. Get this right and the wiki stays clean for
-          years; get it wrong and you get a junk drawer.
-        </p>
-
-        <h3>2a — Decide your zones (do this as a 1-hour team workshop)</h3>
-        <p>
-          A "zone" is a top-level folder with a clear purpose. iVolve's zones
-          are sales-shaped (offerings, pursuits, customers). ABAP is a technical
-          delivery project, so the zones should be shaped around
-          <em>what the team will want to retrieve</em>. A sensible starting
-          point:
-        </p>
-        <div class="tablewrap">
-          <table>
-            <tr>
-              <th>Zone</th>
-              <th>Holds</th>
-              <th>Example pages</th>
-            </tr>
-            <tr>
-              <td><code>01-standards/</code></td>
-              <td>
-                Stable reference — coding standards, naming conventions,
-                architecture principles, environment/landscape docs. Changes
-                rarely.
-              </td>
-              <td><code>Standard - ABAP Naming Conventions.md</code></td>
-            </tr>
-            <tr>
-              <td><code>02-workstreams/</code></td>
-              <td>
-                Active work — one subfolder per workstream or module, containing
-                meetings, decisions, open questions, stakeholder notes.
-              </td>
-              <td>
-                <code
-                  >Decisions/OTC/Decision - OTC - Custom BAPI approach -
-                  2026-07-15.md</code
+            <div class="why">
+              <span class="label">Tip — you have a working reference</span>
+              <p>
+                Our
+                <a href="https://github.com/t-labs-buy/abap-wiki"
+                  ><code>abap-wiki</code></a
                 >
-              </td>
-            </tr>
-            <tr>
-              <td><code>03-intelligence/</code></td>
-              <td>
-                Reusable learnings — patterns seen twice or more, lessons
-                learned, FAQs, gotchas.
-              </td>
-              <td><code>Pattern - IDoc error handling.md</code></td>
-            </tr>
-            <tr>
-              <td><code>04-internal/</code></td>
-              <td>
-                Team operations — contacts, onboarding, processes, runbooks.
-              </td>
-              <td><code>Runbook - Transport release.md</code></td>
-            </tr>
-            <tr>
-              <td><code>meta/</code></td>
-              <td>System files — index, log, entity registry, dedup table.</td>
-              <td><code>meta/log.md</code></td>
-            </tr>
-            <tr>
-              <td><code>raw/</code></td>
-              <td>
-                The processing pipeline — <code>inbox/</code> for unprocessed
-                files, <code>processed/</code> for the archive.
-              </td>
-              <td>—</td>
-            </tr>
-          </table>
-        </div>
-        <p>
-          Adjust the middle two zones to your project's reality; keep
-          <code>meta/</code> and <code>raw/</code> exactly as-is (the pipeline
-          code depends on them).
-        </p>
+                repository is the live, working implementation of everything in
+                this guide. When a step feels abstract, open the corresponding
+                file there (its <code>CLAUDE.md</code>, its
+                <code>.github/workflows/abap-wiki-ingest.yml</code>, its
+                <code>.github/scripts/abap-ingest.py</code>) and see the real
+                thing.
+              </p>
+            </div>
+          </section>
 
-        <h3>2b — Write CLAUDE.md: keep the engine, replace the content</h3>
-        <p>
-          Start from iVolve's <code>CLAUDE.md</code> and treat it as two layers.
-          The <strong>engine</strong> — sections the pipeline depends on — must
-          survive in some form. The <strong>content</strong> — iVolve's specific
-          folders, customers and offerings — gets replaced with your ABAP
-          equivalents.
-        </p>
-        <div class="tablewrap">
-          <table>
-            <tr>
-              <th>Keep (engine)</th>
-              <th>Replace (content)</th>
-            </tr>
-            <tr>
-              <td style="white-space: normal">
-                Frontmatter schema · naming rules · linking rules ("never create
-                floating pages") · ingestion workflow &amp; update order ·
-                deduplication logic · the pre-create entity normalization check
-                · the quality bar
-              </td>
-              <td style="white-space: normal">
-                Zone names and folder trees · page types (pursuit → workstream,
-                customer → module, etc.) · templates · examples · team roles and
-                names
-              </td>
-            </tr>
-          </table>
-        </div>
-        <p>
-          A minimal starter frontmatter block every page must carry (copy
-          verbatim into your constitution):
-        </p>
-        <pre>
+          <!-- ============================================================ -->
+          <section class="phase" id="phase1">
+            <span class="phase-tag">Phase 1 · Foundation</span>
+            <h2>Create the GitHub repository</h2>
+            <div class="phase-meta">
+              <span class="chip">Who — <strong>pipeline owner</strong></span>
+              <span class="chip">Time — <strong>~15 min</strong></span>
+            </div>
+            <p>
+              The repository is the single home for everything: wiki pages, the
+              AI rulebook, and the automation code.
+            </p>
+            <ol class="steps">
+              <li>
+                Sign in to GitHub and click
+                <strong>New repository</strong> (github.com/new).
+              </li>
+              <li>
+                Owner: your organization (not a personal account, if you can
+                avoid it). Name: <code>abap-wiki</code> — ours lives at
+                <a href="https://github.com/t-labs-buy/abap-wiki"
+                  >github.com/t-labs-buy/abap-wiki</a
+                >.
+              </li>
+              <li>
+                Visibility: <strong>Private</strong>. This wiki will contain
+                internal project knowledge.
+              </li>
+              <li>
+                Tick <strong>Add a README file</strong> so the repo isn't empty,
+                then click <strong>Create repository</strong>.
+              </li>
+              <li>
+                Invite your teammates: repo →
+                <strong>Settings → Collaborators → Add people</strong>. Everyone
+                who will read or edit through Obsidian needs
+                <em>Write</em> access.
+              </li>
+              <li>
+                Confirm Actions are allowed:
+                <strong>Settings → Actions → General → Allow all actions</strong
+                >, and under <em>Workflow permissions</em> select
+                <strong>Read and write permissions</strong> (the pipeline must
+                be able to commit the pages it writes).
+              </li>
+            </ol>
+            <div class="win">
+              <span class="label">✓ Win #1</span>
+              <p>
+                You have a private repository named <code>abap-wiki</code>, your
+                team is invited, and Actions can write to it. The wiki has a
+                home.
+              </p>
+            </div>
+          </section>
+
+          <!-- ============================================================ -->
+          <section class="phase" id="phase2">
+            <span class="phase-tag">Phase 2 · The brain</span>
+            <h2>Design the knowledge structure &amp; write the constitution</h2>
+            <div class="phase-meta">
+              <span class="chip"
+                >Who — <strong>whole team workshop</strong></span
+              >
+              <span class="chip">Time — <strong>1–2 hours</strong></span>
+            </div>
+            <p>
+              This is the most important phase, and the only one that is
+              genuinely
+              <em>design</em> work rather than setup work. The
+              <code>CLAUDE.md</code> file at the root of the repo is the AI's
+              operating manual — every time the pipeline runs, Claude reads it
+              and follows it literally. Get this right and the wiki stays clean
+              for years; get it wrong and you get a junk drawer.
+            </p>
+
+            <h3>2a — Decide your zones (do this as a 1-hour team workshop)</h3>
+            <p>
+              A "zone" is a top-level folder with a clear purpose. A sales
+              project's zones might be sales-shaped (offerings, pursuits,
+              customers); ABAP is a technical delivery project, so the zones
+              should be shaped around
+              <em>what the team will want to retrieve</em>. A sensible starting
+              point:
+            </p>
+            <div class="tablewrap">
+              <table>
+                <tr>
+                  <th>Zone</th>
+                  <th>Holds</th>
+                  <th>Example pages</th>
+                </tr>
+                <tr>
+                  <td><code>01-standards/</code></td>
+                  <td>
+                    Stable reference — coding standards, naming conventions,
+                    architecture principles, environment/landscape docs. Changes
+                    rarely.
+                  </td>
+                  <td><code>Standard - ABAP Naming Conventions.md</code></td>
+                </tr>
+                <tr>
+                  <td><code>02-workstreams/</code></td>
+                  <td>
+                    Active work — one subfolder per workstream or module,
+                    containing meetings, decisions, open questions, stakeholder
+                    notes.
+                  </td>
+                  <td>
+                    <code
+                      >Decisions/OTC/Decision - OTC - Custom BAPI approach -
+                      2026-07-15.md</code
+                    >
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>03-intelligence/</code></td>
+                  <td>
+                    Reusable learnings — patterns seen twice or more, lessons
+                    learned, FAQs, gotchas.
+                  </td>
+                  <td><code>Pattern - IDoc error handling.md</code></td>
+                </tr>
+                <tr>
+                  <td><code>04-internal/</code></td>
+                  <td>
+                    Team operations — contacts, onboarding, processes, runbooks.
+                  </td>
+                  <td><code>Runbook - Transport release.md</code></td>
+                </tr>
+                <tr>
+                  <td><code>meta/</code></td>
+                  <td>
+                    System files — index, log, entity registry, dedup table.
+                  </td>
+                  <td><code>meta/log.md</code></td>
+                </tr>
+                <tr>
+                  <td><code>raw/</code></td>
+                  <td>
+                    The processing pipeline — <code>inbox/</code> for
+                    unprocessed files, <code>processed/</code> for the archive.
+                  </td>
+                  <td>—</td>
+                </tr>
+              </table>
+            </div>
+            <p>
+              Adjust the middle two zones to your project's reality; keep
+              <code>meta/</code> and <code>raw/</code> exactly as-is (the
+              pipeline code depends on them).
+            </p>
+
+            <h3>2b — Write CLAUDE.md: keep the engine, replace the content</h3>
+            <p>
+              Our constitution lives at the root of
+              <a href="https://github.com/t-labs-buy/abap-wiki"
+                ><code>abap-wiki</code></a
+              >
+              as <code>CLAUDE.md</code>. Treat it as two layers. The
+              <strong>engine</strong> — sections the pipeline depends on — must
+              survive in some form. The <strong>content</strong> — the
+              project-specific folders, modules and workstreams — is what gets
+              replaced when you reuse this setup for a future project.
+            </p>
+            <div class="tablewrap">
+              <table>
+                <tr>
+                  <th>Keep (engine)</th>
+                  <th>Replace (content)</th>
+                </tr>
+                <tr>
+                  <td style="white-space: normal">
+                    Frontmatter schema · naming rules · linking rules ("never
+                    create floating pages") · ingestion workflow &amp; update
+                    order · deduplication logic · the pre-create entity
+                    normalization check · the quality bar
+                  </td>
+                  <td style="white-space: normal">
+                    Zone names and folder trees · page types · templates ·
+                    examples · team roles and names
+                  </td>
+                </tr>
+              </table>
+            </div>
+            <p>
+              A minimal starter frontmatter block every page must carry (copy
+              verbatim into your constitution):
+            </p>
+            <pre>
 ---
 title: ""
 type: ""            # standard, decision, meeting, pattern, faq, runbook ...
@@ -971,250 +1262,337 @@ workstream: ""      # if applicable
 tags: []
 source_files: []    # raw files ingested into this page
 ---</pre>
-        <div class="why">
-          <span class="label">Why a "constitution" at all?</span>
-          <p>
-            Without written rules, every ingestion run makes its own filing
-            decisions — and 100 runs later you have five spellings of the same
-            module name and duplicate pages everywhere. The constitution turns
-            the AI from a clever intern into a disciplined librarian. iVolve's
-            core rules —
-            <em
-              >update existing pages instead of creating duplicates, every page
-              links upward to a parent, meetings are source material not final
-              artifacts</em
-            >
-            — earned their place through real use. Keep them.
-          </p>
-        </div>
-        <div class="win">
-          <span class="label">✓ Win #2</span>
-          <p>
-            Your team agrees on the zones, and a first-draft
-            <code>CLAUDE.md</code> for ABAP exists. The wiki now has a brain.
-          </p>
-        </div>
-      </section>
+            <div class="why">
+              <span class="label">Why a "constitution" at all?</span>
+              <p>
+                Without written rules, every ingestion run makes its own filing
+                decisions — and 100 runs later you have five spellings of the
+                same module name and duplicate pages everywhere. The
+                constitution turns the AI from a clever intern into a
+                disciplined librarian. Its core rules —
+                <em
+                  >update existing pages instead of creating duplicates, every
+                  page links upward to a parent, meetings are source material
+                  not final artifacts</em
+                >
+                — earned their place through real use. Keep them.
+              </p>
+            </div>
+            <div class="win">
+              <span class="label">✓ Win #2</span>
+              <p>
+                Your team agrees on the zones, and a first-draft
+                <code>CLAUDE.md</code> for ABAP exists. The wiki now has a
+                brain.
+              </p>
+            </div>
+          </section>
 
-      <!-- ============================================================ -->
-      <section class="phase" id="phase3">
-        <span class="phase-tag">Phase 3 · The skeleton</span>
-        <h2>Build the vault skeleton</h2>
-        <p>
-          Now put the structure into the repo. If you're comfortable with Git,
-          clone the repo and create folders locally; otherwise you can create
-          files directly on github.com (<strong
-            >Add file → Create new file</strong
-          >
-          — typing <code>folder/filename.md</code> creates the folder too).
-        </p>
-        <ol class="steps">
-          <li>
-            Create every zone folder from your Phase 2 design, plus
-            <code>raw/inbox/</code>, <code>raw/processed/</code>, and
-            <code>meta/</code>. Git doesn't store empty folders, so put a short
-            <code>README.md</code> in each explaining what belongs there.
-          </li>
-          <li>Add <code>CLAUDE.md</code> at the repo root.</li>
-          <li>
-            Create the meta files the pipeline reads and writes:
-            <ul>
+          <!-- ============================================================ -->
+          <section class="phase" id="phase3">
+            <span class="phase-tag">Phase 3 · The skeleton</span>
+            <h2>Build the vault skeleton</h2>
+            <div class="phase-meta">
+              <span class="chip">Who — <strong>pipeline owner</strong></span>
+              <span class="chip">Time — <strong>~30 min</strong></span>
+            </div>
+            <p>
+              Now put the structure into the repo. If you're comfortable with
+              Git, clone the repo and create folders locally; otherwise you can
+              create files directly on github.com (<strong
+                >Add file → Create new file</strong
+              >
+              — typing <code>folder/filename.md</code> creates the folder too).
+            </p>
+            <ol class="steps">
               <li>
-                <code>meta/index.md</code> — the master navigation page, updated
-                on every ingest.
+                Create every zone folder from your Phase 2 design, plus
+                <code>raw/inbox/</code>, <code>raw/processed/</code>, and
+                <code>meta/</code>. Git doesn't store empty folders, so put a
+                short <code>README.md</code> in each explaining what belongs
+                there.
+              </li>
+              <li>Add <code>CLAUDE.md</code> at the repo root.</li>
+              <li>
+                Create the meta files the pipeline reads and writes:
+                <ul>
+                  <li>
+                    <code>meta/index.md</code> — the master navigation page,
+                    updated on every ingest.
+                  </li>
+                  <li>
+                    <code>meta/log.md</code> — append-only history of what was
+                    ingested when.
+                  </li>
+                  <li>
+                    <code>meta/inbox.md</code> — the dedup table of
+                    already-processed files.
+                  </li>
+                  <li>
+                    <code>meta/entities.md</code> — the registry of canonical
+                    names (module names, system names, vendor names) and their
+                    aliases. Seed it with the ABAP project's known modules and
+                    systems so the AI never invents a second spelling.
+                  </li>
+                </ul>
               </li>
               <li>
-                <code>meta/log.md</code> — append-only history of what was
-                ingested when.
+                Add a <code>_Template-*.md</code> file inside each folder where
+                pages will be created (a template for decisions, one for
+                meetings, one for patterns…). Templates live
+                <em>next to</em> the pages they shape, so both humans and the AI
+                see them at the point of use.
               </li>
-              <li>
-                <code>meta/inbox.md</code> — the dedup table of
-                already-processed files.
-              </li>
-              <li>
-                <code>meta/entities.md</code> — the registry of canonical names
-                (module names, system names, vendor names) and their aliases.
-                Seed it with the ABAP project's known modules and systems so the
-                AI never invents a second spelling.
-              </li>
-            </ul>
-          </li>
-          <li>
-            Add a <code>_Template-*.md</code> file inside each folder where
-            pages will be created (a template for decisions, one for meetings,
-            one for patterns…). Templates live <em>next to</em> the pages they
-            shape, so both humans and the AI see them at the point of use.
-          </li>
-        </ol>
-        <div class="win">
-          <span class="label">✓ Win #3</span>
-          <p>
-            Browsing the repo on github.com shows your full folder structure
-            with templates in place. It already looks like a wiki — it just
-            doesn't write itself yet.
-          </p>
-        </div>
-      </section>
+            </ol>
+            <div class="win">
+              <span class="label">✓ Win #3</span>
+              <p>
+                Browsing the repo on github.com shows your full folder structure
+                with templates in place. It already looks like a wiki — it just
+                doesn't write itself yet.
+              </p>
+            </div>
+          </section>
 
-      <!-- ============================================================ -->
-      <section class="phase" id="phase4">
-        <span class="phase-tag">Phase 4 · The reading room</span>
-        <h2>Set up Obsidian for reading and editing</h2>
-        <p>
-          Each team member does this once on their own laptop. It mirrors the
-          iVolve onboarding guide, pointed at the new repo. (Steps for the
-          person setting up; share this section with every teammate later.)
-        </p>
-        <ol class="steps">
-          <li>
-            <strong>Install Git</strong> — check with
-            <code>git --version</code> in Terminal/Command Prompt; if missing,
-            install from <a href="https://git-scm.com">git-scm.com</a> (Windows:
-            all default settings; Mac: <code>xcode-select --install</code>).
-          </li>
-          <li>
-            <strong>Tell Git who you are</strong> (one time):
-            <pre>
+          <!-- ============================================================ -->
+          <section class="phase" id="phase4">
+            <span class="phase-tag">Phase 4 · The reading room</span>
+            <h2>Set up Obsidian for reading and editing</h2>
+            <div class="phase-meta">
+              <span class="chip">Who — <strong>every team member</strong></span>
+              <span class="chip">Time — <strong>~20 min each</strong></span>
+            </div>
+            <p>
+              Each team member does this once on their own laptop. (Steps for
+              the person setting up; share this section with every teammate
+              later.)
+            </p>
+            <ol class="steps">
+              <li>
+                <strong>Install Git</strong> — check with
+                <code>git --version</code> in Terminal/Command Prompt; if
+                missing, install from
+                <a href="https://git-scm.com">git-scm.com</a> (Windows: all
+                default settings; Mac: <code>xcode-select --install</code>).
+              </li>
+              <li>
+                <strong>Tell Git who you are</strong> (one time):
+                <pre>
 git config --global user.name "Your Name"
 git config --global user.email "you@yourcompany.com"</pre>
-          </li>
-          <li>
-            <strong>Clone the vault</strong>:
-            <code
-              >git clone
-              https://github.com/&lt;your-org&gt;/abap-vault.git</code
-            >. GitHub will ask you to sign in via the browser; Mac users may
-            need a Personal Access Token (github.com → Settings → Developer
-            settings → Personal access tokens).
-          </li>
-          <li>
-            <strong>Install Obsidian</strong> from
-            <a href="https://obsidian.md">obsidian.md</a> (free), choose
-            <strong>Open folder as vault</strong>, and select the
-            <code>abap-vault</code> folder you just cloned — the folder itself,
-            not its parent.
-          </li>
-          <li>
-            <strong>Install the Obsidian Git plugin</strong>: Settings →
-            Community plugins → Browse → search "Obsidian Git" → Install →
-            Enable.
-          </li>
-          <li>
-            <strong>Configure auto-sync</strong> in the plugin's settings:
-            <div class="tablewrap">
-              <table>
-                <tr>
-                  <th>Setting</th>
-                  <th>Value</th>
-                </tr>
-                <tr>
-                  <td>Auto commit-and-sync interval</td>
-                  <td>5 (minutes)</td>
-                </tr>
-                <tr>
-                  <td>Pull on startup</td>
-                  <td>Enabled</td>
-                </tr>
-                <tr>
-                  <td>Merge strategy on conflicts</td>
-                  <td>Ours</td>
-                </tr>
-                <tr>
-                  <td>Push on commit-and-sync</td>
-                  <td>Enabled</td>
-                </tr>
-                <tr>
-                  <td>Pull on commit-and-sync</td>
-                  <td>Enabled</td>
-                </tr>
-              </table>
+              </li>
+              <li>
+                <strong>Clone the vault</strong>:
+                <code
+                  >git clone https://github.com/t-labs-buy/abap-wiki.git</code
+                >. GitHub will ask you to sign in via the browser; Mac users may
+                need a Personal Access Token (github.com → Settings → Developer
+                settings → Personal access tokens).
+              </li>
+              <li>
+                <strong>Install Obsidian</strong> from
+                <a href="https://obsidian.md">obsidian.md</a> (free), choose
+                <strong>Open folder as vault</strong>, and select the
+                <code>abap-wiki</code> folder you just cloned — the folder
+                itself, not its parent.
+              </li>
+              <li>
+                <strong>Install the Obsidian Git plugin</strong>: Settings →
+                Community plugins → Browse → search "Git" and you will find this
+                repo
+                <a href="https://github.com/vinzent03/obsidian-git"
+                  >https://github.com/vinzent03/obsidian-git</a
+                >
+                → Install → Enable.
+              </li>
+              <li>
+                <strong>Configure auto-sync</strong> in the plugin's settings:
+                <div class="tablewrap">
+                  <table>
+                    <tr>
+                      <th>Setting</th>
+                      <th>Value</th>
+                    </tr>
+                    <tr>
+                      <td>Auto commit-and-sync interval</td>
+                      <td>5 (minutes)</td>
+                    </tr>
+                    <tr>
+                      <td>Pull on startup</td>
+                      <td>Enabled</td>
+                    </tr>
+                    <tr>
+                      <td>Merge strategy on conflicts</td>
+                      <td>Ours</td>
+                    </tr>
+                    <tr>
+                      <td>Push on commit-and-sync</td>
+                      <td>Enabled</td>
+                    </tr>
+                    <tr>
+                      <td>Pull on commit-and-sync</td>
+                      <td>Enabled</td>
+                    </tr>
+                  </table>
+                </div>
+              </li>
+              <li>
+                <strong>Verify</strong>: edit any page (add and remove a space),
+                wait five minutes, then check
+                github.com/t-labs-buy/abap-wiki/commits — a commit with your
+                name should appear.
+              </li>
+            </ol>
+            <div class="qa">
+              <p class="q">
+                Why Obsidian at all? What problem does it solve — do we really
+                need it?
+              </p>
+              <p>
+                Obsidian is the <strong>reading room</strong> of this system.
+                Strictly speaking, the automation works without it — but without
+                it, the team's only window into the wiki would be GitHub's file
+                browser. It earns its place in three ways:
+              </p>
+              <div class="cards">
+                <div class="card">
+                  <span class="card-title">1 · A navigable knowledge web</span>
+                  The whole constitution is built on <code>[[wikilinks]]</code>.
+                  On github.com,
+                  <code>[[Decision - OTC - Custom BAPI approach]]</code> is dead
+                  text; in Obsidian it's a clickable connection, with backlinks
+                  ("what links here?") and a graph view of how topics cluster.
+                  GitHub shows files; Obsidian shows <em>knowledge</em>.
+                </div>
+                <div class="card">
+                  <span class="card-title">2 · No Git knowledge needed</span>
+                  Contributors are ABAP consultants and functional experts, not
+                  Git users. With the Git plugin auto-syncing, a teammate edits
+                  a page like a normal document — pull, commit, merge, push all
+                  invisible. Without that, corrections would need Git skills, so
+                  in practice they wouldn't happen. That's how vaults rot.
+                </div>
+                <div class="card">
+                  <span class="card-title"
+                    >3 · Fast enough to become a habit</span
+                  >
+                  Instant full-text search, offline access on every laptop,
+                  folders that mirror the zones. The wiki only compounds if
+                  "check the vault first" beats "ask a colleague" — and that
+                  habit only forms if lookup takes seconds.
+                </div>
+              </div>
+              <p>Division of labor — each tool has exactly one job:</p>
+              <div class="tablewrap">
+                <table>
+                  <tr>
+                    <th>Concern</th>
+                    <th>Handled by</th>
+                  </tr>
+                  <tr>
+                    <td>Storage, history, multi-user conflict safety</td>
+                    <td>Git/GitHub</td>
+                  </tr>
+                  <tr>
+                    <td>Writing and filing knowledge automatically</td>
+                    <td>Claude + the ingest pipeline</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Humans reading, browsing links, and correcting pages
+                    </td>
+                    <td>Obsidian</td>
+                  </tr>
+                  <tr>
+                    <td>Asking questions in plain English</td>
+                    <td>Claude Code</td>
+                  </tr>
+                </table>
+              </div>
+              <p>
+                Could you skip it? Technically yes — but you'd have a wiki
+                written by a machine and read by almost no one, with mistakes
+                nobody corrects. Obsidian closes the human half of the loop: the
+                difference between a wiki your team <em>has</em> and one it
+                <em>actually uses</em>.
+              </p>
             </div>
-          </li>
-          <li>
-            <strong>Verify</strong>: edit any page (add and remove a space),
-            wait five minutes, then check
-            github.com/&lt;your-org&gt;/abap-vault/commits — a commit with your
-            name should appear.
-          </li>
-        </ol>
-        <div class="why">
-          <span class="label">Why Obsidian and not just GitHub's website?</span>
-          <p>
-            GitHub shows files; Obsidian shows <em>knowledge</em>. It renders
-            <code>[[wikilinks]]</code> as clickable connections, offers a graph
-            view of how pages relate, full-text search, and a pleasant editor.
-            The Git plugin makes the whole thing feel like a shared live
-            notebook — everyone's copy syncs itself every five minutes with zero
-            Git knowledge required.
-          </p>
-        </div>
-        <div class="win">
-          <span class="label">✓ Win #4</span>
-          <p>
-            Your vault opens in Obsidian, and a test edit shows up on GitHub
-            within five minutes. Humans are connected.
-          </p>
-        </div>
-      </section>
+            <div class="win">
+              <span class="label">✓ Win #4</span>
+              <p>
+                Your vault opens in Obsidian, and a test edit shows up on GitHub
+                within five minutes. Humans are connected.
+              </p>
+            </div>
+          </section>
 
-      <!-- ============================================================ -->
-      <section class="phase" id="phase5">
-        <span class="phase-tag">Phase 5 · The engine</span>
-        <h2>Build the AI ingestion pipeline</h2>
-        <p>
-          This is the automation heart: a GitHub Actions workflow that runs a
-          Python script, which sends new documents to Claude and commits the
-          resulting wiki updates. You will copy iVolve's working code and adapt
-          it — do not write this from scratch.
-        </p>
+          <!-- ============================================================ -->
+          <section class="phase" id="phase5">
+            <span class="phase-tag">Phase 5 · The engine</span>
+            <h2>Build the AI ingestion pipeline</h2>
+            <div class="phase-meta">
+              <span class="chip">Who — <strong>pipeline owner</strong></span>
+              <span class="chip">Time — <strong>1–2 hours</strong></span>
+            </div>
+            <p>
+              This is the automation heart: a GitHub Actions workflow that runs
+              a Python script, which sends new documents to Claude and commits
+              the resulting wiki updates. The working code lives in the
+              <a href="https://github.com/t-labs-buy/abap-wiki"
+                ><code>abap-wiki</code></a
+              >
+              repo — copy and adapt it; do not write this from scratch.
+            </p>
 
-        <h3>5a — Get an Anthropic API key</h3>
-        <ol class="steps">
-          <li>
-            Create an account at
-            <a href="https://console.anthropic.com">console.anthropic.com</a>
-            (use a team/shared org, not a personal account) and add a payment
-            method under <strong>Billing</strong>.
-          </li>
-          <li>
-            Go to <strong>API Keys → Create Key</strong>. Name it
-            <code>abap-vault-ingest</code>. Copy the key immediately — it is
-            shown only once.
-          </li>
-          <li>
-            Set a monthly spend limit in the console (e.g. $50) so a runaway job
-            can never surprise you.
-          </li>
-        </ol>
+            <h3>5a — Get an Anthropic API key</h3>
+            <ol class="steps">
+              <li>
+                Create an account at
+                <a href="https://console.anthropic.com"
+                  >console.anthropic.com</a
+                >
+                (use a team/shared org, not a personal account) and add a
+                payment method under <strong>Billing</strong>.
+              </li>
+              <li>
+                Go to <strong>API Keys → Create Key</strong>. Name it
+                <code>abap-wiki-ingest</code>. Copy the key immediately — it is
+                shown only once.
+              </li>
+              <li>
+                Set a monthly spend limit in the console (e.g. $50) so a runaway
+                job can never surprise you.
+              </li>
+            </ol>
 
-        <h3>5b — Store the key as a GitHub secret</h3>
-        <p>
-          In the repo:
-          <strong
-            >Settings → Secrets and variables → Actions → New repository
-            secret</strong
-          >. Name: <code>ANTHROPIC_API_KEY</code>. Value: the key you copied.
-          Secrets are encrypted; nobody (including collaborators) can read them
-          back.
-        </p>
-        <div class="warn">
-          <span class="label">Never paste the key anywhere else</span>
-          <p>
-            Not in the code, not in a wiki page, not in chat. The GitHub secret
-            is its only home. If a key ever leaks, delete it in the Anthropic
-            console and create a new one.
-          </p>
-        </div>
+            <h3>5b — Store the key as a GitHub secret</h3>
+            <p>
+              In the repo:
+              <strong
+                >Settings → Secrets and variables → Actions → New repository
+                secret</strong
+              >. Name: <code>ANTHROPIC_API_KEY</code>. Value: the key you
+              copied. Secrets are encrypted; nobody (including collaborators)
+              can read them back.
+            </p>
+            <div class="warn">
+              <span class="label">Never paste the key anywhere else</span>
+              <p>
+                Not in the code, not in a wiki page, not in chat. The GitHub
+                secret is its only home. If a key ever leaks, delete it in the
+                Anthropic console and create a new one.
+              </p>
+            </div>
 
-        <h3>5c — Add the workflow file</h3>
-        <p>
-          Create <code>.github/workflows/abap-vault-ingest.yml</code> in the
-          repo with this content (adapted from iVolve's, with one improvement:
-          it also triggers automatically whenever a file is pushed into
-          <code>raw/inbox/</code>, so no separate "dispatch" step is needed):
-        </p>
-        <pre>
-name: ABAP Vault Ingest
+            <h3>5c — Add the workflow file</h3>
+            <p>
+              Create <code>.github/workflows/abap-wiki-ingest.yml</code> in the
+              repo with this content (it triggers automatically whenever a file
+              is pushed into <code>raw/inbox/</code>, so no separate "dispatch"
+              step is needed):
+            </p>
+            <pre>
+name: ABAP Wiki Ingest
 
 on:
   push:
@@ -1225,7 +1603,7 @@ on:
   workflow_dispatch:           # manual "Run workflow" button
 
 concurrency:
-  group: vault-ingest
+  group: wiki-ingest
   cancel-in-progress: false    # runs queue up instead of colliding
 
 permissions:
@@ -1253,407 +1631,1071 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: python .github/scripts/abap-ingest.py
 
-      - name: Commit and push vault updates
+      - name: Commit and push wiki updates
         run: |
-          git config user.name "ABAP Vault"
-          git config user.email "abap-vault@yourcompany.com"
+          git config user.name "ABAP Wiki"
+          git config user.email "abap-wiki@yourcompany.com"
           git add -A
-          git diff --staged --quiet || git commit -m "ABAP Vault: auto-ingest $(date +%Y-%m-%d)"
+          git diff --staged --quiet || git commit -m "ABAP Wiki: auto-ingest $(date +%Y-%m-%d)"
           git pull --rebase origin main
           git push</pre>
 
-        <h3>5d — Adapt the ingestion script</h3>
-        <p>
-          Copy <code>.github/scripts/ivolve-ingest.py</code> from the iVolve
-          repo into your repo as <code>.github/scripts/abap-ingest.py</code>,
-          then make these changes (ask the iVolve developer to pair with you for
-          30 minutes here — it's the highest-leverage half hour of the whole
-          setup):
-        </p>
-        <ul>
-          <li>
-            <strong>Model</strong> — set the model to
-            <code>claude-opus-4-8</code> (the current Opus model; iVolve's
-            script pins an older Sonnet). One line in the
-            <code>call_claude</code> function.
-          </li>
-          <li>
-            <strong>Prompt text</strong> — the script's prompt says "You are the
-            iVolve Vault AI…" and names iVolve's zones. Rewrite those sentences
-            for ABAP and your Phase 2 zones.
-          </li>
-          <li>
-            <strong>Path validation</strong> — the script has a list of folders
-            it's allowed to write into (<code>is_valid_vault_path</code>).
-            Update it to your zone names.
-          </li>
-          <li>
-            Everything else — file readers for PDF/PPTX/DOCX/XLSX, dedup against
-            <code>meta/inbox.md</code>, chunking, the move-to-processed step —
-            works unchanged.
-          </li>
-        </ul>
-
-        <h3>5e — Test it</h3>
-        <ol class="steps">
-          <li>
-            Put a small test document (a one-page meeting note, as PDF or .txt)
-            into <code>raw/inbox/</code> — commit it via Obsidian or upload it
-            on github.com into that folder.
-          </li>
-          <li>
-            Watch the run under the repo's <strong>Actions</strong> tab. Green
-            check = success.
-          </li>
-          <li>
-            Check the results: new/updated pages in the right zone, an entry in
-            <code>meta/log.md</code>, the test file moved to
-            <code>raw/processed/</code>.
-          </li>
-          <li>
-            If the run fails, open it in the Actions tab — the log shows the
-            exact Python error. The three usual suspects: a typo in the secret
-            name, the model string, or a folder the script expected that doesn't
-            exist.
-          </li>
-        </ol>
-
-        <div class="why">
-          <span class="label">What does this cost?</span>
-          <p>
-            With Claude Opus 4.8 ($5 per million input tokens, $25 per million
-            output tokens), a typical document — a 10-page transcript or a
-            30-slide deck — costs roughly <strong>$0.15–$0.60</strong> to
-            ingest. A team feeding the wiki 30–50 documents a month lands
-            somewhere around <strong>$10–$30/month</strong>. The spend limit you
-            set in 5a is your hard ceiling. GitHub Actions itself is free at
-            this scale for private repos (2,000 minutes/month included).
-          </p>
-        </div>
-        <div class="win">
-          <span class="label">✓ Win #5</span>
-          <p>
-            A document placed in <code>raw/inbox/</code> is automatically read
-            by Claude and turned into linked wiki pages, with a log entry to
-            prove it. The wiki now writes itself.
-          </p>
-        </div>
-      </section>
-
-      <!-- ============================================================ -->
-      <section class="phase" id="phase6">
-        <span class="phase-tag">Phase 6 · The bridge</span>
-        <h2>Connect OneDrive with Power Automate</h2>
-        <p>
-          Right now, feeding the wiki requires putting files into a GitHub
-          folder. This phase gives contributors what they actually want:
-          <em>drop a file into OneDrive, walk away</em>. Power Automate watches
-          the folder and pushes each new file into the repo's
-          <code>raw/inbox/</code> — which (thanks to Phase 5's
-          <code>push</code> trigger) automatically starts the ingestion.
-        </p>
-
-        <h3>6a — Create the drop-zone and a GitHub token</h3>
-        <ol class="steps">
-          <li>
-            In SharePoint or OneDrive, create a shared folder, e.g.
-            <code>ABAP_Vault/Inbox</code>, and share it with the team ("anyone
-            drops project documents here").
-          </li>
-          <li>
-            On GitHub, create a
-            <strong>fine-grained Personal Access Token</strong> for the flow:
-            github.com → Settings → Developer settings → Fine-grained tokens →
-            Generate. Scope it to <em>only</em> the
-            <code>abap-vault</code> repository with
-            <strong>Contents: Read and write</strong> permission. Set a 1-year
-            expiry and put a reminder in your calendar to rotate it.
-          </li>
-        </ol>
-
-        <h3>6b — Build the flow (about 20 minutes)</h3>
-        <p>
-          In
-          <a href="https://make.powerautomate.com">make.powerautomate.com</a>,
-          create an <strong>Automated cloud flow</strong>:
-        </p>
-        <ol class="steps">
-          <li>
-            <strong>Trigger</strong>:
-            <em>"When a file is created (properties only)"</em> (SharePoint
-            connector), pointed at your <code>ABAP_Vault/Inbox</code> folder.
-            Note: it only watches that exact folder, not subfolders.
-          </li>
-          <li>
-            <strong>Action — Get file content</strong> (SharePoint), using the
-            identifier from the trigger.
-          </li>
-          <li>
-            <strong>Action — HTTP</strong> (this is the premium connector):
+            <h3>5d — Adapt the ingestion script</h3>
+            <p>
+              The ingestion script lives at
+              <code>.github/scripts/abap-ingest.py</code> in the
+              <code>abap-wiki</code> repo. When reusing this setup for a new
+              project, copy it and update three things (pair with whoever set up
+              the previous wiki for 30 minutes here — it's the highest-leverage
+              half hour of the whole setup):
+            </p>
             <ul>
-              <li>Method: <code>PUT</code></li>
               <li>
-                URI:
-                <code
-                  >https://api.github.com/repos/&lt;your-org&gt;/abap-vault/contents/raw/inbox/&lt;File
-                  name with extension&gt;</code
-                >
-                (insert the trigger's file-name token where shown)
+                <strong>Model</strong> — set the model to
+                <code>claude-opus-4-8</code> (the current Opus model). One line
+                in the <code>call_claude</code> function.
               </li>
               <li>
-                Headers:
-                <code
-                  >Authorization: Bearer &lt;your fine-grained token&gt;</code
-                >, <code>Accept: application/vnd.github+json</code>,
-                <code>User-Agent: abap-vault-flow</code>
+                <strong>Prompt text</strong> — the script's prompt names the
+                project and its zones ("You are the ABAP Wiki AI…"). Rewrite
+                those sentences for the new project and its Phase 2 zones.
               </li>
               <li>
-                Body:
-                <pre>
-{
-  "message": "inbox: @{triggerOutputs()?['body/{FilenameWithExtension}']}",
-  "content": "@{base64(body('Get_file_content'))}"
-}</pre>
-                GitHub's Contents API requires the file to be base64-encoded —
-                the <code>base64()</code> expression does that.
+                <strong>Path validation</strong> — the script has a list of
+                folders it's allowed to write into
+                (<code>is_valid_vault_path</code>). Update it to your zone
+                names.
+              </li>
+              <li>
+                Everything else — file readers for PDF/PPTX/DOCX/XLSX, dedup
+                against
+                <code>meta/inbox.md</code>, chunking, the move-to-processed step
+                — works unchanged.
               </li>
             </ul>
-          </li>
-          <li>
-            <strong>Optional action — Move file</strong> (SharePoint) into an
-            <code>Inbox/sent</code> subfolder, so contributors can see which
-            files have been picked up.
-          </li>
-          <li>
-            Save, then <strong>test end-to-end</strong>: drop a document into
-            the OneDrive folder → within a minute the flow runs → the file
-            appears in <code>raw/inbox/</code> on GitHub → the Actions workflow
-            starts → a few minutes later, wiki pages update.
-          </li>
-        </ol>
 
-        <div class="warn">
-          <span class="label">Two gotchas worth knowing</span>
-          <p>
-            ① The Contents API rejects a PUT if a file with the same name
-            already exists in <code>raw/inbox/</code> (it would need the
-            existing file's SHA). In practice the pipeline moves files out of
-            the inbox after processing, so collisions are rare — but tell
-            contributors to use descriptive, dated filenames. ② Files over
-            ~40&nbsp;MB won't fit through this API; for big recordings,
-            transcribe first and drop the transcript.
-          </p>
-        </div>
-        <div class="why">
-          <span class="label">Why not sync OneDrive to GitHub directly?</span>
-          <p>
-            There's no native connection between the two — this small flow
-            <em>is</em> the industry-standard bridge (SharePoint trigger →
-            GitHub REST API). An alternative wiring, which iVolve uses, is to
-            have the flow fire a GitHub "repository dispatch" event instead
-            of/alongside the upload; the <code>push</code>-trigger approach
-            above achieves the same with one moving part fewer.
-          </p>
-        </div>
-        <div class="win">
-          <span class="label">✓ Win #6</span>
-          <p>
-            Anyone in the team can drop a document into a OneDrive folder and,
-            minutes later, see the knowledge appear in the wiki — no GitHub
-            account required. The full loop is closed.
-          </p>
-        </div>
-      </section>
+            <h3>5e — Test it</h3>
+            <ol class="steps">
+              <li>
+                Put a small test document (a one-page meeting note, as PDF or
+                .txt) into <code>raw/inbox/</code> — commit it via Obsidian or
+                upload it on github.com into that folder.
+              </li>
+              <li>
+                Watch the run under the repo's <strong>Actions</strong> tab.
+                Green check = success.
+              </li>
+              <li>
+                Check the results: new/updated pages in the right zone, an entry
+                in
+                <code>meta/log.md</code>, the test file moved to
+                <code>raw/processed/</code>.
+              </li>
+              <li>
+                If the run fails, open it in the Actions tab — the log shows the
+                exact Python error. The three usual suspects: a typo in the
+                secret name, the model string, or a folder the script expected
+                that doesn't exist.
+              </li>
+            </ol>
 
-      <!-- ============================================================ -->
-      <section class="phase" id="phase7">
-        <span class="phase-tag">Phase 7 · The oracle</span>
-        <h2>Query the wiki with Claude Code</h2>
-        <p>
-          For team members with Claude Code access, the vault becomes something
-          you can talk to.
-        </p>
-        <ol class="steps">
-          <li>
-            Check Node.js: <code>node --version</code>. If missing or below v18,
-            install the LTS from <a href="https://nodejs.org">nodejs.org</a>.
-          </li>
-          <li>
-            Install Claude Code:
-            <code>npm install -g @anthropic-ai/claude-code</code>.
-          </li>
-          <li>
-            Always launch it <em>inside</em> the vault folder — it only reads
-            the folder it starts in:
-            <pre>
-cd ~/abap-vault
+            <div class="why">
+              <span class="label">What does this cost?</span>
+              <p>
+                With Claude Opus 4.8 ($5 per million input tokens, $25 per
+                million output tokens), a typical document — a 10-page
+                transcript or a 30-slide deck — costs roughly
+                <strong>$0.15–$0.60</strong> to ingest. A team feeding the wiki
+                30–50 documents a month lands somewhere around
+                <strong>$10–$30/month</strong>. The spend limit you set in 5a is
+                your hard ceiling. GitHub Actions itself is free at this scale
+                for private repos (2,000 minutes/month included).
+              </p>
+            </div>
+            <div class="win">
+              <span class="label">✓ Win #5</span>
+              <p>
+                A document placed in <code>raw/inbox/</code> is automatically
+                read by Claude and turned into linked wiki pages, with a log
+                entry to prove it. The wiki now writes itself.
+              </p>
+            </div>
+          </section>
+
+          <!-- ============================================================ -->
+          <section class="phase" id="phase6">
+            <span class="phase-tag">Phase 6 · The bridge</span>
+            <h2>Connect OneDrive with Power Automate</h2>
+            <div class="phase-meta">
+              <span class="chip">Who — <strong>pipeline owner</strong></span>
+              <span class="chip">Time — <strong>30–45 min</strong></span>
+            </div>
+            <p>
+              Right now, feeding the wiki requires putting files into a GitHub
+              folder. This phase gives contributors what they actually want:
+              <em>drop a file into OneDrive, walk away</em>. Power Automate
+              watches the folder and pushes each new file into the repo's
+              <code>raw/inbox/</code> — which (thanks to Phase 5's
+              <code>push</code> trigger) automatically starts the ingestion.
+            </p>
+
+            <h3>6a — Create the drop-zone and a GitHub token</h3>
+            <ol class="steps">
+              <li>
+                In SharePoint or OneDrive, create a shared folder — ours is
+                <code>abap_wiki/inbox</code> — and share it with the team
+                ("anyone drops project documents here").
+              </li>
+              <li>
+                On GitHub, create a
+                <strong>fine-grained Personal Access Token</strong> for the
+                flow: github.com → Settings → Developer settings → Fine-grained
+                tokens → Generate. Scope it to <em>only</em> the
+                <code>abap-wiki</code> repository with
+                <strong>Contents: Read and write</strong> permission. Set a
+                1-year expiry and put a reminder in your calendar to rotate it.
+              </li>
+            </ol>
+
+            <h3>6b — Build the flow (about 20 minutes)</h3>
+            <p>
+              <strong
+                >Before anything else, work out where your
+                <code>Inbox</code> folder from 6a actually lives</strong
+              >
+              — this decides which connector you use, and it's the #1 place
+              people get stuck (a folder in OneDrive is invisible to the
+              SharePoint connector, and vice versa):
+            </p>
+            <div class="choice">
+              <div class="choice-box a">
+                <span class="ct">Case A — OneDrive "My files"</span>
+                You created the folder at
+                <a href="https://onedrive.com">onedrive.com</a> or in the
+                OneDrive app → use the
+                <strong>OneDrive for Business</strong> connector.
+                <em
+                  >(This is our setup: <code>abap_wiki/inbox</code> — follow the
+                  Case A path throughout.)</em
+                >
+              </div>
+              <div class="choice-box b">
+                <span class="ct">Case B — SharePoint site / Teams channel</span>
+                You reach the folder through a site's
+                <strong>Documents</strong> library or a channel's
+                <strong>Files</strong> tab → use the
+                <strong>SharePoint</strong> connector. A Teams folder lives in
+                SharePoint: site = team name, library = <code>Documents</code>,
+                folder = channel name.
+              </div>
+            </div>
+            <div class="why">
+              <span class="label">Not sure which you have? Check the URL.</span>
+              <p>
+                Open the folder in your browser and look at the address bar:
+                <code>https://&lt;yourcompany&gt;-my.sharepoint.com/...</code>
+                (note the <code>-my</code>) is your personal OneDrive → use the
+                <strong>OneDrive for Business</strong> connector.
+                <code
+                  >https://&lt;yourcompany&gt;.sharepoint.com/sites/&lt;SiteName&gt;/...</code
+                >
+                is a SharePoint site → use the
+                <strong>SharePoint</strong> connector. Don't be fooled by
+                <code>sharepoint.com</code> appearing in both — OneDrive for
+                Business is hosted on SharePoint infrastructure, but Power
+                Automate's connectors treat them as two separate worlds.
+              </p>
+            </div>
+
+            <div class="step-h"><span class="n">1</span> Create the flow</div>
+            <ol class="steps">
+              <li>
+                Go to
+                <a href="https://make.powerautomate.com"
+                  >make.powerautomate.com</a
+                >
+                and sign in with your <strong>work</strong> Microsoft 365
+                account (the same one that owns the OneDrive/SharePoint folder).
+              </li>
+              <li>In the left sidebar, click <strong>+ Create</strong>.</li>
+              <li>Choose <strong>Automated cloud flow</strong>.</li>
+              <li>
+                Name it <code>ABAP Wiki Inbox to GitHub</code>, then click
+                <strong>Skip</strong> (bottom of the dialog) — you'll pick the
+                trigger in the designer where it's easier to search.
+              </li>
+            </ol>
+
+            <div class="step-h">
+              <span class="n">2</span> Add the trigger and point it at your
+              folder
+            </div>
+            <p><em>If your folder is in OneDrive (My files):</em></p>
+            <ol class="steps">
+              <li>
+                In the designer's search box, type
+                <code>when a file is created</code>, filter by the
+                <strong>OneDrive for Business</strong> connector, and select
+                <strong>When a file is created</strong>.
+              </li>
+              <li>
+                Click the trigger card to open its settings. In the
+                <strong>Folder</strong> field, click the
+                <strong>folder icon at the right end of the box</strong> — don't
+                try to type the path by hand.
+              </li>
+              <li>
+                A mini file-browser opens showing your OneDrive root. Click the
+                <strong><code>&gt;</code> arrow</strong> next to
+                <code>abap_wiki</code> to drill into it, then click
+                <strong><code>inbox</code></strong> itself. The field should now
+                show <code>/abap_wiki/inbox</code>.
+              </li>
+              <li>
+                <strong
+                  >If <code>abap_wiki</code> doesn't appear in the
+                  picker</strong
+                >: the picker only shows folders in <em>your own</em> My files.
+                A folder someone else shared with you won't show up — either the
+                folder's owner builds the flow, or recreate the drop-zone in
+                your own OneDrive or on a SharePoint site everyone can use.
+              </li>
+            </ol>
+            <p><em>If your folder is in SharePoint / Teams:</em></p>
+            <ol class="steps">
+              <li>
+                Search for
+                <strong>When a file is created (properties only)</strong> and
+                select it under the <strong>SharePoint</strong> connector.
+              </li>
+              <li>
+                <strong>Site Address</strong>: open the dropdown and pick your
+                site (sites you've visited are listed). If it's missing, choose
+                <strong>Enter custom value</strong> and paste the site URL, e.g.
+                <code
+                  >https://&lt;yourcompany&gt;.sharepoint.com/sites/&lt;YourSite&gt;</code
+                >.
+              </li>
+              <li>
+                <strong>Library Name</strong>: pick
+                <code>Documents</code> unless you created a dedicated library.
+              </li>
+              <li>
+                <strong>Folder</strong>: click the folder icon at the right end
+                of the field and drill down to <code>abap_wiki/inbox</code> with
+                the <code>&gt;</code> arrows. Note: the trigger only watches
+                that exact folder, not subfolders.
+              </li>
+            </ol>
+
+            <div class="step-h">
+              <span class="n">3</span> Add the "Get file content" action
+            </div>
+            <div class="warn">
+              <span class="label">
+                This is the easiest place to pick the wrong connector
+              </span>
+              <p>
+                SharePoint and OneDrive for Business <em>both</em> have an
+                action named "Get file content", and the search results are
+                dominated by SharePoint's. You can tell them apart at a glance:
+                SharePoint's version asks for <strong>Site Address</strong> and
+                <strong>File Identifier</strong>; OneDrive's version has a
+                single required field called <strong>File</strong> and carries
+                the blue cloud icon (same as the OneDrive trigger). If your
+                folder is in OneDrive and the action is asking you for a Site
+                Address, you have the wrong one — no Site Address value will
+                ever make it work.
+              </p>
+            </div>
+            <p><em>If your folder is in OneDrive (My files):</em></p>
+            <ol class="steps">
+              <li>
+                Click <strong>+</strong> below the trigger →
+                <strong>Add an action</strong>.
+              </li>
+              <li>
+                In the search box, type the <strong>connector name</strong> —
+                <code>OneDrive</code> — rather than the action name.
+              </li>
+              <li>
+                In the results, find the
+                <strong>OneDrive for Business</strong> group (blue cloud icon).
+                Careful: there is also a plain
+                <strong>OneDrive</strong> connector — that's the
+                consumer/personal one; skip it.
+              </li>
+              <li>
+                Click <strong>See more</strong> on the OneDrive for Business
+                group (or click the connector name) so you're looking only at
+                its actions, then select <strong>Get file content</strong>.
+              </li>
+              <li>
+                Verify you got the right one: the panel header shows the blue
+                cloud icon, and the only required field is
+                <strong>File</strong> — no Site Address anywhere. If
+                <strong>Site Address</strong> appears, it's the SharePoint one
+                again — delete the card (click it → <strong>⋮</strong> menu at
+                the top of the panel → <strong>Delete</strong>) and repeat from
+                step 1.
+              </li>
+              <li>
+                In the <strong>File</strong> field, click the
+                <strong>⚡ lightning-bolt icon</strong> (or type <code>/</code>)
+                to open the dynamic content panel, and under "When a file is
+                created" insert the <strong>File identifier</strong> token.
+              </li>
+            </ol>
+            <p>
+              <em>If your folder is in SharePoint / Teams:</em> use SharePoint's
+              <strong>Get file content</strong>, set
+              <strong>Site Address</strong>
+              to the same site as your trigger, and insert the trigger's
+              <strong>Identifier</strong> token into
+              <strong>File Identifier</strong>.
+            </p>
+
+            <div class="step-h">
+              <span class="n">4</span> Add the HTTP action
+            </div>
+            <p>
+              This is the step that actually uploads the file to GitHub. It uses
+              the generic <strong>HTTP</strong> action, which is a
+              <strong>premium</strong> connector — your account needs a Power
+              Automate Premium license (Power Automate offers a free 90-day
+              trial the first time you use one).
+            </p>
+            <ol class="steps">
+              <li>
+                Click <strong>+</strong> below
+                <strong>Get file content</strong> →
+                <strong>Add an action</strong>.
+              </li>
+              <li>
+                Search <code>HTTP</code> and select the plain
+                <strong>HTTP</strong> action (globe icon, labelled just "HTTP",
+                marked <em>Premium</em>). Not "HTTP with Microsoft Entra ID",
+                not "HTTP Webhook", not "When an HTTP request is received" —
+                just <strong>HTTP</strong>.
+              </li>
+              <li>
+                <strong>URI</strong> — type this exactly (this is our repo,
+                <code>t-labs-buy/abap-wiki</code>),
+                <strong>including the trailing <code>/</code></strong
+                >:
+                <pre>
+https://api.github.com/repos/t-labs-buy/abap-wiki/contents/raw/inbox/</pre>
+                Then, with the cursor still at the very end (right after the
+                last
+                <code>/</code>), click the <strong>⚡ icon</strong> →
+                <strong>fx (Expression)</strong> tab → paste this exactly →
+                <strong>Add</strong>:
+                <pre>
+encodeUriComponent(decodeBase64(triggerOutputs()?['headers']?['x-ms-file-name-encoded']))</pre>
+                This appends the file's name, URL-encoded so names with spaces
+                work. Use this expression — <strong>don't</strong> insert a
+                token from the Dynamic content tab: the OneDrive trigger lists
+                <strong>File content</strong> more prominently than the name
+                tokens, and picking it by mistake stuffs the whole file into the
+                URL. The field should end with one purple <code>fx</code> pill
+                right after <code>inbox/</code>.
+              </li>
+              <li>
+                <strong>Method</strong> — pick <code>PUT</code> from the
+                dropdown.
+              </li>
+              <li>
+                <strong>Headers</strong> — add three rows (left box = key, right
+                box = value):
+                <div class="tablewrap">
+                  <table>
+                    <tr>
+                      <th>Key</th>
+                      <th>Value</th>
+                    </tr>
+                    <tr>
+                      <td><code>Authorization</code></td>
+                      <td>
+                        <code>Bearer github_pat_…</code> — the word
+                        <code>Bearer</code>, one space, then the fine-grained
+                        token from 6a
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><code>Accept</code></td>
+                      <td><code>application/vnd.github+json</code></td>
+                    </tr>
+                    <tr>
+                      <td><code>User-Agent</code></td>
+                      <td><code>abap-wiki-flow</code></td>
+                    </tr>
+                  </table>
+                </div>
+              </li>
+              <li>
+                <strong>Body</strong> — paste this skeleton first:
+                <pre>
+{
+  "message": "inbox: ",
+  "content": ""
+}</pre>
+                Then fill in the two dynamic parts, both via the
+                <strong>fx (Expression)</strong> tab (not the Dynamic content
+                tab):
+                <ul>
+                  <li>
+                    Cursor right after <code>inbox: </code> (still inside the
+                    quotes) → <strong>⚡</strong> → <strong>fx</strong> → paste
+                    → <strong>Add</strong>:
+                    <pre>
+decodeBase64(triggerOutputs()?['headers']?['x-ms-file-name-encoded'])</pre>
+                    (Same file name as the URI, but without URL-encoding — a
+                    commit message is plain text.)
+                  </li>
+                  <li>
+                    Cursor between the quotes of <code>"content"</code> →
+                    <strong>⚡</strong> → <strong>fx</strong> → paste →
+                    <strong>Add</strong>:
+                    <pre>base64(body('Get_file_content'))</pre>
+                    GitHub's Contents API requires the file to be base64-encoded
+                    — this expression does that.
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <strong>Verify in Code view</strong> before saving — click the
+                <strong>Code view</strong> tab on the HTTP card. It must contain
+                exactly these lines (this is the configuration that is confirmed
+                working):
+                <pre>
+"uri": "https://api.github.com/repos/t-labs-buy/abap-wiki/contents/raw/inbox/@{encodeUriComponent(decodeBase64(triggerOutputs()?['headers']?['x-ms-file-name-encoded']))}",
+"body": {
+  "message": "inbox: @{decodeBase64(triggerOutputs()?['headers']?['x-ms-file-name-encoded'])}",
+  "content": "@{base64(body('Get_file_content'))}"
+}</pre>
+                Checks: the URI has <code>inbox/@{</code> (slash before the
+                expression!), and <code>body('Get_file_content')</code> appears
+                <strong>only</strong> in <code>"content"</code> — nowhere else.
+              </li>
+            </ol>
+            <div class="warn">
+              <span class="label">Troubleshooting the HTTP action</span>
+              <p>
+                Every one of these happened while setting this flow up; check
+                them in order:
+              </p>
+              <div class="tablewrap">
+                <table>
+                  <tr>
+                    <th>Error / symptom</th>
+                    <th>Cause</th>
+                    <th>Fix</th>
+                  </tr>
+                  <tr>
+                    <td>
+                      <code>Invalid request. "sha" wasn't supplied.</code>
+                    </td>
+                    <td>
+                      The URI has no file name at the end, so GitHub thinks
+                      you're overwriting the existing path
+                      <code>raw/inbox</code> itself. <em>Or</em> a file with the
+                      same name already exists in <code>raw/inbox/</code> on
+                      GitHub (leftover from an earlier test).
+                    </td>
+                    <td>
+                      Add the file-name expression to the URI (sub-step 3). When
+                      re-testing, always use a
+                      <strong>freshly named file</strong>, or delete the
+                      leftover from the repo first.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <code
+                        >The provided 'Http' action URI ... is not valid. The
+                        URI must be a well formed absolute URI</code
+                      >
+                    </td>
+                    <td>
+                      The file name was inserted raw and contains spaces (e.g.
+                      <code>Meeting Notes.docx</code>), or the
+                      <strong>File content</strong> token was inserted instead
+                      of the name.
+                    </td>
+                    <td>
+                      Use the <code>encodeUriComponent(decodeBase64(...))</code>
+                      expression from sub-step 3 — it handles both.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      URI or commit message contains the whole document text
+                    </td>
+                    <td>
+                      The <strong>File content</strong> token was picked from
+                      the Dynamic content tab — it sits right next to the name
+                      tokens.
+                    </td>
+                    <td>
+                      Remove the pill and use the <code>fx</code> expressions
+                      above instead of Dynamic content tokens.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      File lands in the repo as <code>raw/inboxMyFile.txt</code>
+                      (glued name, wrong folder)
+                    </td>
+                    <td>
+                      Missing <code>/</code> between <code>inbox</code> and the
+                      expression in the URI.
+                    </td>
+                    <td>
+                      In Code view the URI must read
+                      <code>inbox/@{encodeUriComponent(...</code> — with the
+                      slash.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Anything else</td>
+                    <td>—</td>
+                    <td>
+                      Open
+                      <strong
+                        >My flows → run history → the failed run → click the red
+                        HTTP card</strong
+                      >
+                      and read <strong>Inputs → URI</strong> and
+                      <strong>Outputs → Body</strong>: it shows exactly what was
+                      sent and GitHub's exact complaint.
+                    </td>
+                  </tr>
+                </table>
+              </div>
+              <p>
+                Also: the expression's <code>Get_file_content</code> must match
+                your Step 3 card's name (spaces → underscores), and the 6a token
+                needs <strong>Contents: Read and write</strong> on
+                <code>abap-wiki</code> — GitHub confusingly answers
+                <code>404</code> (not 403) when the token can't write.
+              </p>
+            </div>
+
+            <div class="step-h">
+              <span class="n">5</span> Optional: mark files as picked up
+            </div>
+            <p>
+              This moves each file into a <code>sent</code> subfolder after it
+              has been uploaded, so contributors can see at a glance which files
+              the pipeline has already picked up. Optional, but recommended.
+            </p>
+            <ol class="steps">
+              <li>
+                <strong>Create the destination folder first</strong>: in
+                OneDrive, create a subfolder named <code>sent</code> inside your
+                <code>abap_wiki/inbox</code> folder. The flow can't move a file
+                into a folder that doesn't exist. (This is safe: the trigger
+                watches only the exact <code>inbox</code> folder, not its
+                subfolders, so files landing in <code>inbox/sent</code> won't
+                re-trigger the flow.)
+              </li>
+              <li>
+                Back in the designer, click <strong>+</strong> below the
+                <strong>HTTP</strong> action → <strong>Add an action</strong>.
+                The position matters: actions run in order, so the move only
+                happens after the upload succeeds — if the HTTP step fails, the
+                file stays in the inbox as a visible "not processed yet" signal.
+              </li>
+              <li>
+                Search <code>OneDrive</code>, open the
+                <strong>OneDrive for Business</strong> group, and select
+                <strong>Move or rename a file</strong> (that's OneDrive's name
+                for this action). Same icon check as before: blue cloud, and no
+                Site Address field anywhere.
+              </li>
+              <li>
+                <strong>File</strong> — click <strong>⚡</strong> and insert the
+                trigger's <strong>File identifier</strong> token.
+              </li>
+              <li>
+                <strong>Destination file path</strong> — this must include the
+                file name, not just the folder. Type this exactly,
+                <strong>including the trailing <code>/</code></strong
+                >:
+                <pre>/abap_wiki/inbox/sent/</pre>
+                Then, cursor at the very end → <strong>⚡</strong> →
+                <strong>fx (Expression)</strong> tab → paste this exactly →
+                <strong>Add</strong>:
+                <pre>
+decodeBase64(triggerOutputs()?['headers']?['x-ms-file-name-encoded'])</pre>
+                Same rule as the HTTP action: use the
+                <code>fx</code> expression, <strong>not</strong> a Dynamic
+                content token (the File content token sits right next to the
+                name tokens). And note: plain <code>decodeBase64</code> here —
+                <strong>no</strong> <code>encodeUriComponent</code>. This is a
+                file path, not a URL; encoding it would put a literal
+                <code>%20</code> into the moved file's name.
+              </li>
+              <li>
+                Open <strong>Advanced parameters</strong> and set
+                <strong>Overwrite</strong> to <strong>Yes</strong>, so a
+                duplicate filename doesn't make the whole flow fail.
+              </li>
+              <li>
+                <strong>Verify in Code view</strong> — the parameters must read
+                exactly (this is the configuration that is confirmed working):
+                <pre>
+"id": "@triggerOutputs()?['headers/x-ms-file-id']",
+"destination": "/abap_wiki/inbox/sent/@{decodeBase64(triggerOutputs()?['headers']?['x-ms-file-name-encoded'])}",
+"overwrite": true</pre>
+                Checks: <code>sent/@{</code> has the slash, and the destination
+                expression is <code>decodeBase64(triggerOutputs()...</code> —
+                <strong>not</strong> <code>body('Get_file_content')</code>.
+              </li>
+            </ol>
+            <div class="warn">
+              <span class="label">
+                Troubleshooting: Action 'Move_or_rename_a_file' failed:
+                BadGateway
+              </span>
+              <p>
+                OneDrive returns this unhelpful error when the destination path
+                is malformed. Both causes seen in practice: the
+                <strong>File content</strong> token in the destination instead
+                of the file name, and/or a missing <code>/</code> after
+                <code>sent</code>. Fix with sub-steps 5 and 7 above. Also
+                confirm the <code>sent</code> subfolder actually exists in
+                OneDrive — the action won't create it (sub-step 1).
+              </p>
+            </div>
+            <p>
+              <em>If your folder is in SharePoint / Teams:</em> use SharePoint's
+              <strong>Move file</strong> action instead —
+              <strong>Current Site Address</strong> and
+              <strong>Destination Site Address</strong> = your site,
+              <strong>File to Move</strong> = the trigger's
+              <strong>Identifier</strong> token,
+              <strong>Destination Folder</strong> = browse to
+              <code>…/Inbox/sent</code>, and
+              <strong>If another file is already there</strong> =
+              <strong>Replace</strong>.
+            </p>
+
+            <div class="step-h">
+              <span class="n">6</span> Save and test end-to-end
+            </div>
+            <p>
+              Click <strong>Save</strong>, then drop a document
+              <strong>with a brand-new filename</strong> (one never uploaded
+              before — a reused name triggers the "sha wasn't supplied" error)
+              into the folder → within a minute the flow runs (check
+              <strong>My flows → 28-day run history</strong>) → the file appears
+              in <code>raw/inbox/</code> on GitHub with a commit message like
+              <code>inbox: &lt;filename&gt;</code> → the Actions workflow starts
+              → a few minutes later, wiki pages update.
+            </p>
+
+            <div class="warn">
+              <span class="label">Two gotchas worth knowing</span>
+              <ol>
+                <li>
+                  The Contents API rejects a PUT if a file with the same name
+                  already exists in <code>raw/inbox/</code> (it would need the
+                  existing file's SHA). In practice the pipeline moves files out
+                  of the inbox after processing, so collisions are rare — but
+                  tell contributors to use descriptive, dated filenames.
+                </li>
+                <li>
+                  Files over ~40&nbsp;MB won't fit through this API; for big
+                  recordings, transcribe first and drop the transcript.
+                </li>
+              </ol>
+            </div>
+            <div class="why">
+              <span class="label"
+                >Why not sync OneDrive to GitHub directly?</span
+              >
+              <p>
+                There's no native connection between the two — this small flow
+                <em>is</em> the industry-standard bridge (a file trigger →
+                GitHub REST API). An alternative wiring is to have the flow fire
+                a GitHub "repository dispatch" event instead of/alongside the
+                upload; the <code>push</code>-trigger approach above achieves
+                the same with one moving part fewer.
+              </p>
+            </div>
+            <div class="win">
+              <span class="label">✓ Win #6</span>
+              <p>
+                Anyone in the team can drop a document into a OneDrive folder
+                and, minutes later, see the knowledge appear in the wiki — no
+                GitHub account required. The full loop is closed.
+              </p>
+            </div>
+          </section>
+
+          <!-- ============================================================ -->
+          <section class="phase" id="phase7">
+            <span class="phase-tag">Phase 7 · The oracle</span>
+            <h2>Query the wiki with Claude Code</h2>
+            <div class="phase-meta">
+              <span class="chip"
+                >Who — <strong>anyone with Claude Code</strong></span
+              >
+              <span class="chip">Time — <strong>~10 min</strong></span>
+            </div>
+            <p>
+              For team members with Claude Code access, the vault becomes
+              something you can talk to.
+            </p>
+            <ol class="steps">
+              <li>
+                Check Node.js: <code>node --version</code>. If missing or below
+                v18, install the LTS from
+                <a href="https://nodejs.org">nodejs.org</a>.
+              </li>
+              <li>
+                Install Claude Code:
+                <code>npm install -g @anthropic-ai/claude-code</code>.
+              </li>
+              <li>
+                Always launch it <em>inside</em> the vault folder — it only
+                reads the folder it starts in:
+                <pre>
+cd ~/abap-wiki
 claude</pre>
-          </li>
-          <li>
-            Try: <em>"What zones exist in this vault?"</em>, then something
-            real:
-            <em>"Summarize every open decision in the OTC workstream."</em>
-          </li>
-        </ol>
-        <p>
-          Because <code>CLAUDE.md</code> sits at the vault root, Claude Code
-          automatically reads your constitution on launch — so it answers from
-          synthesized wiki pages (citing them), refuses to treat raw inbox files
-          as truth, and can even write new knowledge back into the vault
-          following your own rules.
-        </p>
-        <div class="win">
-          <span class="label">✓ Win #7</span>
-          <p>
-            You asked the wiki a question in plain English and got an answer
-            citing its own pages. This is the payoff moment — demo it to the
-            team.
-          </p>
+              </li>
+              <li>
+                Try: <em>"What zones exist in this vault?"</em>, then something
+                real:
+                <em>"Summarize every open decision in the OTC workstream."</em>
+              </li>
+            </ol>
+            <p>
+              Because <code>CLAUDE.md</code> sits at the vault root, Claude Code
+              automatically reads your constitution on launch — so it answers
+              from synthesized wiki pages (citing them), refuses to treat raw
+              inbox files as truth, and can even write new knowledge back into
+              the vault following your own rules.
+            </p>
+            <div class="qa">
+              <p class="q">
+                Where do I ask questions — the Claude Code terminal or the
+                Obsidian UI?
+              </p>
+              <p>
+                In the <strong>Claude Code terminal</strong> — that's where
+                Query Mode (defined in <code>CLAUDE.md</code>) runs. Obsidian
+                has no AI answering questions; it's the reading and browsing
+                layer. The two complement each other.
+              </p>
+              <p>
+                Just ask in plain language, like "ABAP naming conventions". Per
+                the vault's Query Mode rules, Claude will:
+              </p>
+              <ol>
+                <li>Read <code>meta/index.md</code> to orient</li>
+                <li>Read the relevant pages from the right zone</li>
+                <li>
+                  Answer only from synthesized vault pages (never from
+                  <code>raw/</code>)
+                </li>
+                <li>
+                  Cite the source page, e.g. "From
+                  <code
+                    >[[Decision - OTC - Custom BAPI approach -
+                    2026-07-15]]</code
+                  >…"
+                </li>
+                <li>
+                  Say explicitly when the vault doesn't have the answer yet
+                </li>
+              </ol>
+              <p>
+                This is the right place for synthesis-style questions:
+                <em>"What did we decide about credit-block release and why?"</em
+                >, <em>"What's the status of ZSD_CREDIT_AUTORELEASE?"</em>,
+                <em>"Have we seen this IDoc error before?"</em>,
+                <em>"Is OTC handover-ready?"</em> — anything where the answer is
+                spread across several pages.
+              </p>
+            </div>
+            <div class="win">
+              <span class="label">✓ Win #7</span>
+              <p>
+                You asked the wiki a question in plain English and got an answer
+                citing its own pages. This is the payoff moment — demo it to the
+                team.
+              </p>
+            </div>
+          </section>
+
+          <!-- ============================================================ -->
+          <section class="phase" id="phase8">
+            <span class="phase-tag">Phase 8 · Keeping it alive</span>
+            <h2>Onboard the team &amp; keep it alive</h2>
+            <div class="phase-meta">
+              <span class="chip">Who — <strong>everyone</strong></span>
+              <span class="chip">Time — <strong>ongoing rhythm</strong></span>
+            </div>
+            <p>
+              Technology is now done. What makes the wiki compound instead of
+              rot is a small amount of human rhythm — this is the lesson the
+              constitution encodes hardest.
+            </p>
+
+            <h3>
+              The contributor workflow (teach everyone these three things)
+            </h3>
+            <ol class="steps">
+              <li>
+                <strong>Upload documents to OneDrive.</strong> Any deck,
+                transcript, spec, or email thread worth remembering goes into
+                the Inbox folder.
+              </li>
+              <li>
+                <strong>Open Obsidian to read.</strong> Look things up before
+                asking colleagues; the answer is often already there.
+              </li>
+              <li>
+                <strong>Review what the AI wrote.</strong> After your document
+                is ingested (a few minutes), skim the pages it touched and fix
+                anything wrong. Two minutes of review keeps the whole system
+                trustworthy.
+              </li>
+            </ol>
+
+            <h3>The rules that prevent rot</h3>
+            <ul>
+              <li>
+                One named <strong>curator</strong> owns quality: merges
+                duplicates, archives dead pages, promotes repeated learnings
+                into <code>03-intelligence/</code>.
+              </li>
+              <li>
+                <strong>Never delete pages</strong> — set
+                <code>status: archived</code> in the frontmatter instead.
+              </li>
+              <li>
+                <strong>Don't edit <code>CLAUDE.md</code> casually</strong> —
+                changes affect every future ingestion; they go through the
+                curator.
+              </li>
+              <li>
+                <strong>Files enter only through the drop-zone</strong> — no
+                pasting raw material straight into wiki folders.
+              </li>
+              <li>
+                A 20-minute <strong>weekly sweep</strong>: check the Actions tab
+                for failed runs, tighten stale pages, ask "what repeated this
+                week that should become a pattern page?"
+              </li>
+            </ul>
+
+            <h3>Quick troubleshooting</h3>
+            <div class="tablewrap">
+              <table>
+                <tr>
+                  <th>Symptom</th>
+                  <th>Fix</th>
+                </tr>
+                <tr>
+                  <td style="white-space: normal">
+                    File dropped in OneDrive, nothing happened
+                  </td>
+                  <td style="white-space: normal">
+                    Check the flow's run history in Power Automate first, then
+                    the repo's Actions tab. One of the two will show a red
+                    failure with the reason.
+                  </td>
+                </tr>
+                <tr>
+                  <td style="white-space: normal">Actions run failed</td>
+                  <td style="white-space: normal">
+                    Open the run log. Expired GitHub token, misnamed secret, or
+                    an Anthropic billing issue cover 90% of cases.
+                  </td>
+                </tr>
+                <tr>
+                  <td style="white-space: normal">
+                    AI filed something in the wrong place
+                  </td>
+                  <td style="white-space: normal">
+                    Move the page in Obsidian, then sharpen the relevant rule or
+                    example in <code>CLAUDE.md</code> so it doesn't recur.
+                  </td>
+                </tr>
+                <tr>
+                  <td style="white-space: normal">
+                    Duplicate pages for the same thing
+                  </td>
+                  <td style="white-space: normal">
+                    Merge them, then add the name variants to
+                    <code>meta/entities.md</code> — that registry is exactly
+                    what prevents this.
+                  </td>
+                </tr>
+                <tr>
+                  <td style="white-space: normal">
+                    Merge conflict in Obsidian
+                  </td>
+                  <td style="white-space: normal">
+                    Message the curator rather than resolving it yourself the
+                    first time.
+                  </td>
+                </tr>
+              </table>
+            </div>
+
+            <div class="win">
+              <span class="label">✓ Win #8 — you're done</span>
+              <p>
+                The team is onboarded, the rhythm is agreed, and the ABAP wiki
+                is compounding knowledge on its own. Bookmark this guide —
+                Phases 1–8 are exactly the recipe for the
+                <em>next</em> project's wiki too, and a second setup typically
+                takes half a day.
+              </p>
+            </div>
+          </section>
+
+          <!-- ============================================================ -->
+          <section class="phase" id="resources">
+            <span class="phase-tag"
+              >Resources · Tooling &amp; further reading</span
+            >
+            <h2>Useful ABAP repositories</h2>
+            <p>
+              Open-source projects worth knowing about — for the wiki itself,
+              and for the broader ABAP development toolchain.
+            </p>
+            <div class="tablewrap">
+              <table>
+                <tr>
+                  <th>Repository</th>
+                  <th>What it is</th>
+                </tr>
+                <tr>
+                  <td>
+                    <a href="https://github.com/Gixsy95/abap_wiki"
+                      >Gixsy95/abap_wiki</a
+                    >
+                  </td>
+                  <td>
+                    A community ABAP knowledge wiki on GitHub — useful as
+                    inspiration for structuring and growing our own vault.
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <a href="https://github.com/abapGit/abapGit"
+                      >abapGit/abapGit</a
+                    >
+                  </td>
+                  <td>
+                    The open-source Git client for ABAP — the standard way to
+                    version-control ABAP development objects and share code
+                    between systems.
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <a href="https://github.com/abaplint/abaplint"
+                      >abaplint/abaplint</a
+                    >
+                  </td>
+                  <td>
+                    A static-analysis linter for ABAP: enforces naming
+                    conventions, syntax rules, and clean-code checks, and runs
+                    in CI (e.g. GitHub Actions) on abapGit repositories.
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <a href="https://github.com/sap/abap-cleaner"
+                      >sap/abap-cleaner</a
+                    >
+                  </td>
+                  <td>
+                    SAP's automated code cleanup tool: applies dozens of
+                    clean-ABAP style rules to existing code, available as an
+                    Eclipse/ADT plugin and standalone app.
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <a
+                      href="https://github.com/marcellourbani/vscode_abap_remote_fs"
+                      >marcellourbani/vscode_abap_remote_fs</a
+                    >
+                  </td>
+                  <td>
+                    A VS Code extension that mounts an ABAP system as a remote
+                    filesystem — edit, activate, and run ABAP source directly
+                    from VS Code via ADT services.
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <a href="https://github.com/marianfoo/abap-mcp-server"
+                      >marianfoo/abap-mcp-server</a
+                    >
+                  </td>
+                  <td>
+                    A Model Context Protocol (MCP) server for ABAP systems —
+                    lets AI assistants like Claude connect to an SAP system to
+                    read and work with ABAP objects.
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </section>
+
+          <div class="pager">
+            <button id="pagerPrev" type="button"></button>
+            <button id="pagerNext" type="button"></button>
+          </div>
+
+          <footer>
+            <p>
+              <strong>Reusing this guide for future projects:</strong> only
+              Phase 2 (structure design) is real work the second time —
+              everything else is copy, rename, and re-key. Consider keeping a
+              <code>vault-template</code> repository with the skeleton,
+              workflow, and script ready to fork.
+            </p>
+            <p>
+              Live implementation:
+              <a href="https://github.com/t-labs-buy/abap-wiki"
+                >github.com/t-labs-buy/abap-wiki</a
+              >. External references:
+              <a href="https://docs.github.com/en/rest/repos/contents"
+                >GitHub Contents API</a
+              >
+              ·
+              <a
+                href="https://learn.microsoft.com/en-us/power-automate/sharepoint-overview"
+                >Power Automate + SharePoint</a
+              >
+              · <a href="https://console.anthropic.com">Anthropic Console</a> ·
+              <a href="https://obsidian.md">Obsidian</a> ·
+              <a href="https://git-scm.com">Git</a>.
+            </p>
+          </footer>
         </div>
-      </section>
-
-      <!-- ============================================================ -->
-      <section class="phase" id="phase8">
-        <span class="phase-tag">Phase 8 · Keeping it alive</span>
-        <h2>Onboard the team &amp; keep it alive</h2>
-        <p>
-          Technology is now done. What makes the wiki compound instead of rot is
-          a small amount of human rhythm — this is the lesson the iVolve
-          constitution encodes hardest.
-        </p>
-
-        <h3>The contributor workflow (teach everyone these three things)</h3>
-        <ol class="steps">
-          <li>
-            <strong>Upload documents to OneDrive.</strong> Any deck, transcript,
-            spec, or email thread worth remembering goes into the Inbox folder.
-          </li>
-          <li>
-            <strong>Open Obsidian to read.</strong> Look things up before asking
-            colleagues; the answer is often already there.
-          </li>
-          <li>
-            <strong>Review what the AI wrote.</strong> After your document is
-            ingested (a few minutes), skim the pages it touched and fix anything
-            wrong. Two minutes of review keeps the whole system trustworthy.
-          </li>
-        </ol>
-
-        <h3>The rules that prevent rot</h3>
-        <ul>
-          <li>
-            One named <strong>curator</strong> owns quality: merges duplicates,
-            archives dead pages, promotes repeated learnings into
-            <code>03-intelligence/</code>.
-          </li>
-          <li>
-            <strong>Never delete pages</strong> — set
-            <code>status: archived</code> in the frontmatter instead.
-          </li>
-          <li>
-            <strong>Don't edit <code>CLAUDE.md</code> casually</strong> —
-            changes affect every future ingestion; they go through the curator.
-          </li>
-          <li>
-            <strong>Files enter only through the drop-zone</strong> — no pasting
-            raw material straight into wiki folders.
-          </li>
-          <li>
-            A 20-minute <strong>weekly sweep</strong>: check the Actions tab for
-            failed runs, tighten stale pages, ask "what repeated this week that
-            should become a pattern page?"
-          </li>
-        </ul>
-
-        <h3>Quick troubleshooting</h3>
-        <div class="tablewrap">
-          <table>
-            <tr>
-              <th>Symptom</th>
-              <th>Fix</th>
-            </tr>
-            <tr>
-              <td style="white-space: normal">
-                File dropped in OneDrive, nothing happened
-              </td>
-              <td style="white-space: normal">
-                Check the flow's run history in Power Automate first, then the
-                repo's Actions tab. One of the two will show a red failure with
-                the reason.
-              </td>
-            </tr>
-            <tr>
-              <td style="white-space: normal">Actions run failed</td>
-              <td style="white-space: normal">
-                Open the run log. Expired GitHub token, misnamed secret, or an
-                Anthropic billing issue cover 90% of cases.
-              </td>
-            </tr>
-            <tr>
-              <td style="white-space: normal">
-                AI filed something in the wrong place
-              </td>
-              <td style="white-space: normal">
-                Move the page in Obsidian, then sharpen the relevant rule or
-                example in <code>CLAUDE.md</code> so it doesn't recur.
-              </td>
-            </tr>
-            <tr>
-              <td style="white-space: normal">
-                Duplicate pages for the same thing
-              </td>
-              <td style="white-space: normal">
-                Merge them, then add the name variants to
-                <code>meta/entities.md</code> — that registry is exactly what
-                prevents this.
-              </td>
-            </tr>
-            <tr>
-              <td style="white-space: normal">Merge conflict in Obsidian</td>
-              <td style="white-space: normal">
-                Message the curator rather than resolving it yourself the first
-                time.
-              </td>
-            </tr>
-          </table>
-        </div>
-
-        <div class="win">
-          <span class="label">✓ Win #8 — you're done</span>
-          <p>
-            The team is onboarded, the rhythm is agreed, and the ABAP wiki is
-            compounding knowledge on its own. Bookmark this guide — Phases 1–8
-            are exactly the recipe for the <em>next</em> project's wiki too, and
-            a second setup typically takes half a day.
-          </p>
-        </div>
-      </section>
-
-      <footer>
-        <p>
-          <strong>Reusing this guide for future projects:</strong> only Phase 2
-          (structure design) is real work the second time — everything else is
-          copy, rename, and re-key. Consider keeping a
-          <code>vault-template</code> repository with the skeleton, workflow,
-          and script ready to fork.
-        </p>
-        <p>
-          Modelled on the iVolve vault (its <code>CLAUDE.md</code> constitution,
-          ingest workflow, and onboarding guide). External references:
-          <a href="https://docs.github.com/en/rest/repos/contents"
-            >GitHub Contents API</a
-          >
-          ·
-          <a
-            href="https://learn.microsoft.com/en-us/power-automate/sharepoint-overview"
-            >Power Automate + SharePoint</a
-          >
-          · <a href="https://console.anthropic.com">Anthropic Console</a> ·
-          <a href="https://obsidian.md">Obsidian</a> ·
-          <a href="https://git-scm.com">Git</a>.
-        </p>
-      </footer>
+      </div>
     </main>
+
+    <noscript>
+      <style>
+        section.phase {
+          display: block;
+        }
+        .pager {
+          display: none;
+        }
+      </style>
+    </noscript>
 
     <script>
       (function () {
@@ -1705,6 +2747,68 @@ claude</pre>
         }
         media.addEventListener("change", render);
         render();
+
+        // --- Sidebar tabs: show one section at a time ---
+        var tabs = Array.prototype.slice.call(
+          document.querySelectorAll("nav.sidebar a.tab"),
+        );
+        var sections = tabs.map(function (t) {
+          return document.querySelector(t.getAttribute("href"));
+        });
+        var prevBtn = document.getElementById("pagerPrev");
+        var nextBtn = document.getElementById("pagerNext");
+
+        function titleOf(i) {
+          return tabs[i].textContent.replace(/^\s*\d+\s*/, "").trim();
+        }
+
+        function currentIndex() {
+          var h = location.hash;
+          for (var i = 0; i < tabs.length; i++) {
+            if (tabs[i].getAttribute("href") === h) return i;
+          }
+          return 0;
+        }
+
+        function showSection(idx, scrollTop) {
+          sections.forEach(function (s, i) {
+            s.classList.toggle("active", i === idx);
+          });
+          tabs.forEach(function (t, i) {
+            t.classList.toggle("active", i === idx);
+            if (i === idx) t.setAttribute("aria-current", "page");
+            else t.removeAttribute("aria-current");
+          });
+          prevBtn.disabled = idx === 0;
+          nextBtn.disabled = idx === tabs.length - 1;
+          prevBtn.textContent = idx > 0 ? "← Back: " + titleOf(idx - 1) : "";
+          nextBtn.textContent =
+            idx < tabs.length - 1 ? "Next: " + titleOf(idx + 1) + " →" : "";
+          if (scrollTop) window.scrollTo(0, 0);
+        }
+
+        prevBtn.addEventListener("click", function () {
+          var i = currentIndex();
+          if (i > 0) location.hash = tabs[i - 1].getAttribute("href");
+        });
+        nextBtn.addEventListener("click", function () {
+          var i = currentIndex();
+          if (i < tabs.length - 1)
+            location.hash = tabs[i + 1].getAttribute("href");
+        });
+        window.addEventListener("hashchange", function () {
+          showSection(currentIndex(), true);
+        });
+        showSection(currentIndex(), false);
+
+        // --- External links (GitHub etc.) open in a new tab ---
+        Array.prototype.forEach.call(
+          document.querySelectorAll('a[href^="http"]'),
+          function (a) {
+            a.setAttribute("target", "_blank");
+            a.setAttribute("rel", "noopener");
+          },
+        );
       })();
     </script>
   </body>

@@ -2,13 +2,14 @@
 
 > **Internal playbook · Knowledge engineering**
 >
-> A start-to-finish walkthrough for building an AI-maintained knowledge vault — modelled on the iVolve vault, written so that anyone in the organization can follow it for ABAP or any future project.
+> A start-to-finish walkthrough for building an AI-maintained knowledge vault — written so that anyone in the organization can follow it for ABAP or any future project.
 
-|              |                                                            |
-| ------------ | ---------------------------------------------------------- |
-| **Audience** | technical & non-technical                                  |
-| **Time**     | ~1 working day for one person, spread over a week          |
-| **Stack**    | GitHub · OneDrive · Power Automate · Claude API · Obsidian |
+|              |                                                                            |
+| ------------ | -------------------------------------------------------------------------- |
+| **Audience** | technical & non-technical                                                  |
+| **Time**     | ~1 working day for one person, spread over a week                          |
+| **Stack**    | GitHub · OneDrive · Power Automate · Claude API · Obsidian                 |
+| **Repo**     | [github.com/t-labs-buy/abap-wiki](https://github.com/t-labs-buy/abap-wiki) |
 
 ## The journey — eight phases, eight wins
 
@@ -21,6 +22,7 @@
 7. [Connect OneDrive with Power Automate](#phase-6--connect-onedrive-with-power-automate)
 8. [Query the wiki with Claude Code](#phase-7--query-the-wiki-with-claude-code)
 9. [Onboard the team & keep it alive](#phase-8--onboard-the-team--keep-it-alive)
+10. [Resources · Useful ABAP repositories](#resources--useful-abap-repositories)
 
 ---
 
@@ -69,10 +71,10 @@ You'll touch seven tools. None is optional, but each does exactly one job:
 - **An Anthropic API account** with billing enabled — [console.anthropic.com](https://console.anthropic.com). This is separate from a Claude.ai subscription.
 - **Access to Power Automate** in your Microsoft 365 tenant, with the ability to use the HTTP action (a "premium" connector — most enterprise M365 plans include it; check with your IT admin).
 - **A OneDrive/SharePoint folder** you can share with the team.
-- **One named owner** for the pipeline — the person who holds the API key, watches for failed runs, and curates quality. For iVolve this role exists explicitly; give ABAP one too.
+- **One named owner** for the pipeline — the person who holds the API key, watches for failed runs, and curates quality.
 
 > **Tip — you have a working reference.**
-> The `ivolve-vault` repository is a live, working example of everything in this guide. When a step feels abstract, open the corresponding file there (its `CLAUDE.md`, its `.github/workflows/ivolve-vault-ingest.yml`, its `.github/scripts/ivolve-ingest.py`) and see the real thing.
+> Our [`abap-wiki`](https://github.com/t-labs-buy/abap-wiki) repository is the live, working implementation of everything in this guide. When a step feels abstract, open the corresponding file there (its `CLAUDE.md`, its `.github/workflows/abap-wiki-ingest.yml`, its `.github/scripts/abap-ingest.py`) and see the real thing.
 
 ---
 
@@ -81,13 +83,13 @@ You'll touch seven tools. None is optional, but each does exactly one job:
 The repository is the single home for everything: wiki pages, the AI rulebook, and the automation code.
 
 1. Sign in to GitHub and click **New repository** (github.com/new).
-2. Owner: your organization (not a personal account, if you can avoid it). Name: `abap-vault`.
+2. Owner: your organization (not a personal account, if you can avoid it). Name: `abap-wiki` — ours lives at [github.com/t-labs-buy/abap-wiki](https://github.com/t-labs-buy/abap-wiki).
 3. Visibility: **Private**. This wiki will contain internal project knowledge.
 4. Tick **Add a README file** so the repo isn't empty, then click **Create repository**.
 5. Invite your teammates: repo → **Settings → Collaborators → Add people**. Everyone who will read or edit through Obsidian needs _Write_ access.
 6. Confirm Actions are allowed: **Settings → Actions → General → Allow all actions**, and under _Workflow permissions_ select **Read and write permissions** (the pipeline must be able to commit the pages it writes).
 
-> ✅ **Win #1** — You have a private repository named `abap-vault`, your team is invited, and Actions can write to it. The wiki has a home.
+> ✅ **Win #1** — You have a private repository named `abap-wiki`, your team is invited, and Actions can write to it. The wiki has a home.
 
 ---
 
@@ -97,7 +99,7 @@ This is the most important phase, and the only one that is genuinely _design_ wo
 
 ### 2a — Decide your zones (do this as a 1-hour team workshop)
 
-A "zone" is a top-level folder with a clear purpose. iVolve's zones are sales-shaped (offerings, pursuits, customers). ABAP is a technical delivery project, so the zones should be shaped around _what the team will want to retrieve_. A sensible starting point:
+A "zone" is a top-level folder with a clear purpose. A sales project's zones might be sales-shaped (offerings, pursuits, customers); ABAP is a technical delivery project, so the zones should be shaped around _what the team will want to retrieve_. A sensible starting point:
 
 | Zone               | Holds                                                                                                                         | Example pages                                                         |
 | ------------------ | ----------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
@@ -112,11 +114,11 @@ Adjust the middle two zones to your project's reality; keep `meta/` and `raw/` e
 
 ### 2b — Write CLAUDE.md: keep the engine, replace the content
 
-Start from iVolve's `CLAUDE.md` and treat it as two layers. The **engine** — sections the pipeline depends on — must survive in some form. The **content** — iVolve's specific folders, customers and offerings — gets replaced with your ABAP equivalents.
+Our constitution lives at the root of [`abap-wiki`](https://github.com/t-labs-buy/abap-wiki) as `CLAUDE.md`. Treat it as two layers. The **engine** — sections the pipeline depends on — must survive in some form. The **content** — the project-specific folders, modules and workstreams — is what gets replaced when you reuse this setup for a future project.
 
-| Keep (engine)                                                                                                                                                                                             | Replace (content)                                                                                                                      |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| Frontmatter schema · naming rules · linking rules ("never create floating pages") · ingestion workflow & update order · deduplication logic · the pre-create entity normalization check · the quality bar | Zone names and folder trees · page types (pursuit → workstream, customer → module, etc.) · templates · examples · team roles and names |
+| Keep (engine)                                                                                                                                                                                             | Replace (content)                                                                      |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| Frontmatter schema · naming rules · linking rules ("never create floating pages") · ingestion workflow & update order · deduplication logic · the pre-create entity normalization check · the quality bar | Zone names and folder trees · page types · templates · examples · team roles and names |
 
 A minimal starter frontmatter block every page must carry (copy verbatim into your constitution):
 
@@ -136,7 +138,7 @@ source_files: [] # raw files ingested into this page
 ```
 
 > **Why a "constitution" at all?**
-> Without written rules, every ingestion run makes its own filing decisions — and 100 runs later you have five spellings of the same module name and duplicate pages everywhere. The constitution turns the AI from a clever intern into a disciplined librarian. iVolve's core rules — _update existing pages instead of creating duplicates, every page links upward to a parent, meetings are source material not final artifacts_ — earned their place through real use. Keep them.
+> Without written rules, every ingestion run makes its own filing decisions — and 100 runs later you have five spellings of the same module name and duplicate pages everywhere. The constitution turns the AI from a clever intern into a disciplined librarian. Its core rules — _update existing pages instead of creating duplicates, every page links upward to a parent, meetings are source material not final artifacts_ — earned their place through real use. Keep them.
 
 > ✅ **Win #2** — Your team agrees on the zones, and a first-draft `CLAUDE.md` for ABAP exists. The wiki now has a brain.
 
@@ -161,7 +163,7 @@ Now put the structure into the repo. If you're comfortable with Git, clone the r
 
 ## Phase 4 · Set up Obsidian for reading and editing
 
-Each team member does this once on their own laptop. It mirrors the iVolve onboarding guide, pointed at the new repo. (Steps for the person setting up; share this section with every teammate later.)
+Each team member does this once on their own laptop. (Steps for the person setting up; share this section with every teammate later.)
 
 1. **Install Git** — check with `git --version` in Terminal/Command Prompt; if missing, install from [git-scm.com](https://git-scm.com) (Windows: all default settings; Mac: `xcode-select --install`).
 2. **Tell Git who you are** (one time):
@@ -171,9 +173,9 @@ Each team member does this once on their own laptop. It mirrors the iVolve onboa
    git config --global user.email "you@yourcompany.com"
    ```
 
-3. **Clone the vault**: `git clone https://github.com/<your-org>/abap-vault.git`. GitHub will ask you to sign in via the browser; Mac users may need a Personal Access Token (github.com → Settings → Developer settings → Personal access tokens).
-4. **Install Obsidian** from [obsidian.md](https://obsidian.md) (free), choose **Open folder as vault**, and select the `abap-vault` folder you just cloned — the folder itself, not its parent.
-5. **Install the Obsidian Git plugin**: Settings → Community plugins → Browse → search "Obsidian Git" → Install → Enable.
+3. **Clone the vault**: `git clone https://github.com/t-labs-buy/abap-wiki.git`. GitHub will ask you to sign in via the browser; Mac users may need a Personal Access Token (github.com → Settings → Developer settings → Personal access tokens).
+4. **Install Obsidian** from [obsidian.md](https://obsidian.md) (free), choose **Open folder as vault**, and select the `abap-wiki` folder you just cloned — the folder itself, not its parent.
+5. **Install the Obsidian Git plugin**: Settings → Community plugins → Browse → search "Git" and you will find this repo [https://github.com/vinzent03/obsidian-git](https://github.com/vinzent03/obsidian-git) → Install → Enable.
 6. **Configure auto-sync** in the plugin's settings:
 
    | Setting                       | Value       |
@@ -184,10 +186,28 @@ Each team member does this once on their own laptop. It mirrors the iVolve onboa
    | Push on commit-and-sync       | Enabled     |
    | Pull on commit-and-sync       | Enabled     |
 
-7. **Verify**: edit any page (add and remove a space), wait five minutes, then check github.com/&lt;your-org&gt;/abap-vault/commits — a commit with your name should appear.
+7. **Verify**: edit any page (add and remove a space), wait five minutes, then check github.com/t-labs-buy/abap-wiki/commits — a commit with your name should appear.
 
-> **Why Obsidian and not just GitHub's website?**
-> GitHub shows files; Obsidian shows _knowledge_. It renders `[[wikilinks]]` as clickable connections, offers a graph view of how pages relate, full-text search, and a pleasant editor. The Git plugin makes the whole thing feel like a shared live notebook — everyone's copy syncs itself every five minutes with zero Git knowledge required.
+### What is the purpose of using Obsidian in this project? What problem does it solve? Why do we need it in the first place?
+
+Obsidian is the reading room of this system — it solves the "humans need a pleasant way to consume and correct the knowledge" problem. Strictly speaking, the pipeline works without it; nothing in the automation depends on Obsidian. But without it, the wiki's only interface for your team would be GitHub's file browser, and that fails the humans in three specific ways:
+
+1. **It turns files into a navigable knowledge web.** The whole constitution is built on `[[wikilinks]]` — every decision links to its workstream, every pattern links to where it was observed, every issue links to the gotcha it produced. On github.com, `[[Decision - OTC - Custom BAPI approach - 2026-07-15]]` is just dead text. In Obsidian it's a clickable connection, with backlinks ("what links here?") and a graph view showing how topics cluster. The link discipline the AI is instructed to maintain only pays off in a tool that renders links as navigation. That's the core reason: GitHub shows files; Obsidian shows _knowledge_.
+
+2. **It gives non-technical teammates read/write access without learning Git.** Your contributors are ABAP consultants and functional experts, not necessarily Git users. The constitution requires humans to review what the AI wrote and fix mistakes ("two minutes of review keeps the whole system trustworthy"). With the Obsidian Git plugin configured for auto-sync, a teammate opens what feels like a private Wikipedia, edits a page like a normal document, and the change is committed and pushed automatically — pull, commit, merge, push all invisible. Without that, every correction would require Git knowledge or a clunky web edit, and in practice the reviews just wouldn't happen. That's how vaults rot.
+
+3. **It makes the vault fast to consult, which is what makes it get used.** Instant full-text search, offline access on every laptop, and folder navigation that mirrors the zones. The wiki only compounds if people's default move is "check the vault before asking a colleague" — and that habit only forms if lookup takes seconds.
+
+Worth being clear about the division of labor — each tool has exactly one job:
+
+| Concern                                              | Handled by                   |
+| ---------------------------------------------------- | ---------------------------- |
+| Storage, history, multi-user conflict safety         | Git/GitHub                   |
+| Writing and filing knowledge automatically           | Claude + the ingest pipeline |
+| Humans reading, browsing links, and correcting pages | Obsidian                     |
+| Asking questions in plain English                    | Claude Code                  |
+
+So could you skip it? Technically yes — the pipeline would still capture and file the knowledge. But you'd have a wiki that's written by a machine and read by almost no one, with mistakes nobody corrects. Obsidian is what closes the human half of the loop: it's the difference between a wiki your team _has_ and one your team _actually uses_.
 
 > ✅ **Win #4** — Your vault opens in Obsidian, and a test edit shows up on GitHub within five minutes. Humans are connected.
 
@@ -195,12 +215,12 @@ Each team member does this once on their own laptop. It mirrors the iVolve onboa
 
 ## Phase 5 · Build the AI ingestion pipeline
 
-This is the automation heart: a GitHub Actions workflow that runs a Python script, which sends new documents to Claude and commits the resulting wiki updates. You will copy iVolve's working code and adapt it — do not write this from scratch.
+This is the automation heart: a GitHub Actions workflow that runs a Python script, which sends new documents to Claude and commits the resulting wiki updates. The working code lives in the [`abap-wiki`](https://github.com/t-labs-buy/abap-wiki) repo — copy and adapt it; do not write this from scratch.
 
 ### 5a — Get an Anthropic API key
 
 1. Create an account at [console.anthropic.com](https://console.anthropic.com) (use a team/shared org, not a personal account) and add a payment method under **Billing**.
-2. Go to **API Keys → Create Key**. Name it `abap-vault-ingest`. Copy the key immediately — it is shown only once.
+2. Go to **API Keys → Create Key**. Name it `abap-wiki-ingest`. Copy the key immediately — it is shown only once.
 3. Set a monthly spend limit in the console (e.g. $50) so a runaway job can never surprise you.
 
 ### 5b — Store the key as a GitHub secret
@@ -212,10 +232,10 @@ In the repo: **Settings → Secrets and variables → Actions → New repository
 
 ### 5c — Add the workflow file
 
-Create `.github/workflows/abap-vault-ingest.yml` in the repo with this content (adapted from iVolve's, with one improvement: it also triggers automatically whenever a file is pushed into `raw/inbox/`, so no separate "dispatch" step is needed):
+Create `.github/workflows/abap-wiki-ingest.yml` in the repo with this content (it triggers automatically whenever a file is pushed into `raw/inbox/`, so no separate "dispatch" step is needed):
 
 ```yaml
-name: ABAP Vault Ingest
+name: ABAP Wiki Ingest
 
 on:
   push:
@@ -226,7 +246,7 @@ on:
   workflow_dispatch: # manual "Run workflow" button
 
 concurrency:
-  group: vault-ingest
+  group: wiki-ingest
   cancel-in-progress: false # runs queue up instead of colliding
 
 permissions:
@@ -254,22 +274,22 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: python .github/scripts/abap-ingest.py
 
-      - name: Commit and push vault updates
+      - name: Commit and push wiki updates
         run: |
-          git config user.name "ABAP Vault"
-          git config user.email "abap-vault@yourcompany.com"
+          git config user.name "ABAP Wiki"
+          git config user.email "abap-wiki@yourcompany.com"
           git add -A
-          git diff --staged --quiet || git commit -m "ABAP Vault: auto-ingest $(date +%Y-%m-%d)"
+          git diff --staged --quiet || git commit -m "ABAP Wiki: auto-ingest $(date +%Y-%m-%d)"
           git pull --rebase origin main
           git push
 ```
 
 ### 5d — Adapt the ingestion script
 
-Copy `.github/scripts/ivolve-ingest.py` from the iVolve repo into your repo as `.github/scripts/abap-ingest.py`, then make these changes (ask the iVolve developer to pair with you for 30 minutes here — it's the highest-leverage half hour of the whole setup):
+The ingestion script lives at `.github/scripts/abap-ingest.py` in the `abap-wiki` repo. When reusing this setup for a new project, copy it and update three things (pair with whoever set up the previous wiki for 30 minutes here — it's the highest-leverage half hour of the whole setup):
 
-- **Model** — set the model to `claude-opus-4-8` (the current Opus model; iVolve's script pins an older Sonnet). One line in the `call_claude` function.
-- **Prompt text** — the script's prompt says "You are the iVolve Vault AI…" and names iVolve's zones. Rewrite those sentences for ABAP and your Phase 2 zones.
+- **Model** — set the model to `claude-opus-4-8` (the current Opus model). One line in the `call_claude` function.
+- **Prompt text** — the script's prompt names the project and its zones ("You are the ABAP Wiki AI…"). Rewrite those sentences for the new project and its Phase 2 zones.
 - **Path validation** — the script has a list of folders it's allowed to write into (`is_valid_vault_path`). Update it to your zone names.
 - Everything else — file readers for PDF/PPTX/DOCX/XLSX, dedup against `meta/inbox.md`, chunking, the move-to-processed step — works unchanged.
 
@@ -293,37 +313,181 @@ Right now, feeding the wiki requires putting files into a GitHub folder. This ph
 
 ### 6a — Create the drop-zone and a GitHub token
 
-1. In SharePoint or OneDrive, create a shared folder, e.g. `ABAP_Vault/Inbox`, and share it with the team ("anyone drops project documents here").
-2. On GitHub, create a **fine-grained Personal Access Token** for the flow: github.com → Settings → Developer settings → Fine-grained tokens → Generate. Scope it to _only_ the `abap-vault` repository with **Contents: Read and write** permission. Set a 1-year expiry and put a reminder in your calendar to rotate it.
+1. In SharePoint or OneDrive, create a shared folder — ours is `abap_wiki/inbox` — and share it with the team ("anyone drops project documents here").
+2. On GitHub, create a **fine-grained Personal Access Token** for the flow: github.com → Settings → Developer settings → Fine-grained tokens → Generate. Scope it to _only_ the `abap-wiki` repository with **Contents: Read and write** permission. Set a 1-year expiry and put a reminder in your calendar to rotate it.
 
 ### 6b — Build the flow (about 20 minutes)
 
-In [make.powerautomate.com](https://make.powerautomate.com), create an **Automated cloud flow**:
+**Before anything else, work out where your `Inbox` folder from 6a actually lives** — this decides which connector you use, and it's the #1 place people get stuck (a folder in OneDrive is invisible to the SharePoint connector, and vice versa):
 
-1. **Trigger**: _"When a file is created (properties only)"_ (SharePoint connector), pointed at your `ABAP_Vault/Inbox` folder. Note: it only watches that exact folder, not subfolders.
-2. **Action — Get file content** (SharePoint), using the identifier from the trigger.
-3. **Action — HTTP** (this is the premium connector):
-   - Method: `PUT`
-   - URI: `https://api.github.com/repos/<your-org>/abap-vault/contents/raw/inbox/<File name with extension>` (insert the trigger's file-name token where shown)
-   - Headers: `Authorization: Bearer <your fine-grained token>`, `Accept: application/vnd.github+json`, `User-Agent: abap-vault-flow`
-   - Body:
+- You created it in **OneDrive** — you see it under **My files** at [onedrive.com](https://onedrive.com) or in the OneDrive desktop app → use the **OneDrive for Business** connector.
+- You created it in a **SharePoint site or a Teams channel** — you reach it through a site's **Documents** library or a channel's **Files** tab → use the **SharePoint** connector. (A Teams channel folder lives in SharePoint: the site is named after the team, the library is `Documents`, and the top-level folder is named after the channel.)
 
-     ```json
-     {
-       "message": "inbox: @{triggerOutputs()?['body/{FilenameWithExtension}']}",
-       "content": "@{base64(body('Get_file_content'))}"
-     }
+> **Not sure which you have? Check the URL.** Open the folder in your browser and look at the address bar: `https://<yourcompany>-my.sharepoint.com/...` (note the `-my`) is your personal OneDrive → use the **OneDrive for Business** connector. `https://<yourcompany>.sharepoint.com/sites/<SiteName>/...` is a SharePoint site → use the **SharePoint** connector. Don't be fooled by `sharepoint.com` appearing in both — OneDrive for Business is hosted on SharePoint infrastructure, but Power Automate's connectors treat them as two separate worlds.
+
+**Step 1 — Create the flow**
+
+1. Go to [make.powerautomate.com](https://make.powerautomate.com) and sign in with your **work** Microsoft 365 account (the same one that owns the OneDrive/SharePoint folder).
+2. In the left sidebar, click **+ Create**.
+3. Choose **Automated cloud flow**.
+4. Name it `ABAP Wiki Inbox to GitHub`, then click **Skip** (bottom of the dialog) — you'll pick the trigger in the designer where it's easier to search.
+
+**Step 2 — Add the trigger and point it at your folder**
+
+_If your folder is in OneDrive (My files):_
+
+1. In the designer's search box, type `when a file is created`, filter by the **OneDrive for Business** connector, and select **When a file is created**.
+2. Click the trigger card to open its settings. In the **Folder** field, click the **folder icon at the right end of the box** — don't try to type the path by hand.
+3. A mini file-browser opens showing your OneDrive root. Click the **`>` arrow** next to `abap_wiki` to drill into it, then click **`inbox`** itself. The field should now show `/abap_wiki/inbox`.
+4. **If `abap_wiki` doesn't appear in the picker**: the picker only shows folders in _your own_ My files. A folder someone else shared with you won't show up — either the folder's owner builds the flow, or recreate the drop-zone in your own OneDrive or on a SharePoint site everyone can use.
+
+_If your folder is in SharePoint / Teams:_
+
+1. Search for **When a file is created (properties only)** and select it under the **SharePoint** connector.
+2. **Site Address**: open the dropdown and pick your site (sites you've visited are listed). If it's missing, choose **Enter custom value** and paste the site URL, e.g. `https://<yourcompany>.sharepoint.com/sites/<YourSite>`.
+3. **Library Name**: pick `Documents` unless you created a dedicated library.
+4. **Folder**: click the folder icon at the right end of the field and drill down to `abap_wiki/inbox` with the `>` arrows. Note: the trigger only watches that exact folder, not subfolders.
+
+**Step 3 — Add the "Get file content" action**
+
+> ⚠️ **This is the easiest place to pick the wrong connector.** SharePoint and OneDrive for Business _both_ have an action named "Get file content", and the search results are dominated by SharePoint's. You can tell them apart at a glance: SharePoint's version asks for **Site Address** and **File Identifier**; OneDrive's version has a single required field called **File** and carries the blue cloud icon (same as the OneDrive trigger). If your folder is in OneDrive and the action is asking you for a Site Address, you have the wrong one — no Site Address value will ever make it work.
+
+_If your folder is in OneDrive (My files):_
+
+1. Click **+** below the trigger → **Add an action**.
+2. In the search box, type the **connector name** — `OneDrive` — rather than the action name.
+3. In the results, find the **OneDrive for Business** group (blue cloud icon). Careful: there is also a plain **OneDrive** connector — that's the consumer/personal one; skip it.
+4. Click **See more** on the OneDrive for Business group (or click the connector name) so you're looking only at its actions, then select **Get file content**.
+5. Verify you got the right one: the panel header shows the blue cloud icon, and the only required field is **File** — no Site Address anywhere. If **Site Address** appears, it's the SharePoint one again — delete the card (click it → **⋮** menu at the top of the panel → **Delete**) and repeat from step 1.
+6. In the **File** field, click the **⚡ lightning-bolt icon** (or type `/`) to open the dynamic content panel, and under "When a file is created" insert the **File identifier** token.
+
+_If your folder is in SharePoint / Teams:_ use SharePoint's **Get file content**, set **Site Address** to the same site as your trigger, and insert the trigger's **Identifier** token into **File Identifier**.
+
+**Step 4 — Add the HTTP action**
+
+This is the step that actually uploads the file to GitHub. It uses the generic **HTTP** action, which is a **premium** connector — your account needs a Power Automate Premium license (Power Automate offers a free 90-day trial the first time you use one).
+
+1. Click **+** below **Get file content** → **Add an action**.
+2. Search `HTTP` and select the plain **HTTP** action (globe icon, labelled just "HTTP", marked _Premium_). Not "HTTP with Microsoft Entra ID", not "HTTP Webhook", not "When an HTTP request is received" — just **HTTP**.
+3. **URI** — type this exactly (this is our repo, `t-labs-buy/abap-wiki`), **including the trailing `/`**:
+
+   ```
+   https://api.github.com/repos/t-labs-buy/abap-wiki/contents/raw/inbox/
+   ```
+
+   Then, with the cursor still at the very end (right after the last `/`), click the **⚡ icon** → **fx (Expression)** tab → paste this exactly → **Add**:
+
+   ```
+   encodeUriComponent(decodeBase64(triggerOutputs()?['headers']?['x-ms-file-name-encoded']))
+   ```
+
+   This appends the file's name, URL-encoded so names with spaces work. Use this expression — **don't** insert a token from the Dynamic content tab: the OneDrive trigger lists **File content** more prominently than the name tokens, and picking it by mistake stuffs the whole file into the URL. The field should end with one purple `fx` pill right after `inbox/`.
+
+4. **Method** — pick `PUT` from the dropdown.
+5. **Headers** — add three rows (left box = key, right box = value):
+
+   | Key             | Value                                                                                     |
+   | --------------- | ----------------------------------------------------------------------------------------- |
+   | `Authorization` | `Bearer github_pat_…` — the word `Bearer`, one space, then the fine-grained token from 6a |
+   | `Accept`        | `application/vnd.github+json`                                                             |
+   | `User-Agent`    | `abap-wiki-flow`                                                                          |
+
+6. **Body** — paste this skeleton first:
+
+   ```json
+   {
+     "message": "inbox: ",
+     "content": ""
+   }
+   ```
+
+   Then fill in the two dynamic parts, both via the **fx (Expression)** tab (not the Dynamic content tab):
+   - Cursor right after `inbox: ` (still inside the quotes) → **⚡** → **fx** → paste → **Add**:
+
+     ```
+     decodeBase64(triggerOutputs()?['headers']?['x-ms-file-name-encoded'])
      ```
 
-     GitHub's Contents API requires the file to be base64-encoded — the `base64()` expression does that.
-4. **Optional action — Move file** (SharePoint) into an `Inbox/sent` subfolder, so contributors can see which files have been picked up.
-5. Save, then **test end-to-end**: drop a document into the OneDrive folder → within a minute the flow runs → the file appears in `raw/inbox/` on GitHub → the Actions workflow starts → a few minutes later, wiki pages update.
+     (Same file name as the URI, but without URL-encoding — a commit message is plain text.)
+
+   - Cursor between the quotes of `"content"` → **⚡** → **fx** → paste → **Add**:
+
+     ```
+     base64(body('Get_file_content'))
+     ```
+
+     GitHub's Contents API requires the file to be base64-encoded — this expression does that.
+
+7. **Verify in Code view** before saving — click the **Code view** tab on the HTTP card. It must contain exactly these lines (this is the configuration that is confirmed working):
+
+   ```json
+   "uri": "https://api.github.com/repos/t-labs-buy/abap-wiki/contents/raw/inbox/@{encodeUriComponent(decodeBase64(triggerOutputs()?['headers']?['x-ms-file-name-encoded']))}",
+   "body": {
+     "message": "inbox: @{decodeBase64(triggerOutputs()?['headers']?['x-ms-file-name-encoded'])}",
+     "content": "@{base64(body('Get_file_content'))}"
+   }
+   ```
+
+   Checks: the URI has `inbox/@{` (slash before the expression!), and `body('Get_file_content')` appears **only** in `"content"` — nowhere else.
+
+> ⚠️ **Troubleshooting the HTTP action** — every one of these happened while setting this flow up; check them in order:
+>
+> | Error / symptom                                                                               | Cause                                                                                                                                                                                                                     | Fix                                                                                                                                                                                       |
+> | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+> | `Invalid request. "sha" wasn't supplied.`                                                     | The URI has no file name at the end, so GitHub thinks you're overwriting the existing path `raw/inbox` itself. **Or** a file with the same name already exists in `raw/inbox/` on GitHub (leftover from an earlier test). | Add the file-name expression to the URI (sub-step 3). When re-testing, always use a **freshly named file**, or delete the leftover from the repo first.                                   |
+> | `The provided 'Http' action URI ... is not valid. The URI must be a well formed absolute URI` | The file name was inserted raw and contains spaces (e.g. `Meeting Notes.docx`), or the **File content** token was inserted instead of the name.                                                                           | Use the `encodeUriComponent(decodeBase64(...))` expression from sub-step 3 — it handles both.                                                                                             |
+> | URI or commit message contains the whole document text                                        | The **File content** token was picked from the Dynamic content tab — it sits right next to the name tokens.                                                                                                               | Remove the pill and use the `fx` expressions above instead of Dynamic content tokens.                                                                                                     |
+> | File lands in the repo as `raw/inboxMyFile.txt` (glued name, wrong folder)                    | Missing `/` between `inbox` and the expression in the URI.                                                                                                                                                                | In Code view the URI must read `inbox/@{encodeUriComponent(...` — with the slash.                                                                                                         |
+> | Anything else                                                                                 | —                                                                                                                                                                                                                         | Open **My flows → run history → the failed run → click the red HTTP card** and read **Inputs → URI** and **Outputs → Body**: it shows exactly what was sent and GitHub's exact complaint. |
+>
+> Also: the expression's `Get_file_content` must match your Step 3 card's name (spaces → underscores), and the 6a token needs **Contents: Read and write** on `abap-wiki` — GitHub confusingly answers `404` (not 403) when the token can't write.
+
+**Step 5 — Optional: mark files as picked up**
+
+This moves each file into a `sent` subfolder after it has been uploaded, so contributors can see at a glance which files the pipeline has already picked up. Optional, but recommended.
+
+1. **Create the destination folder first**: in OneDrive, create a subfolder named `sent` inside your `abap_wiki/inbox` folder. The flow can't move a file into a folder that doesn't exist. (This is safe: the trigger watches only the exact `inbox` folder, not its subfolders, so files landing in `inbox/sent` won't re-trigger the flow.)
+2. Back in the designer, click **+** below the **HTTP** action → **Add an action**. The position matters: actions run in order, so the move only happens after the upload succeeds — if the HTTP step fails, the file stays in the inbox as a visible "not processed yet" signal.
+3. Search `OneDrive`, open the **OneDrive for Business** group, and select **Move or rename a file** (that's OneDrive's name for this action). Same icon check as before: blue cloud, and no Site Address field anywhere.
+4. **File** — click **⚡** and insert the trigger's **File identifier** token.
+5. **Destination file path** — this must include the file name, not just the folder. Type this exactly, **including the trailing `/`**:
+
+   ```
+   /abap_wiki/inbox/sent/
+   ```
+
+   Then, cursor at the very end → **⚡** → **fx (Expression)** tab → paste this exactly → **Add**:
+
+   ```
+   decodeBase64(triggerOutputs()?['headers']?['x-ms-file-name-encoded'])
+   ```
+
+   Same rule as the HTTP action: use the `fx` expression, **not** a Dynamic content token (the File content token sits right next to the name tokens). And note: plain `decodeBase64` here — **no** `encodeUriComponent`. This is a file path, not a URL; encoding it would put a literal `%20` into the moved file's name.
+
+6. Open **Advanced parameters** and set **Overwrite** to **Yes**, so a duplicate filename doesn't make the whole flow fail.
+7. **Verify in Code view** — the parameters must read exactly (this is the configuration that is confirmed working):
+
+   ```json
+   "id": "@triggerOutputs()?['headers/x-ms-file-id']",
+   "destination": "/abap_wiki/inbox/sent/@{decodeBase64(triggerOutputs()?['headers']?['x-ms-file-name-encoded'])}",
+   "overwrite": true
+   ```
+
+   Checks: `sent/@{` has the slash, and the destination expression is `decodeBase64(triggerOutputs()...` — **not** `body('Get_file_content')`.
+
+> ⚠️ **Troubleshooting: `Action 'Move_or_rename_a_file' failed: BadGateway`.** OneDrive returns this unhelpful error when the destination path is malformed. Both causes seen in practice: the **File content** token in the destination instead of the file name, and/or a missing `/` after `sent`. Fix with sub-steps 5 and 7 above. Also confirm the `sent` subfolder actually exists in OneDrive — the action won't create it (sub-step 1).
+
+_If your folder is in SharePoint / Teams:_ use SharePoint's **Move file** action instead — **Current Site Address** and **Destination Site Address** = your site, **File to Move** = the trigger's **Identifier** token, **Destination Folder** = browse to `…/Inbox/sent`, and **If another file is already there** = **Replace**.
+
+**Step 6 — Save and test end-to-end**
+
+Click **Save**, then drop a document **with a brand-new filename** (one never uploaded before — a reused name triggers the "sha wasn't supplied" error) into the folder → within a minute the flow runs (check **My flows → 28-day run history**) → the file appears in `raw/inbox/` on GitHub with a commit message like `inbox: <filename>` → the Actions workflow starts → a few minutes later, wiki pages update.
 
 > ⚠️ **Two gotchas worth knowing.**
 > ① The Contents API rejects a PUT if a file with the same name already exists in `raw/inbox/` (it would need the existing file's SHA). In practice the pipeline moves files out of the inbox after processing, so collisions are rare — but tell contributors to use descriptive, dated filenames. ② Files over ~40 MB won't fit through this API; for big recordings, transcribe first and drop the transcript.
 
 > **Why not sync OneDrive to GitHub directly?**
-> There's no native connection between the two — this small flow _is_ the industry-standard bridge (SharePoint trigger → GitHub REST API). An alternative wiring, which iVolve uses, is to have the flow fire a GitHub "repository dispatch" event instead of/alongside the upload; the `push`-trigger approach above achieves the same with one moving part fewer.
+> There's no native connection between the two — this small flow _is_ the industry-standard bridge (a file trigger → GitHub REST API). An alternative wiring is to have the flow fire a GitHub "repository dispatch" event instead of/alongside the upload; the `push`-trigger approach above achieves the same with one moving part fewer.
 
 > ✅ **Win #6** — Anyone in the team can drop a document into a OneDrive folder and, minutes later, see the knowledge appear in the wiki — no GitHub account required. The full loop is closed.
 
@@ -338,7 +502,7 @@ For team members with Claude Code access, the vault becomes something you can ta
 3. Always launch it _inside_ the vault folder — it only reads the folder it starts in:
 
    ```
-   cd ~/abap-vault
+   cd ~/abap-wiki
    claude
    ```
 
@@ -346,13 +510,29 @@ For team members with Claude Code access, the vault becomes something you can ta
 
 Because `CLAUDE.md` sits at the vault root, Claude Code automatically reads your constitution on launch — so it answers from synthesized wiki pages (citing them), refuses to treat raw inbox files as truth, and can even write new knowledge back into the vault following your own rules.
 
+### How to query the ABAP wiki knowledge base? Do I query in the Claude Code terminal or in the Obsidian UI?
+
+You query in the **Claude Code terminal** — that's where Query Mode (defined in your `CLAUDE.md`) runs. Obsidian doesn't have an AI answering questions; it's the reading and browsing layer. The two complement each other.
+
+**Claude Code terminal — for questions**
+
+Just ask in plain language, like "ABAP naming conventions". Per the vault's Query Mode rules, Claude will:
+
+1. Read `meta/index.md` to orient
+2. Read the relevant pages from the right zone
+3. Answer only from synthesized vault pages (never from `raw/`)
+4. Cite the source page, e.g. "From `[[Decision - OTC - Custom BAPI approach - 2026-07-15]]`…"
+5. Say explicitly when the vault doesn't have the answer yet
+
+This is the right place for synthesis-style questions: _"What did we decide about credit-block release and why?"_, _"What's the status of ZSD_CREDIT_AUTORELEASE?"_, _"Have we seen this IDoc error before?"_, _"Is OTC handover-ready?"_ — anything where the answer is spread across several pages.
+
 > ✅ **Win #7** — You asked the wiki a question in plain English and got an answer citing its own pages. This is the payoff moment — demo it to the team.
 
 ---
 
 ## Phase 8 · Onboard the team & keep it alive
 
-Technology is now done. What makes the wiki compound instead of rot is a small amount of human rhythm — this is the lesson the iVolve constitution encodes hardest.
+Technology is now done. What makes the wiki compound instead of rot is a small amount of human rhythm — this is the lesson the constitution encodes hardest.
 
 ### The contributor workflow (teach everyone these three things)
 
@@ -382,6 +562,21 @@ Technology is now done. What makes the wiki compound instead of rot is a small a
 
 ---
 
+## Resources · Useful ABAP repositories
+
+Open-source projects worth knowing about — for the wiki itself, and for the broader ABAP development toolchain.
+
+| Repository                                                                                      | What it is                                                                                                                                                  |
+| ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Gixsy95/abap_wiki](https://github.com/Gixsy95/abap_wiki)                                       | A community ABAP knowledge wiki on GitHub — useful as inspiration for structuring and growing our own vault.                                                |
+| [abapGit/abapGit](https://github.com/abapGit/abapGit)                                           | The open-source Git client for ABAP — the standard way to version-control ABAP development objects and share code between systems.                          |
+| [abaplint/abaplint](https://github.com/abaplint/abaplint)                                       | A static-analysis linter for ABAP: enforces naming conventions, syntax rules, and clean-code checks, and runs in CI (e.g. GitHub Actions) on abapGit repos. |
+| [sap/abap-cleaner](https://github.com/sap/abap-cleaner)                                         | SAP's automated code cleanup tool: applies dozens of clean-ABAP style rules to existing code, available as an Eclipse/ADT plugin and standalone app.        |
+| [marcellourbani/vscode_abap_remote_fs](https://github.com/marcellourbani/vscode_abap_remote_fs) | A VS Code extension that mounts an ABAP system as a remote filesystem — edit, activate, and run ABAP source directly from VS Code via ADT services.         |
+| [marianfoo/abap-mcp-server](https://github.com/marianfoo/abap-mcp-server)                       | A Model Context Protocol (MCP) server for ABAP systems — lets AI assistants like Claude connect to an SAP system to read and work with ABAP objects.        |
+
+---
+
 **Reusing this guide for future projects:** only Phase 2 (structure design) is real work the second time — everything else is copy, rename, and re-key. Consider keeping a `vault-template` repository with the skeleton, workflow, and script ready to fork.
 
-Modelled on the iVolve vault (its `CLAUDE.md` constitution, ingest workflow, and onboarding guide). External references: [GitHub Contents API](https://docs.github.com/en/rest/repos/contents) · [Power Automate + SharePoint](https://learn.microsoft.com/en-us/power-automate/sharepoint-overview) · [Anthropic Console](https://console.anthropic.com) · [Obsidian](https://obsidian.md) · [Git](https://git-scm.com).
+Live implementation: [github.com/t-labs-buy/abap-wiki](https://github.com/t-labs-buy/abap-wiki). External references: [GitHub Contents API](https://docs.github.com/en/rest/repos/contents) · [Power Automate + SharePoint](https://learn.microsoft.com/en-us/power-automate/sharepoint-overview) · [Anthropic Console](https://console.anthropic.com) · [Obsidian](https://obsidian.md) · [Git](https://git-scm.com).

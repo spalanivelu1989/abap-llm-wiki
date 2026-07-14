@@ -25,12 +25,12 @@ skinparam ArrowColor #444444
 actor "Team member" as User
 
 package "Microsoft 365 tenant" {
-  rectangle "OneDrive Inbox\nABAP_Vault/Inbox" as OD
-  rectangle "Power Automate\nbridge flow" as PA
+  rectangle "OneDrive Inbox\nabap_wiki/inbox (personal OneDrive)" as OD
+  rectangle "Power Automate\nABAP Wiki Inbox to GitHub" as PA
 }
 
 package "GitHub cloud" {
-  database "abap-vault repository\npages · CLAUDE.md · meta/ · raw/" as REPO
+  database "abap-wiki repository\npages · CLAUDE.md · meta/ · raw/" as REPO
   rectangle "GitHub Actions\ningest workflow" as GHA
   rectangle "Ingest Script\nabap-ingest.py (Python 3.11)" as PY
 }
@@ -46,6 +46,7 @@ cloud "Claude API\nclaude-opus-4-8" as CLAUDE
 User --> OD : file upload (M365 account)
 OD --> PA : "file created" trigger
 PA --> REPO : HTTPS PUT Contents API\n(fine-grained PAT)
+PA ..> OD : move source to\ninbox/sent
 REPO --> GHA : push to raw/inbox/**\ntriggers workflow
 GHA --> PY : checkout + run\n(GITHUB_TOKEN)
 PY --> CLAUDE : HTTPS POST /v1/messages\n(ANTHROPIC_API_KEY)
