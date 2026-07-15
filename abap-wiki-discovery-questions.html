@@ -1,0 +1,1141 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ABAP LLM Wiki — Team Discovery Questions</title>
+    <style>
+      :root {
+        --paper: #f3f5f4;
+        --card: #fdfefd;
+        --ink: #1f2b28;
+        --muted: #5c6b67;
+        --teal: #0e6b5b;
+        --teal-soft: #e3eeeb;
+        --amber: #a9701f;
+        --amber-soft: #f4eadb;
+        --line: #c9d4d0;
+        --chip-bg: #e9eeec;
+        --shadow: 0 1px 3px rgba(31, 43, 40, 0.08);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --paper: #131d1a;
+          --card: #1b2723;
+          --ink: #e4ece9;
+          --muted: #93a5a0;
+          --teal: #5bbfa9;
+          --teal-soft: #1e332e;
+          --amber: #d9a05b;
+          --amber-soft: #33281a;
+          --line: #33443f;
+          --chip-bg: #24322d;
+          --shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+        }
+      }
+      :root[data-theme="dark"] {
+        --paper: #131d1a;
+        --card: #1b2723;
+        --ink: #e4ece9;
+        --muted: #93a5a0;
+        --teal: #5bbfa9;
+        --teal-soft: #1e332e;
+        --amber: #d9a05b;
+        --amber-soft: #33281a;
+        --line: #33443f;
+        --chip-bg: #24322d;
+        --shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+      }
+      :root[data-theme="light"] {
+        --paper: #f3f5f4;
+        --card: #fdfefd;
+        --ink: #1f2b28;
+        --muted: #5c6b67;
+        --teal: #0e6b5b;
+        --teal-soft: #e3eeeb;
+        --amber: #a9701f;
+        --amber-soft: #f4eadb;
+        --line: #c9d4d0;
+        --chip-bg: #e9eeec;
+        --shadow: 0 1px 3px rgba(31, 43, 40, 0.08);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        background: var(--paper);
+        color: var(--ink);
+        font-family:
+          "Avenir Next",
+          "Segoe UI",
+          system-ui,
+          -apple-system,
+          sans-serif;
+        line-height: 1.55;
+        margin: 0;
+        padding: 3rem 1.25rem 4rem;
+      }
+      .page {
+        max-width: 860px;
+        margin: 0 auto;
+      }
+      .display {
+        font-family:
+          "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+      }
+
+      header.masthead {
+        margin-bottom: 2.2rem;
+      }
+      .eyebrow {
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        font-size: 0.72rem;
+        font-weight: 600;
+        color: var(--teal);
+        margin: 0 0 0.75rem;
+      }
+      h1 {
+        font-family: "Iowan Old Style", Palatino, Georgia, serif;
+        font-size: clamp(1.8rem, 4.5vw, 2.5rem);
+        line-height: 1.15;
+        margin: 0 0 0.9rem;
+        text-wrap: balance;
+        font-weight: 600;
+      }
+      .lede {
+        font-size: 1.05rem;
+        color: var(--muted);
+        max-width: 40rem;
+        margin: 0;
+      }
+      .lede strong {
+        color: var(--ink);
+        font-weight: 600;
+      }
+
+      .context {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-left: 3px solid var(--teal);
+        border-radius: 8px;
+        padding: 1.1rem 1.35rem;
+        margin: 1.8rem 0 2.4rem;
+        box-shadow: var(--shadow);
+      }
+      .context h2 {
+        font-family: "Iowan Old Style", Palatino, Georgia, serif;
+        font-size: 1.1rem;
+        margin: 0 0 0.5rem;
+      }
+      .context p {
+        margin: 0.5rem 0 0;
+        font-size: 0.96rem;
+      }
+
+      .part-banner {
+        margin: 2.6rem 0 1.4rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid var(--teal);
+      }
+      .part-banner h2 {
+        font-family: "Iowan Old Style", Palatino, Georgia, serif;
+        font-size: 1.45rem;
+        margin: 0;
+        font-weight: 600;
+      }
+      .part-banner p {
+        margin: 0.25rem 0 0;
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+
+      section.theme {
+        margin-bottom: 2.2rem;
+      }
+      .theme-head {
+        display: flex;
+        align-items: baseline;
+        gap: 0.7rem;
+        margin-bottom: 0.25rem;
+      }
+      .theme-letter {
+        flex: none;
+        width: 2rem;
+        height: 2rem;
+        border-radius: 50%;
+        background: var(--teal-soft);
+        color: var(--teal);
+        border: 1.5px solid var(--teal);
+        display: grid;
+        place-items: center;
+        font-family: "Iowan Old Style", Palatino, Georgia, serif;
+        font-weight: 600;
+        font-size: 0.95rem;
+        align-self: center;
+      }
+      section.theme h3 {
+        font-family: "Iowan Old Style", Palatino, Georgia, serif;
+        font-size: 1.2rem;
+        margin: 0;
+        font-weight: 600;
+      }
+      .goal {
+        margin: 0.35rem 0 0.9rem;
+        font-size: 0.9rem;
+        color: var(--muted);
+        font-style: italic;
+        max-width: 42rem;
+      }
+
+      ol.questions {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        counter-reset: none;
+        display: grid;
+        gap: 0.5rem;
+      }
+      ol.questions li {
+        display: grid;
+        grid-template-columns: 2.2rem 1fr;
+        gap: 0.6rem;
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 0.65rem 0.9rem;
+        box-shadow: var(--shadow);
+        font-size: 0.97rem;
+      }
+      ol.questions li .qnum {
+        font-family: "Iowan Old Style", Palatino, Georgia, serif;
+        font-weight: 600;
+        color: var(--teal);
+        text-align: right;
+      }
+      ol.questions li.starred {
+        border-left: 3px solid var(--amber);
+      }
+      ol.questions li.starred .qnum {
+        color: var(--amber);
+      }
+      ol.questions li .note {
+        display: block;
+        font-size: 0.85rem;
+        color: var(--muted);
+        margin-top: 0.25rem;
+      }
+
+      .shortlist {
+        background: var(--amber-soft);
+        border: 1px solid var(--amber);
+        border-radius: 10px;
+        padding: 1.2rem 1.4rem;
+        margin: 2.4rem 0;
+      }
+      .shortlist h2 {
+        font-family: "Iowan Old Style", Palatino, Georgia, serif;
+        font-size: 1.15rem;
+        margin: 0 0 0.4rem;
+        color: var(--amber);
+      }
+      .shortlist p {
+        margin: 0.4rem 0 0;
+        font-size: 0.96rem;
+      }
+
+      .tips {
+        background: var(--teal-soft);
+        border: 1px solid var(--teal);
+        border-radius: 10px;
+        padding: 1.2rem 1.4rem;
+        margin: 2.4rem 0 0;
+      }
+      .tips h2 {
+        font-family: "Iowan Old Style", Palatino, Georgia, serif;
+        font-size: 1.15rem;
+        margin: 0 0 0.4rem;
+        color: var(--teal);
+      }
+      .tips ul {
+        margin: 0.4rem 0 0;
+        padding-left: 1.15rem;
+      }
+      .tips li {
+        margin: 0.4rem 0;
+        font-size: 0.96rem;
+      }
+
+      .legend {
+        font-size: 0.85rem;
+        color: var(--muted);
+        margin: 0 0 1.6rem;
+      }
+      .legend .mark {
+        display: inline-block;
+        width: 0.85em;
+        height: 0.85em;
+        background: var(--amber);
+        border-radius: 2px;
+        vertical-align: -0.05em;
+        margin-right: 0.35em;
+      }
+
+      footer.tagline {
+        margin-top: 2.8rem;
+        padding-top: 1.4rem;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 0.9rem;
+        max-width: 44rem;
+      }
+
+      /* theme toggle */
+      .theme-toggle {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        z-index: 10;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        background: var(--card);
+        color: var(--ink);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 0.42rem 0.9rem;
+        font:
+          600 0.78rem "Avenir Next",
+          "Segoe UI",
+          system-ui,
+          -apple-system,
+          sans-serif;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        cursor: pointer;
+        box-shadow: var(--shadow);
+      }
+      .theme-toggle:hover {
+        border-color: var(--teal);
+        color: var(--teal);
+      }
+      .theme-toggle:focus-visible {
+        outline: 2px solid var(--teal);
+        outline-offset: 2px;
+      }
+      .theme-toggle .glyph {
+        font-size: 1rem;
+        line-height: 1;
+      }
+
+      @media print {
+        .theme-toggle {
+          display: none;
+        }
+        body {
+          padding: 0.5rem;
+        }
+        ol.questions li,
+        .context,
+        .shortlist,
+        .tips {
+          box-shadow: none;
+        }
+        section.theme {
+          break-inside: avoid-page;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <button
+      class="theme-toggle"
+      id="themeToggle"
+      type="button"
+      aria-label="Switch between light and dark mode"
+    >
+      <span class="glyph" id="themeGlyph">☾</span>
+      <span id="themeLabel">Dark</span>
+    </button>
+
+    <div class="page">
+      <header class="masthead">
+        <p class="eyebrow">ABAP LLM Wiki · Team Discovery</p>
+        <h1>Fifty-six questions before we build the habit</h1>
+        <p class="lede">
+          A workshop kit for interviewing the ABAP team about the AI-powered
+          knowledge vault. <strong>Part 1 (A–I)</strong> finds out what the wiki
+          should contain. <strong>Part 2 (J–N)</strong> finds out how it must
+          behave to actually get used.
+        </p>
+      </header>
+
+      <div class="context">
+        <h2 class="display">Why these questions</h2>
+        <p>
+          Industry research on SAP teams says the problem is real: a typical ECC
+          system carries ~22,000 custom objects whose original authors have
+          moved on, documentation is the most-cited gap in custom code
+          management, and custom code that "nobody fully understands anymore" is
+          the single biggest cause of S/4HANA migration overruns. So the
+          interview isn't about <em>whether</em> a knowledge vault helps — it's
+          about finding which specific losses hurt <em>this</em> team, so the
+          wiki earns daily use instead of becoming another shelf nobody visits.
+        </p>
+      </div>
+
+      <p class="legend">
+        <span class="mark"></span>Amber-marked questions form the 30-minute
+        shortlist — ask these if time is short.
+      </p>
+
+      <!-- ============ PART 1 ============ -->
+      <div class="part-banner">
+        <h2>Part 1 — What should the wiki contain?</h2>
+        <p>
+          Themes A–I: knowledge losses, repeat demand, source material, legacy
+          code, trust, and success criteria.
+        </p>
+      </div>
+
+      <section class="theme">
+        <div class="theme-head">
+          <span class="theme-letter">A</span>
+          <h3>Where your knowledge lives today</h3>
+        </div>
+        <p class="goal">
+          Goal: map the current, informal system — the vault has to beat it, not
+          just exist alongside it.
+        </p>
+        <ol class="questions">
+          <li>
+            <span class="qnum">1</span
+            ><span
+              >When you need to understand a custom program you didn't write,
+              what do you do first — read the code, ask a colleague, search old
+              emails, check a shared drive?</span
+            >
+          </li>
+          <li class="starred">
+            <span class="qnum">2</span
+            ><span
+              >Think of the last time you spent more than half a day figuring
+              something out that a teammate already knew. What was it, and why
+              didn't their knowledge reach you?</span
+            >
+          </li>
+          <li class="starred">
+            <span class="qnum">3</span
+            ><span
+              >Which person on the team, if they left tomorrow, would take the
+              most irreplaceable knowledge with them? What do they know that's
+              written down nowhere?</span
+            >
+          </li>
+          <li>
+            <span class="qnum">4</span
+            ><span
+              >Where do design decisions get recorded today — and have you ever
+              discovered two conflicting "decisions" on the same topic?</span
+            >
+          </li>
+          <li>
+            <span class="qnum">5</span
+            ><span
+              >What documentation do you actually <em>trust</em> today, and why?
+              What documentation exists but you've stopped reading?</span
+            >
+          </li>
+        </ol>
+      </section>
+
+      <section class="theme">
+        <div class="theme-head">
+          <span class="theme-letter">B</span>
+          <h3>The questions you answer over and over</h3>
+        </div>
+        <p class="goal">
+          Goal: seed the FAQ and troubleshooting sections with real repeat
+          demand.
+        </p>
+        <ol class="questions">
+          <li class="starred">
+            <span class="qnum">6</span
+            ><span
+              >What are the three questions new joiners or functional
+              consultants ask you most often?</span
+            >
+          </li>
+          <li>
+            <span class="qnum">7</span
+            ><span
+              >Which recurring production problems (failed IDocs, stuck
+              background jobs, authorization errors, interface failures) do you
+              re-diagnose from scratch every time? Is there a diagnostic path
+              you keep re-walking?</span
+            >
+          </li>
+          <li>
+            <span class="qnum">8</span
+            ><span
+              >What do clients or the functional team repeatedly ask that you
+              wish had a standing, written answer?</span
+            >
+          </li>
+          <li class="starred">
+            <span class="qnum">9</span
+            ><span
+              >Which "gotchas" — non-obvious SAP behavior that cost you hours —
+              have bitten more than one person on this team?<span class="note"
+                >Ask for specific stories: a COMMIT flag, a lock behavior, a
+                transport ordering surprise.</span
+              ></span
+            >
+          </li>
+        </ol>
+      </section>
+
+      <section class="theme">
+        <div class="theme-head">
+          <span class="theme-letter">C</span>
+          <h3>What to feed the librarian</h3>
+        </div>
+        <p class="goal">
+          Goal: decide which document types the pipeline should prioritize, and
+          remove friction from the drop-zone habit.
+        </p>
+        <ol class="questions">
+          <li>
+            <span class="qnum">10</span
+            ><span
+              >What artifacts does your work actually produce — meeting notes,
+              FS/TS documents, transcripts, emails, chat threads, spreadsheets,
+              WRICEF lists? Which of these contain knowledge that dies
+              today?</span
+            >
+          </li>
+          <li>
+            <span class="qnum">11</span
+            ><span
+              >Would you realistically drop a raw meeting transcript or an email
+              thread into a folder, if that's all it took? What would stop
+              you?<span class="note"
+                >Confidentiality, effort, habit, tooling?</span
+              ></span
+            >
+          </li>
+          <li>
+            <span class="qnum">12</span
+            ><span
+              >Are there existing document troves worth back-ingesting — old
+              design documents, a SharePoint of specs, a defect log from the
+              last go-live?</span
+            >
+          </li>
+        </ol>
+      </section>
+
+      <section class="theme">
+        <div class="theme-head">
+          <span class="theme-letter">D</span>
+          <h3>Legacy code — what the AI should reconstruct</h3>
+        </div>
+        <p class="goal">
+          Goal: prioritize the code-ingestion feature — the highest-value and
+          hardest problem in the research.
+        </p>
+        <ol class="questions">
+          <li class="starred">
+            <span class="qnum">13</span
+            ><span
+              >Which custom objects scare you the most to touch — and is that
+              because of missing documentation, missing test data, or missing
+              understanding of who uses them?</span
+            >
+          </li>
+          <li class="starred">
+            <span class="qnum">14</span
+            ><span
+              >If an AI drafted a functional spec for a legacy program (what it
+              does in business terms, its dependencies, which processes break if
+              it fails), what would that draft need to contain for you to bother
+              reading it?</span
+            >
+          </li>
+          <li>
+            <span class="qnum">15</span
+            ><span
+              >Which matters more to document first: the objects changed most
+              often, the objects that fail most often, or the objects in scope
+              for migration/remediation?</span
+            >
+          </li>
+          <li>
+            <span class="qnum">16</span
+            ><span
+              >What dependency information do you look up repeatedly —
+              where-used lists, table usage, which enhancement calls what?</span
+            >
+          </li>
+        </ol>
+      </section>
+
+      <section class="theme">
+        <div class="theme-head">
+          <span class="theme-letter">E</span>
+          <h3>Trust — the make-or-break for an LLM wiki</h3>
+        </div>
+        <p class="goal">
+          Goal: AI-generated pages carry a draft/ai-generated tag until a human
+          validates them. Calibrate how the team wants that to work.
+        </p>
+        <ol class="questions">
+          <li>
+            <span class="qnum">17</span
+            ><span
+              >How would you want AI-written pages marked so you always know
+              what's machine-inferred versus human-confirmed?</span
+            >
+          </li>
+          <li>
+            <span class="qnum">18</span
+            ><span
+              >Who should validate AI-generated documentation, and how much
+              review time per week is realistic — honestly?</span
+            >
+          </li>
+          <li class="starred">
+            <span class="qnum">19</span
+            ><span
+              >What's worse for you: a page that's missing, or a page that's
+              confidently wrong? Can you give an example of documentation that
+              misled you?</span
+            >
+          </li>
+          <li>
+            <span class="qnum">20</span
+            ><span
+              >If the AI gets something wrong and you spot it, what's the
+              easiest correction path you'd actually use — edit the page,
+              comment, tell one named person?</span
+            >
+          </li>
+        </ol>
+      </section>
+
+      <section class="theme">
+        <div class="theme-head">
+          <span class="theme-letter">F</span>
+          <h3>How you want to ask and consume</h3>
+        </div>
+        <p class="goal">
+          Goal: shape query mode and delivery — a wiki nobody opens is a failure
+          regardless of content quality.
+        </p>
+        <ol class="questions">
+          <li class="starred">
+            <span class="qnum">21</span
+            ><span
+              >When you have a question mid-task, where are you — in
+              Eclipse/ADT, SAP GUI, Teams, a browser? Where would the answer
+              need to appear to be useful?</span
+            >
+          </li>
+          <li>
+            <span class="qnum">22</span
+            ><span
+              >Would you rather browse pages, or ask questions in plain language
+              and get an answer with sources cited? Or both?</span
+            >
+          </li>
+          <li>
+            <span class="qnum">23</span
+            ><span
+              >What answer format helps most: a direct answer with a link, a
+              checklist, a code snippet, a "who to ask"?</span
+            >
+          </li>
+          <li>
+            <span class="qnum">24</span
+            ><span
+              >Should the wiki answer in English only, or do team members prefer
+              another language for reading?</span
+            >
+          </li>
+        </ol>
+      </section>
+
+      <section class="theme">
+        <div class="theme-head">
+          <span class="theme-letter">G</span>
+          <h3>Estimates, actuals, and the numbers</h3>
+        </div>
+        <p class="goal">
+          Goal: the vault tracks estimated vs. actual effort per development — a
+          calibration loop. Test appetite.
+        </p>
+        <ol class="questions">
+          <li>
+            <span class="qnum">25</span
+            ><span
+              >How do you estimate WRICEF effort today, and do you ever look
+              back at what a similar object actually took last time?</span
+            >
+          </li>
+          <li>
+            <span class="qnum">26</span
+            ><span
+              >Would you record actual effort on completed developments if it
+              took under a minute — and what would make that feel worth it
+              rather than surveillance?</span
+            >
+          </li>
+        </ol>
+      </section>
+
+      <section class="theme">
+        <div class="theme-head">
+          <span class="theme-letter">H</span>
+          <h3>Handovers and onboarding</h3>
+        </div>
+        <p class="goal">
+          Goal: test the vault's handover-readiness checklist against real
+          handover pain.
+        </p>
+        <ol class="questions">
+          <li>
+            <span class="qnum">27</span
+            ><span
+              >Describe the last handover you gave or received. What was
+              missing? What did the leaver never write down?</span
+            >
+          </li>
+          <li>
+            <span class="qnum">28</span
+            ><span
+              >If a new developer joined your workstream Monday, what should
+              they be able to find without asking anyone — day one, week one,
+              month one?</span
+            >
+          </li>
+        </ol>
+      </section>
+
+      <section class="theme">
+        <div class="theme-head">
+          <span class="theme-letter">I</span>
+          <h3>Success criteria and anti-goals</h3>
+        </div>
+        <p class="goal">
+          Goal: get their definition of success — and their fears — on record
+          before you build habits around the tool.
+        </p>
+        <ol class="questions">
+          <li class="starred">
+            <span class="qnum">29</span
+            ><span
+              >Six months from now, what would make you say "the wiki saved me
+              real time this week"? What's the first search you'd genuinely
+              run?</span
+            >
+          </li>
+          <li class="starred">
+            <span class="qnum">30</span
+            ><span
+              >What would make you abandon it?<span class="note"
+                >Stale pages, wrong answers, duplicate pages, too much ceremony
+                to contribute?</span
+              ></span
+            >
+          </li>
+          <li>
+            <span class="qnum">31</span
+            ><span
+              >Is there anything you would <em>not</em> want captured in a
+              shared vault — client-sensitive material, half-formed opinions
+              from meetings, individual performance signals?</span
+            >
+          </li>
+        </ol>
+      </section>
+
+      <!-- ============ PART 2 ============ -->
+      <div class="part-banner">
+        <h2>Part 2 — How will the team actually use it?</h2>
+        <p>
+          Themes J–N: moments of use, personas, contribution habits, toolchain
+          fit, and the first ninety days.
+        </p>
+      </div>
+
+      <section class="theme">
+        <div class="theme-head">
+          <span class="theme-letter">J</span>
+          <h3>Moments of use — when would you open it?</h3>
+        </div>
+        <p class="goal">
+          Goal: identify the real triggers. A tool gets adopted when it attaches
+          to moments that already exist in the workday.
+        </p>
+        <ol class="questions">
+          <li>
+            <span class="qnum">32</span
+            ><span
+              >Walk me through yesterday. At which points in your day did you
+              need information you didn't have in your head — and what did you
+              do in each of those moments?</span
+            >
+          </li>
+          <li>
+            <span class="qnum">33</span
+            ><span
+              >What are you usually in the middle of when a knowledge question
+              comes up: writing code, debugging a production issue, sitting in a
+              meeting, estimating, reviewing a transport, writing a spec?</span
+            >
+          </li>
+          <li>
+            <span class="qnum">34</span
+            ><span
+              >In those moments, how much time will you realistically give the
+              wiki before you give up and ping a colleague — thirty seconds? Two
+              minutes?</span
+            >
+          </li>
+          <li>
+            <span class="qnum">35</span
+            ><span
+              >Are there scheduled moments where the wiki could have a standing
+              role — sprint planning, defect triage, design reviews, the weekly
+              team call, pre-transport-release checks?</span
+            >
+          </li>
+          <li>
+            <span class="qnum">36</span
+            ><span
+              >Would you use it <em>before</em> starting a new development (to
+              check for prior decisions, similar objects, applicable standards),
+              or does that check not happen today at all?</span
+            >
+          </li>
+        </ol>
+      </section>
+
+      <section class="theme">
+        <div class="theme-head">
+          <span class="theme-letter">K</span>
+          <h3>Who uses it, and differently</h3>
+        </div>
+        <p class="goal">
+          Goal: a senior developer, a new joiner, a functional consultant, and a
+          project lead need different things from the same vault — find out
+          which personas matter most.
+        </p>
+        <ol class="questions">
+          <li>
+            <span class="qnum">37</span
+            ><span
+              >Who do you expect to be the heaviest <em>readers</em> of the wiki
+              — developers, functional consultants, team leads, the client? And
+              who will rarely touch it?</span
+            >
+          </li>
+          <li>
+            <span class="qnum">38</span
+            ><span
+              >Should functional consultants and the client see everything, or
+              are there pages that should stay team-internal (rough estimates,
+              candid meeting extracts, internal concerns)?</span
+            >
+          </li>
+          <li>
+            <span class="qnum">39</span
+            ><span
+              >Is there a role that mostly <em>asks</em> and a role that mostly
+              <em>answers</em> today?<span class="note"
+                >The answer tells you whose time the wiki should save
+                first.</span
+              ></span
+            >
+          </li>
+          <li>
+            <span class="qnum">40</span
+            ><span
+              >For project leads specifically: what would you want to pull from
+              the wiki for status reporting, steering meetings, or audits — and
+              would that change what gets captured?</span
+            >
+          </li>
+        </ol>
+      </section>
+
+      <section class="theme">
+        <div class="theme-head">
+          <span class="theme-letter">L</span>
+          <h3>Reading vs. contributing — the two-way street</h3>
+        </div>
+        <p class="goal">
+          Goal: everyone says yes to reading; adoption dies on contribution.
+          Probe the contribution side hard.
+        </p>
+        <ol class="questions">
+          <li>
+            <span class="qnum">41</span
+            ><span
+              >Be honest: after a meeting you ran, will you drop the notes into
+              the inbox folder? Every time, sometimes, never? What would make it
+              "every time"?</span
+            >
+          </li>
+          <li>
+            <span class="qnum">42</span
+            ><span
+              >Who should own dropping meeting material — the meeting organizer,
+              a rotating role, whoever took notes?</span
+            >
+          </li>
+          <li>
+            <span class="qnum">43</span
+            ><span
+              >When you solve a nasty problem at 6pm, what's the maximum effort
+              you'd spend capturing it — dropping a raw chat transcript,
+              dictating two sentences, writing a proper note, or nothing?</span
+            >
+          </li>
+          <li>
+            <span class="qnum">44</span
+            ><span
+              >Would automatic capture from existing channels help — Teams
+              meeting transcripts flowing in automatically, or a designated
+              email address/channel that feeds the inbox — so contribution
+              requires no extra step at all?</span
+            >
+          </li>
+          <li>
+            <span class="qnum">45</span
+            ><span
+              >When you <em>correct</em> something during a conversation ("no,
+              we changed that decision in March"), should that correction flow
+              into the wiki, and how would you want that to happen without
+              breaking your conversation?</span
+            >
+          </li>
+        </ol>
+      </section>
+
+      <section class="theme">
+        <div class="theme-head">
+          <span class="theme-letter">M</span>
+          <h3>Fit with your actual toolchain</h3>
+        </div>
+        <p class="goal">
+          Goal: locate the wiki inside the tools they already live in, and find
+          the friction points early.
+        </p>
+        <ol class="questions">
+          <li>
+            <span class="qnum">46</span
+            ><span
+              >Which tools are open on your screen all day — Eclipse/ADT, SAP
+              GUI, Teams, Outlook, browser, Excel, a ticketing tool
+              (Jira/Solution Manager/ServiceNow)?</span
+            >
+          </li>
+          <li>
+            <span class="qnum">47</span
+            ><span
+              >Does the team already use Obsidian, or would reading happen via
+              GitHub, a browser, or something else? Who would need help setting
+              up access?</span
+            >
+          </li>
+          <li>
+            <span class="qnum">48</span
+            ><span
+              >When a defect ticket comes in, where does its story live today —
+              and should the wiki link to tickets, mirror them, or stay out of
+              ticket-land entirely?</span
+            >
+          </li>
+          <li>
+            <span class="qnum">49</span
+            ><span
+              >Do you already use any AI tools in your daily work (ChatGPT,
+              Copilot, SAP's Joule)? What have you learned about when you trust
+              them and when you don't?</span
+            >
+          </li>
+          <li>
+            <span class="qnum">50</span
+            ><span
+              >Are there client-side restrictions we must respect — data that
+              can't leave certain systems, naming that can't appear in a repo,
+              approval needed before adopting a new tool?</span
+            >
+          </li>
+        </ol>
+      </section>
+
+      <section class="theme">
+        <div class="theme-head">
+          <span class="theme-letter">N</span>
+          <h3>The first ninety days — building the habit</h3>
+        </div>
+        <p class="goal">
+          Goal: adoption is won or lost early. Co-design the rollout with the
+          team so it's theirs, not something imposed.
+        </p>
+        <ol class="questions">
+          <li class="starred">
+            <span class="qnum">51</span
+            ><span
+              >What single use case should the wiki nail first to win you over —
+              legacy code explanations, FAQ answers, decision lookup, onboarding
+              material?<span class="note"
+                >Force a ranking; "all of it" is not an answer. This is the most
+                important question in the kit.</span
+              ></span
+            >
+          </li>
+          <li>
+            <span class="qnum">52</span
+            ><span
+              >Would a "seed sprint" be worth it — a week where we deliberately
+              back-ingest the most valuable existing documents — and who could
+              name the top twenty documents to feed it?</span
+            >
+          </li>
+          <li>
+            <span class="qnum">53</span
+            ><span
+              >Who on the team would volunteer to be the curator (quality
+              gatekeeper) and who the intelligence lead (promotes repeated
+              lessons)? Should these rotate?</span
+            >
+          </li>
+          <li>
+            <span class="qnum">54</span
+            ><span
+              >How should we handle the awkward middle period when the wiki is
+              half-empty — is a page saying "the vault doesn't know this yet,
+              ask a named colleague" acceptable, or does that erode trust?</span
+            >
+          </li>
+          <li>
+            <span class="qnum">55</span
+            ><span
+              >What check-in rhythm would you accept to keep it honest — a
+              20-minute weekly review, monthly, or only when something
+              breaks?</span
+            >
+          </li>
+          <li>
+            <span class="qnum">56</span
+            ><span
+              >How will <em>we</em> know it's working? Pick a signal you'd
+              believe: fewer repeated questions in the team channel, faster
+              onboarding, wiki links appearing in ticket resolutions, people
+              citing pages in meetings?</span
+            >
+          </li>
+        </ol>
+      </section>
+
+      <div class="shortlist">
+        <h2 class="display">Only have 30 minutes?</h2>
+        <p>
+          Ask the ten amber-marked questions:
+          <strong>2, 3, 6, 9, 13, 14, 19, 21, 29, 30</strong> — plus
+          <strong>51</strong> if you can squeeze in one more. Together they
+          cover knowledge loss, repeat demand, the legacy-code feature, trust,
+          and adoption — the answers that actually change how the wiki should
+          behave.
+        </p>
+      </div>
+
+      <div class="tips">
+        <h2 class="display">Facilitation tips</h2>
+        <ul>
+          <li>
+            <strong>Ask for stories, not preferences.</strong> "Tell me about
+            the last time…" beats "would you like…". People are poor predictors
+            of tool usage but accurate reporters of past pain.
+          </li>
+          <li>
+            <strong>Anchor Part 2 in last week.</strong> For themes J–L, keep
+            pulling answers back to real recent moments. Themes M–N are
+            co-design, so hypotheticals are fine there.
+          </li>
+          <li>
+            <strong>Force rankings.</strong> Whenever someone answers "all of
+            it", ask them to pick one. Question 51 especially.
+          </li>
+          <li>
+            <strong>Close the loop.</strong> Write the answers up and drop the
+            document into <code>raw/inbox/</code> — the interview itself becomes
+            the vault's first stakeholder-signal ingestion, a live demonstration
+            of the system working.
+          </li>
+        </ul>
+      </div>
+
+      <footer class="tagline">
+        ABAP LLM Wiki discovery kit · Part 1 (A–I): what the wiki should contain
+        · Part 2 (J–N): how it must behave to get used · Prepared July 2026
+      </footer>
+    </div>
+
+    <script>
+      (function () {
+        var root = document.documentElement;
+        var button = document.getElementById("themeToggle");
+        var glyph = document.getElementById("themeGlyph");
+        var label = document.getElementById("themeLabel");
+
+        function currentTheme() {
+          var forced = root.getAttribute("data-theme");
+          if (forced) return forced;
+          return window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light";
+        }
+
+        function render() {
+          if (currentTheme() === "dark") {
+            glyph.textContent = "☀";
+            label.textContent = "Light";
+          } else {
+            glyph.textContent = "☾";
+            label.textContent = "Dark";
+          }
+        }
+
+        function apply(theme) {
+          root.setAttribute("data-theme", theme);
+          try {
+            localStorage.setItem("abap-discovery-theme", theme);
+          } catch (e) {}
+          render();
+        }
+
+        var saved = null;
+        try {
+          saved = localStorage.getItem("abap-discovery-theme");
+        } catch (e) {}
+        if (saved === "dark" || saved === "light") {
+          root.setAttribute("data-theme", saved);
+        }
+
+        button.addEventListener("click", function () {
+          apply(currentTheme() === "dark" ? "light" : "dark");
+        });
+
+        window
+          .matchMedia("(prefers-color-scheme: dark)")
+          .addEventListener("change", render);
+        render();
+      })();
+    </script>
+  </body>
+</html>
