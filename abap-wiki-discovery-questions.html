@@ -226,6 +226,15 @@
         color: var(--muted);
         margin-top: 0.25rem;
       }
+      ol.questions li.answered:not(.starred) {
+        border-left: 3px solid var(--teal);
+      }
+      ol.questions li .answer {
+        display: block;
+        font-size: 0.85rem;
+        color: var(--teal);
+        margin-top: 0.3rem;
+      }
 
       .shortlist {
         background: var(--amber-soft);
@@ -280,6 +289,9 @@
         border-radius: 2px;
         vertical-align: -0.05em;
         margin-right: 0.35em;
+      }
+      .legend .mark.teal {
+        background: var(--teal);
       }
 
       footer.tagline {
@@ -423,7 +435,9 @@
           A workshop kit for interviewing the ABAP team about the AI-powered
           knowledge vault. <strong>Part 1 (A–I)</strong> finds out what the wiki
           should contain. <strong>Part 2 (J–N)</strong> finds out how it must
-          behave to actually get used.
+          behave to actually get used. <strong>Round 2 (O)</strong> follows up
+          on the team's first written answers, which are annotated inline in
+          teal.
         </p>
       </header>
 
@@ -441,9 +455,31 @@
         </p>
       </div>
 
+      <div class="context">
+        <h2 class="display">Round 1 responses are in</h2>
+        <p>
+          The ABAP team's first written response (July 2026) already answers
+          parts of themes C, D, G, and N — those answers appear in teal under
+          the questions they address. Three headlines: the priority feed is
+          <strong
+            >FS/TS documents, solution designs, troubleshooting guides, and
+            development standards</strong
+          >; the killer feature is <strong>reconstructing legacy code</strong> —
+          summarization, generated FS/TS, business-logic explanation, impacted
+          processes, and dependency analysis; and the team sent two design
+          questions back — can <strong>TADIR metadata</strong> power dependency
+          capture and impact analysis, and should the vault be
+          <strong>per-customer or reusable</strong> across landscapes? The
+          follow-ups these answers earned are collected in
+          <strong>Round 2 (theme O)</strong> at the end.
+        </p>
+      </div>
+
       <p class="legend">
         <span class="mark"></span>Amber-marked questions form the 30-minute
         shortlist — ask these if time is short.
+        <span class="mark teal" style="margin-left: 0.9em"></span>Teal notes
+        record the team's first written answers (July 2026).
       </p>
 
       <!-- ============ PART 1 ============ -->
@@ -562,13 +598,19 @@
           remove friction from the drop-zone habit.
         </p>
         <ol class="questions">
-          <li>
+          <li class="answered">
             <span class="qnum">10</span
             ><span
               >What artifacts does your work actually produce — meeting notes,
               FS/TS documents, transcripts, emails, chat threads, spreadsheets,
               WRICEF lists? Which of these contain knowledge that dies
-              today?</span
+              today?<span class="answer"
+                >Team's first answer — highest-priority feed: functional
+                specifications, technical specifications, solution/design
+                documents, troubleshooting guides, and development standards
+                &amp; best practices. Follow-up 57 asks where those live
+                today.</span
+              ></span
             >
           </li>
           <li>
@@ -602,21 +644,33 @@
           hardest problem in the research.
         </p>
         <ol class="questions">
-          <li class="starred">
+          <li class="starred answered">
             <span class="qnum">13</span
             ><span
               >Which custom objects scare you the most to touch — and is that
               because of missing documentation, missing test data, or missing
-              understanding of who uses them?</span
+              understanding of who uses them?<span class="answer"
+                >Team's first answer — the biggest challenge is the missing
+                business purpose and rationale behind legacy custom
+                developments: many programs are years old and the original
+                developers are no longer available.</span
+              ></span
             >
           </li>
-          <li class="starred">
+          <li class="starred answered">
             <span class="qnum">14</span
             ><span
               >If an AI drafted a functional spec for a legacy program (what it
               does in business terms, its dependencies, which processes break if
               it fails), what would that draft need to contain for you to bother
-              reading it?</span
+              reading it?<span class="answer"
+                >Team's first answer — confirmed as a significant value-add.
+                Wanted capabilities: code summarization, auto-generated FS/TS
+                from source, business-logic explanation, identification of
+                impacted business processes, and object relationship /
+                dependency analysis. Follow-up 58 asks which template a
+                generated spec must follow.</span
+              ></span
             >
           </li>
           <li>
@@ -627,11 +681,19 @@
               for migration/remediation?</span
             >
           </li>
-          <li>
+          <li class="answered">
             <span class="qnum">16</span
             ><span
               >What dependency information do you look up repeatedly —
-              where-used lists, table usage, which enhancement calls what?</span
+              where-used lists, table usage, which enhancement calls what?<span
+                class="answer"
+                >Team's first answer — object relationship and dependency
+                analysis is a stated high priority (programs, classes, CDS
+                views, DDIC objects, enhancements), especially for impact
+                analysis, Clean Core initiatives, and code modernization. Their
+                counter-question — can this be captured from a TADIR metadata
+                export? — is follow-up 60.</span
+              ></span
             >
           </li>
         </ol>
@@ -732,11 +794,17 @@
           calibration loop. Test appetite.
         </p>
         <ol class="questions">
-          <li>
+          <li class="answered">
             <span class="qnum">25</span
             ><span
               >How do you estimate WRICEF effort today, and do you ever look
-              back at what a similar object actually took last time?</span
+              back at what a similar object actually took last time?<span
+                class="answer"
+                >Team's first answer — effort estimation is a stated area of
+                interest from the pre-sales and delivery perspective. Their
+                counter-question — would captured ABAP metadata be sufficient to
+                support estimation, or is more needed? — is follow-up 59.</span
+              ></span
             >
           </li>
           <li>
@@ -1022,12 +1090,18 @@
               them and when you don't?</span
             >
           </li>
-          <li>
+          <li class="answered">
             <span class="qnum">50</span
             ><span
               >Are there client-side restrictions we must respect — data that
               can't leave certain systems, naming that can't appear in a repo,
-              approval needed before adopting a new tool?</span
+              approval needed before adopting a new tool?<span class="answer"
+                >Team's first answer — a heavily customized landscape would be
+                the best pilot candidate; Tarento's own demo system is available
+                but not heavily customized, and customer demo-system data would
+                need approvals and confidentiality clearance. Follow-up 63 pins
+                down that boundary.</span
+              ></span
             >
           </li>
         </ol>
@@ -1043,7 +1117,7 @@
           team so it's theirs, not something imposed.
         </p>
         <ol class="questions">
-          <li class="starred">
+          <li class="starred answered">
             <span class="qnum">51</span
             ><span
               >What single use case should the wiki nail first to win you over —
@@ -1051,6 +1125,11 @@
               material?<span class="note"
                 >Force a ranking; "all of it" is not an answer. This is the most
                 important question in the kit.</span
+              ><span class="answer"
+                >Team's first answer points clearly at legacy code:
+                summarization, generated FS/TS, business-logic explanation,
+                impacted processes, and dependency analysis. Worth confirming
+                the ranking within that list in the interview.</span
               ></span
             >
           </li>
@@ -1098,6 +1177,126 @@
         </ol>
       </section>
 
+      <!-- ============ ROUND 2 ============ -->
+      <div class="part-banner">
+        <h2>Round 2 — Follow-ups from the first written response</h2>
+        <p>
+          The team's July 2026 answers resolved parts of themes C, D, G, and N —
+          and raised design questions of their own. Ask these next.
+        </p>
+      </div>
+
+      <section class="theme">
+        <div class="theme-head">
+          <span class="theme-letter">O</span>
+          <h3>Digging into the first answers</h3>
+        </div>
+        <p class="goal">
+          Goal: turn the round-1 answers and the team's counter-questions into
+          concrete decisions about the seed corpus, the metadata feed, the vault
+          architecture, and the pilot.
+        </p>
+        <ol class="questions">
+          <li>
+            <span class="qnum">57</span
+            ><span
+              >Of the five document types you prioritized — FS, TS,
+              solution/design documents, troubleshooting guides, development
+              standards — which already sit in an organized, accessible store,
+              and which live scattered across mailboxes and laptops? Who could
+              name the best twenty documents to seed the vault?<span
+                class="note"
+                >Connects to question 52 (the seed sprint). No sample document
+                was available in round 1, so locating the corpus is the first
+                practical step.</span
+              ></span
+            >
+          </li>
+          <li>
+            <span class="qnum">58</span
+            ><span
+              >For an AI-generated functional or technical spec to be usable in
+              delivery, which template must it follow — a Tarento standard, a
+              customer's own format? And who signs off a generated spec before
+              it's treated as trustworthy?<span class="note"
+                >Builds on questions 14 and 17–18: generated FS/TS was confirmed
+                as the killer feature, so the review path and format decide
+                whether drafts get read.</span
+              ></span
+            >
+          </li>
+          <li class="starred">
+            <span class="qnum">59</span
+            ><span
+              >Unpack one recent estimate: when you sized that WRICEF item,
+              which inputs actually moved the number — complexity class, similar
+              past objects, interface count, test effort, gut feel? Which of
+              those could the vault realistically hold?<span class="note"
+                >This answers the team's own counter-question — "is ABAP
+                metadata sufficient for effort estimation?" — by listing what
+                estimation actually consumes. Expect the answer to be "metadata
+                plus recorded actuals plus FS complexity," which is exactly the
+                calibration loop in theme G.</span
+              ></span
+            >
+          </li>
+          <li class="starred">
+            <span class="qnum">60</span
+            ><span
+              >If we ingest TADIR and where-used metadata, which impact question
+              should the wiki answer first: "what breaks if this DDIC object
+              changes?", "which custom objects sit inside this business
+              process?", or "what's in scope for Clean Core remediation?" And
+              which exports are realistically obtainable — TADIR, where-used
+              indexes, enhancement inventories?<span class="note"
+                >The team flagged TADIR-based dependency capture (programs,
+                classes, CDS views, DDIC objects, enhancements) as a
+                high-priority capability for impact analysis, Clean Core, and
+                modernization.</span
+              ></span
+            >
+          </li>
+          <li class="starred">
+            <span class="qnum">61</span
+            ><span
+              >If you moved to another customer's landscape tomorrow, which
+              pages from this vault would you want to take with you — coding
+              standards, gotchas, estimation calibrations — and which knowledge
+              is strictly customer-specific?<span class="note"
+                >This decides the architecture behind the team's question
+                "system-specific or reusable?": the likely answer is one vault
+                per customer landscape plus a shared, reusable core of standards
+                and patterns.</span
+              ></span
+            >
+          </li>
+          <li>
+            <span class="qnum">62</span
+            ><span
+              >To identify impacted business processes from code, the AI needs
+              an object-to-process mapping. Where does that knowledge live today
+              — process documentation, Solution Manager, functional consultants'
+              heads — and who could validate a first draft of that
+              mapping?</span
+            >
+          </li>
+          <li>
+            <span class="qnum">63</span
+            ><span
+              >For the heavily-customized pilot you proposed: what result, on
+              which real objects, would make you call it a success — and what
+              exactly is the approval path and confidentiality boundary for
+              using a customer demo system's metadata?<span class="note"
+                >Round 1 said Tarento's demo system is available but not heavily
+                customized; a customer demo system needs approvals. Make the
+                pilot's success criteria concrete before that conversation
+                happens.</span
+              ></span
+            >
+          </li>
+        </ol>
+      </section>
+
       <div class="shortlist">
         <h2 class="display">Only have 30 minutes?</h2>
         <p>
@@ -1106,7 +1305,9 @@
           <strong>51</strong> if you can squeeze in one more. Together they
           cover knowledge loss, repeat demand, the legacy-code feature, trust,
           and adoption — the answers that actually change how the wiki should
-          behave.
+          behave. If round 1 answers are already in hand, swap in the three
+          amber follow-ups — <strong>59, 60, 61</strong> — which turn the team's
+          own counter-questions into design decisions.
         </p>
       </div>
 
@@ -1330,7 +1531,8 @@
 
       <footer class="tagline">
         ABAP LLM Wiki discovery kit · Part 1 (A–I): what the wiki should contain
-        · Part 2 (J–N): how it must behave to get used · Prepared July 2026
+        · Part 2 (J–N): how it must behave to get used · Round 2 (O): follow-ups
+        added after the team's first written response · Prepared July 2026
       </footer>
     </div>
 
