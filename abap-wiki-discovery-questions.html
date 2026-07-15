@@ -329,6 +329,62 @@
         line-height: 1;
       }
 
+      ol.resources {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        display: grid;
+        gap: 0.7rem;
+      }
+      ol.resources li {
+        display: grid;
+        grid-template-columns: 2.2rem 1fr;
+        gap: 0.6rem;
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 0.8rem 1rem;
+        box-shadow: var(--shadow);
+        font-size: 0.95rem;
+      }
+      ol.resources li .rnum {
+        font-family: "Iowan Old Style", Palatino, Georgia, serif;
+        font-weight: 600;
+        color: var(--teal);
+        text-align: right;
+      }
+      ol.resources h4 {
+        font-family: "Iowan Old Style", Palatino, Georgia, serif;
+        font-size: 1.02rem;
+        font-weight: 600;
+        margin: 0;
+      }
+      ol.resources h4 a {
+        color: var(--ink);
+        text-decoration: underline;
+        text-decoration-color: var(--teal);
+        text-underline-offset: 0.18em;
+      }
+      ol.resources h4 a:hover {
+        color: var(--teal);
+      }
+      ol.resources .src {
+        display: block;
+        font-size: 0.82rem;
+        color: var(--muted);
+        margin-top: 0.15rem;
+      }
+      ol.resources p {
+        margin: 0.4rem 0 0;
+        font-size: 0.92rem;
+      }
+      ol.resources p a,
+      .tips a {
+        color: var(--teal);
+        text-decoration: underline;
+        text-underline-offset: 0.18em;
+      }
+
       @media print {
         .theme-toggle {
           display: none;
@@ -337,6 +393,7 @@
           padding: 0.5rem;
         }
         ol.questions li,
+        ol.resources li,
         .context,
         .shortlist,
         .tips {
@@ -1078,6 +1135,198 @@
             of the system working.
           </li>
         </ul>
+      </div>
+
+      <div class="part-banner">
+        <h2>Resources — five kindred builds</h2>
+        <p>
+          Writeups of the same pattern elsewhere, and what each one validates
+          about this project.
+        </p>
+      </div>
+
+      <ol class="resources">
+        <li>
+          <span class="rnum">1</span>
+          <div>
+            <h4>
+              <a
+                href="https://hackernoon.com/how-i-built-a-self-maintaining-knowledge-base-for-6-projects-using-claude-code-and-karpathys-llm-wiki"
+                target="_blank"
+                rel="noopener"
+                >How I Built a Self-Maintaining Knowledge Base for 6 Projects
+                Using Claude Code &amp; Karpathy's LLM Wiki</a
+              >
+            </h4>
+            <span class="src">HackerNoon</span>
+            <p>
+              The closest match in spirit: a practitioner's end-to-end account
+              of a self-maintaining, LLM-curated knowledge base across multiple
+              projects, using git hooks to trigger Claude automatically when
+              content changes — the same "automation reacts to new material"
+              idea as our workflow trigger. (Caveat: the site blocks automated
+              readers, so this was assessed from search metadata rather than a
+              full read.)
+            </p>
+          </div>
+        </li>
+        <li>
+          <span class="rnum">2</span>
+          <div>
+            <h4>
+              <a
+                href="https://corti.com/building-an-ai-powered-knowledge-management-system-automating-obsidian-with-claude-code-and-ci-cd-pipelines/"
+                target="_blank"
+                rel="noopener"
+                >Building an AI-Powered Knowledge Management System: Automating
+                Obsidian with Claude Code and CI/CD Pipelines</a
+              >
+            </h4>
+            <span class="src">Corti</span>
+            <p>
+              Architecturally the nearest neighbor to this repo: an Obsidian
+              vault treated as a code project, with GitHub Actions workflows
+              that validate content (broken wikilinks, missing metadata), run
+              Claude for enhancement (tagging, link suggestions), and deploy on
+              every commit. Verified: moderate-depth tutorial with a complete
+              GitHub Actions workflow config and working script examples —
+              concepts are strong, though some snippets are illustrative rather
+              than production-ready.
+            </p>
+          </div>
+        </li>
+        <li>
+          <span class="rnum">3</span>
+          <div>
+            <h4>
+              <a
+                href="https://www.mindstudio.ai/blog/how-to-build-llm-wiki-knowledge-base-obsidian-claude-code"
+                target="_blank"
+                rel="noopener"
+                >How to Build an LLM Wiki Knowledge Base with Obsidian and
+                Claude Code</a
+              >
+            </h4>
+            <span class="src">MindStudio</span>
+            <p>
+              Verified as a genuine step-by-step tutorial with working code.
+              Covers the full loop: vault setup with a schema file (their
+              equivalent of our CLAUDE.md constitution), extraction scripts for
+              PDFs/YouTube/web pages, an ingestion prompt telling Claude how to
+              process and link content, automation scripts, and — notably —
+              edge-case handling (large PDFs, duplicate detection), which maps
+              directly onto the robustness work in our pipeline.
+            </p>
+          </div>
+        </li>
+        <li>
+          <span class="rnum">4</span>
+          <div>
+            <h4>
+              <a
+                href="https://louiswang524.github.io/blog/llm-knowledge-base/"
+                target="_blank"
+                rel="noopener"
+                >Building a Self-Improving Personal Knowledge Base</a
+              >
+            </h4>
+            <span class="src">Louis Wang</span>
+            <p>
+              Verified. The clearest articulation of the design pattern: a
+              <code>raw/</code> staging layer → Claude-compiled wiki → outputs,
+              with explicit compile, deduplicate-and-merge, and "reflect" steps
+              (synthesis across sources — the equivalent of our
+              pattern-promotion rule). More an architectural essay than a
+              tutorial, but there's a
+              <a
+                href="https://github.com/louiswang524/llm-knowledge-base/"
+                target="_blank"
+                rel="noopener"
+                >companion GitHub repo</a
+              >. Best read for whoever plays curator.
+            </p>
+          </div>
+        </li>
+        <li>
+          <span class="rnum">5</span>
+          <div>
+            <h4>
+              <a
+                href="https://gotoguy.blog/2021/01/20/how-to-send-requests-to-github-api-from-power-platform-using-custom-connector/"
+                target="_blank"
+                rel="noopener"
+                >How to Send Requests to GitHub API from Power Platform using
+                Custom Connector</a
+              >
+            </h4>
+            <span class="src">GoToGuy Blog</span>
+            <p>
+              Verified, and it's the missing Microsoft-side piece: a thorough
+              walkthrough of connecting Power Automate to GitHub — OAuth app
+              setup, a custom connector with operations to update files and
+              trigger GitHub Actions workflows, plus a ready-made OpenAPI
+              definition. Pair it with a OneDrive "when a file is created"
+              trigger and you have exactly our bridge documented. Older (2021)
+              but the connector approach is still current;
+              <a
+                href="https://learn.microsoft.com/en-us/connectors/github/"
+                target="_blank"
+                rel="noopener"
+                >Microsoft's docs</a
+              >
+              confirm the same operations exist natively now.
+            </p>
+          </div>
+        </li>
+      </ol>
+
+      <div class="tips">
+        <h2 class="display">Worth bookmarking beyond the five</h2>
+        <ul>
+          <li>
+            <a
+              href="https://github.com/lucasastorian/llmwiki"
+              target="_blank"
+              rel="noopener"
+              >lucasastorian/llmwiki</a
+            >
+            — open-source Karpathy-pattern implementation: upload documents,
+            Claude writes the wiki.
+          </li>
+          <li>
+            <a
+              href="https://github.com/githubnext/awesome-continuous-ai"
+              target="_blank"
+              rel="noopener"
+              >githubnext/awesome-continuous-ai</a
+            >
+            — GitHub's curated list of AI-in-Actions patterns, useful for
+            evolving the pipeline.
+          </li>
+          <li>
+            <a
+              href="https://medium.com/p/7ca980b8ef7f"
+              target="_blank"
+              rel="noopener"
+              >Automating Markdown uploads to S3 + Bedrock Knowledge Base sync
+              with GitHub Actions</a
+            >
+            (Medium) — if the vault should ever also feed a RAG-style Q&amp;A
+            bot.
+          </li>
+        </ul>
+      </div>
+
+      <div class="shortlist">
+        <h2 class="display">How to read them against this project</h2>
+        <p>
+          #2 and #3 validate the GitHub Actions + constitution-file approach; #4
+          validates the raw-inbox/compile/promote architecture; #5 documents the
+          Power Platform bridge; #1 shows the same idea sustained across
+          multiple projects. Nothing out there has our dedup registry, entity
+          normalization, or the estimation-calibration loop — those appear to be
+          this project's own contributions to the pattern.
+        </p>
       </div>
 
       <footer class="tagline">
