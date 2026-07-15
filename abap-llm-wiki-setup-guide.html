@@ -850,6 +850,40 @@
               </li>
             </ol>
 
+            <div class="why">
+              <span class="label">See also — the non-technical version</span>
+              <p>
+                Prefer to start with no technology at all? Read
+                <a href="#plain-tour"
+                  >A plain-language tour of the whole system</a
+                >
+                in the Misc tab — it explains this exact machinery as a company
+                library with a robot librarian, and it's the right link to share
+                with stakeholders and non-technical teammates.
+              </p>
+            </div>
+
+            <div class="why">
+              <span class="label"
+                >Background — where this pattern comes from</span
+              >
+              <p>
+                Andrej Karpathy's
+                <a
+                  href="https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f"
+                  >"LLM Wiki" gist</a
+                >
+                describes the general pattern this guide implements: instead of
+                RAG-style retrieval that re-derives answers from raw documents
+                on every question, the LLM incrementally builds and maintains a
+                persistent, interlinked markdown wiki — with a schema file (our
+                <code>CLAUDE.md</code>), an <code>index.md</code> catalog, an
+                append-only <code>log.md</code>, and Obsidian as the reading UI.
+                It's a 10-minute read and the best conceptual grounding for
+                everything that follows.
+              </p>
+            </div>
+
             <div class="flow">
               <div class="flow-col">
                 <div class="flow-role">Contributor</div>
@@ -1136,7 +1170,9 @@
               <code>CLAUDE.md</code> file at the root of the repo is the AI's
               operating manual — every time the pipeline runs, Claude reads it
               and follows it literally. Get this right and the wiki stays clean
-              for years; get it wrong and you get a junk drawer.
+              for years; get it wrong and you get a junk drawer. (In the
+              <a href="#plain-tour">plain-language tour</a>, this file is "the
+              constitution" — the rulebook the robot librarian must follow.)
             </p>
 
             <h3>2a — Decide your zones (do this as a 1-hour team workshop)</h3>
@@ -1306,6 +1342,10 @@ source_files: []    # raw files ingested into this page
                 >Add file → Create new file</strong
               >
               — typing <code>folder/filename.md</code> creates the folder too).
+              If you want the plain-English purpose of every folder you're about
+              to create — the shelves, the mailroom, the librarian's desk — see
+              <a href="#plain-tour">A plain-language tour of the whole system</a
+              >.
             </p>
             <ol class="steps">
               <li>
@@ -1546,6 +1586,18 @@ git config --global user.email "you@yourcompany.com"</pre>
               >
               repo — copy and adapt it; do not write this from scratch.
             </p>
+
+            <div class="why">
+              <span class="label">See also — what these two files mean</span>
+              <p>
+                The two files you build in this phase are "the alarm bell" (the
+                workflow) and "the librarian" (the script) in
+                <a href="#plain-tour"
+                  >A plain-language tour of the whole system</a
+                >
+                — read it first if you want the intuition before the mechanics.
+              </p>
+            </div>
 
             <h3>5a — Get an Anthropic API key</h3>
             <ol class="steps">
@@ -2447,6 +2499,19 @@ claude</pre>
               constitution encodes hardest.
             </p>
 
+            <div class="why">
+              <span class="label">See also — the onboarding explainer</span>
+              <p>
+                When introducing the wiki to non-technical teammates, start them
+                on
+                <a href="#plain-tour"
+                  >A plain-language tour of the whole system</a
+                >
+                — it explains the whole vault as a library with a robot
+                librarian, with no code or GitHub knowledge required.
+              </p>
+            </div>
+
             <h3>
               The contributor workflow (teach everyone these three things)
             </h3>
@@ -2797,7 +2862,7 @@ claude</pre>
             </div>
 
             <!-- ── Second topic: plain-language tour ─────────────────── -->
-            <h2>A plain-language tour of the whole system</h2>
+            <h2 id="plain-tour">A plain-language tour of the whole system</h2>
             <div class="qa">
               <p class="q">
                 Can you explain the whole system in plain language, for someone
@@ -2808,7 +2873,23 @@ claude</pre>
                 <strong>company library with a robot librarian</strong>: people
                 drop documents into a mail slot, the librarian reads them, files
                 the knowledge in the right shelves, and keeps a catalog of
-                everything.
+                everything. (This is the same system described technically in
+                <a href="#part0">Part 0</a> and built step by step in Phases
+                1–6; the two robot files below are what
+                <a href="#phase5">Phase 5</a> builds.)
+              </p>
+            </div>
+
+            <div class="why">
+              <span class="label">Prefer a visual version?</span>
+              <p>
+                This same story also exists as a standalone illustrated page —
+                <a href="abap-vault-explainer.html"
+                  >The ABAP Knowledge Vault — How It Works</a
+                >
+                — which walks through the mail slot, the librarian, the four
+                shelves, and the constitution one scene at a time. It's
+                self-contained, so you can send the file directly to anyone.
               </p>
             </div>
 
@@ -3088,12 +3169,30 @@ claude</pre>
           return tabs[i].textContent.replace(/^\s*\d+\s*/, "").trim();
         }
 
-        function currentIndex() {
+        // Resolve the hash to a tab index; a hash may also point at an
+        // anchor INSIDE a section (e.g. #plain-tour), in which case we
+        // activate that section's tab and remember the element to scroll to.
+        function resolveHash() {
           var h = location.hash;
           for (var i = 0; i < tabs.length; i++) {
-            if (tabs[i].getAttribute("href") === h) return i;
+            if (tabs[i].getAttribute("href") === h) return { idx: i, el: null };
           }
-          return 0;
+          if (h.length > 1) {
+            var el = null;
+            try {
+              el = document.getElementById(h.slice(1));
+            } catch (e) {}
+            if (el) {
+              for (var j = 0; j < sections.length; j++) {
+                if (sections[j].contains(el)) return { idx: j, el: el };
+              }
+            }
+          }
+          return { idx: 0, el: null };
+        }
+
+        function currentIndex() {
+          return resolveHash().idx;
         }
 
         function showSection(idx, scrollTop) {
@@ -3122,10 +3221,15 @@ claude</pre>
           if (i < tabs.length - 1)
             location.hash = tabs[i + 1].getAttribute("href");
         });
+        function syncToHash(initial) {
+          var r = resolveHash();
+          showSection(r.idx, !initial && !r.el);
+          if (r.el) r.el.scrollIntoView();
+        }
         window.addEventListener("hashchange", function () {
-          showSection(currentIndex(), true);
+          syncToHash(false);
         });
-        showSection(currentIndex(), false);
+        syncToHash(true);
 
         // --- External links (GitHub etc.) open in a new tab ---
         Array.prototype.forEach.call(

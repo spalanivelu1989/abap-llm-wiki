@@ -35,6 +35,10 @@ Despite the fancy name, an LLM wiki is four ordinary things working together:
 3. **An automated pipeline** — anyone drops a raw document (a transcript, a deck, a spec) into a OneDrive folder. Within minutes, an automated job sends it to Claude, which extracts the durable knowledge and updates the right wiki pages.
 4. **Two ways for humans to use it** — Obsidian (a free app that displays the wiki beautifully and shows links between pages) for reading and light editing, and Claude Code (a terminal tool) for asking the wiki questions in plain English.
 
+> 💡 **See also — the non-technical version.** Prefer to start with no technology at all? Read [A plain-language tour of the whole system](#misc--a-plain-language-tour-of-the-whole-system) — it explains this exact machinery as a company library with a robot librarian, and it's the right link to share with stakeholders and non-technical teammates.
+
+> 📖 **Background — where this pattern comes from.** Andrej Karpathy's ["LLM Wiki" gist](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) describes the general pattern this guide implements: instead of RAG-style retrieval that re-derives answers from raw documents on every question, the LLM incrementally builds and maintains a persistent, interlinked markdown wiki — with a schema file (our `CLAUDE.md`), an `index.md` catalog, an append-only `log.md`, and Obsidian as the reading UI. It's a 10-minute read and the best conceptual grounding for everything that follows.
+
 ### How the pieces connect
 
 **Contributor** → **Automation** → **Team**
@@ -95,7 +99,7 @@ The repository is the single home for everything: wiki pages, the AI rulebook, a
 
 ## Phase 2 · Design the knowledge structure & write the constitution
 
-This is the most important phase, and the only one that is genuinely _design_ work rather than setup work. The `CLAUDE.md` file at the root of the repo is the AI's operating manual — every time the pipeline runs, Claude reads it and follows it literally. Get this right and the wiki stays clean for years; get it wrong and you get a junk drawer.
+This is the most important phase, and the only one that is genuinely _design_ work rather than setup work. The `CLAUDE.md` file at the root of the repo is the AI's operating manual — every time the pipeline runs, Claude reads it and follows it literally. Get this right and the wiki stays clean for years; get it wrong and you get a junk drawer. (In the [plain-language tour](#misc--a-plain-language-tour-of-the-whole-system), this file is "the constitution" — the rulebook the robot librarian must follow.)
 
 ### 2a — Decide your zones (do this as a 1-hour team workshop)
 
@@ -146,7 +150,7 @@ source_files: [] # raw files ingested into this page
 
 ## Phase 3 · Build the vault skeleton
 
-Now put the structure into the repo. If you're comfortable with Git, clone the repo and create folders locally; otherwise you can create files directly on github.com (**Add file → Create new file** — typing `folder/filename.md` creates the folder too).
+Now put the structure into the repo. If you're comfortable with Git, clone the repo and create folders locally; otherwise you can create files directly on github.com (**Add file → Create new file** — typing `folder/filename.md` creates the folder too). If you want the plain-English purpose of every folder you're about to create — the shelves, the mailroom, the librarian's desk — see [A plain-language tour of the whole system](#misc--a-plain-language-tour-of-the-whole-system).
 
 1. Create every zone folder from your Phase 2 design, plus `raw/inbox/`, `raw/processed/`, and `meta/`. Git doesn't store empty folders, so put a short `README.md` in each explaining what belongs there.
 2. Add `CLAUDE.md` at the repo root.
@@ -216,6 +220,8 @@ So could you skip it? Technically yes — the pipeline would still capture and f
 ## Phase 5 · Build the AI ingestion pipeline
 
 This is the automation heart: a GitHub Actions workflow that runs a Python script, which sends new documents to Claude and commits the resulting wiki updates. The working code lives in the [`abap-wiki`](https://github.com/t-labs-buy/abap-wiki) repo — copy and adapt it; do not write this from scratch.
+
+> 💡 **See also — what these two files mean.** The two files you build in this phase are "the alarm bell" (the workflow) and "the librarian" (the script) in [A plain-language tour of the whole system](#misc--a-plain-language-tour-of-the-whole-system) — read it first if you want the intuition before the mechanics.
 
 ### 5a — Get an Anthropic API key
 
@@ -534,6 +540,8 @@ This is the right place for synthesis-style questions: _"What did we decide abou
 
 Technology is now done. What makes the wiki compound instead of rot is a small amount of human rhythm — this is the lesson the constitution encodes hardest.
 
+> 💡 **See also — the onboarding explainer.** When introducing the wiki to non-technical teammates, start them on [A plain-language tour of the whole system](#misc--a-plain-language-tour-of-the-whole-system) — it explains the whole vault as a library with a robot librarian, with no code or GitHub knowledge required.
+
 ### The contributor workflow (teach everyone these three things)
 
 1. **Upload documents to OneDrive.** Any deck, transcript, spec, or email thread worth remembering goes into the Inbox folder.
@@ -620,7 +628,9 @@ Claude returns a JSON object of creates and updates with full markdown content; 
 
 ### Can you explain the whole system in plain language, for someone who doesn't read code?
 
-The easiest way to picture the vault is as a **company library with a robot librarian**: people drop documents into a mail slot, the librarian reads them, files the knowledge in the right shelves, and keeps a catalog of everything.
+The easiest way to picture the vault is as a **company library with a robot librarian**: people drop documents into a mail slot, the librarian reads them, files the knowledge in the right shelves, and keeps a catalog of everything. (This is the same system described technically in [Part 0](#part-0--what-an-llm-wiki-actually-is) and built step by step in Phases 1–6; the two robot files below are what [Phase 5](#phase-5--build-the-ai-ingestion-pipeline) builds.)
+
+> 💡 **Prefer a visual version?** This same story also exists as a standalone illustrated page — [The ABAP Knowledge Vault — How It Works](abap-vault-explainer.html) — which walks through the mail slot, the librarian, the four shelves, and the constitution one scene at a time. It's self-contained, so you can send the file directly to anyone.
 
 #### The two "robot" files
 
