@@ -2522,6 +2522,91 @@ claude</pre>
                 spread across several pages.
               </p>
             </div>
+
+            <div class="qa">
+              <p class="q">
+                How precise does my question have to be — spelling, grammar,
+                exact names?
+              </p>
+              <p>
+                An early test session answers this. A hastily typed query —
+                corrected to
+                <em>"What was the decision about removing address type?"</em> —
+                still retrieved the right page. Did precision matter here? In
+                this case, no: the vault is small and "address type" was
+                distinctive enough to match exactly one decision page. But as
+                the vault grows (multiple workstreams, multiple
+                validation-related decisions), a vague query could match several
+                pages. Adding <strong>context anchors</strong> — the workstream,
+                the object, or the CR number — makes retrieval reliable:
+              </p>
+              <pre>
+"What was the decision about removing address type
+ from the CR045 BP address validation?"</pre>
+            </div>
+
+            <h3>Sample questions that work well against this vault</h3>
+            <div class="tablewrap">
+              <table>
+                <tr>
+                  <th>Ask about</th>
+                  <th>Example questions</th>
+                </tr>
+                <tr>
+                  <td>Decisions</td>
+                  <td>
+                    "Why was address type removed from the BP address validation
+                    criteria?" · "What was decided about the credit auto-release
+                    job's configuration?" · "List all OTC decisions made this
+                    year with their rationale."
+                  </td>
+                </tr>
+                <tr>
+                  <td>Developments / specs</td>
+                  <td>
+                    "What does the <code>ZSD_CREDIT_AUTORELEASE</code> job do,
+                    and when does it run?" · "How does the BP address validation
+                    against <code>ZSD_ADR_VLD</code> work — what fields are
+                    matched?" · "Which developments are affected by the CR045 v3
+                    decision?"
+                  </td>
+                </tr>
+                <tr>
+                  <td>Stakeholders / ownership</td>
+                  <td>
+                    "Who owns master data topics in OTC?" · "What are Anna
+                    Larsen's current concerns or asks?"
+                  </td>
+                </tr>
+                <tr>
+                  <td>Open questions / status</td>
+                  <td>
+                    "What open questions does the OTC workstream have, and who
+                    owns them?" · "Is the OTC workstream handover-ready? What's
+                    missing?"
+                  </td>
+                </tr>
+                <tr>
+                  <td>Intelligence layer</td>
+                  <td>
+                    "Do we have any gotchas about
+                    <code>BAPI_TRANSACTION_COMMIT</code>?" · "What patterns have
+                    we seen in more than one workstream?"
+                  </td>
+                </tr>
+              </table>
+            </div>
+
+            <div class="why">
+              <span class="label">Rule of thumb — how to phrase a query</span>
+              <p>
+                Name the <strong>thing</strong> (object, CR, table, process) and
+                the <strong>kind of answer</strong> you want (decision,
+                rationale, status, dependencies, owner). Grammar imperfections
+                rarely break retrieval — missing context anchors do.
+              </p>
+            </div>
+
             <div class="win">
               <span class="label">✓ Win #7</span>
               <p>
