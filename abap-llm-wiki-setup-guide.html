@@ -2795,6 +2795,186 @@ claude</pre>
                 be the fix.
               </p>
             </div>
+
+            <!-- ── Second topic: plain-language tour ─────────────────── -->
+            <h2>A plain-language tour of the whole system</h2>
+            <div class="qa">
+              <p class="q">
+                Can you explain the whole system in plain language, for someone
+                who doesn't read code?
+              </p>
+              <p>
+                The easiest way to picture the vault is as a
+                <strong>company library with a robot librarian</strong>: people
+                drop documents into a mail slot, the librarian reads them, files
+                the knowledge in the right shelves, and keeps a catalog of
+                everything.
+              </p>
+            </div>
+
+            <h3>The two "robot" files</h3>
+            <ul>
+              <li>
+                <strong
+                  ><code>.github/workflows/abap-vault-ingest.yml</code> — the
+                  alarm bell.</strong
+                >
+                This file doesn't do any thinking itself. It's a small set of
+                instructions that tells GitHub: "whenever a new document lands
+                in the inbox, wake up the librarian." It also rings the bell
+                once a week (Monday mornings) as a safety net, in case something
+                was missed, and it has a manual button you can press to trigger
+                a run yourself. Once the librarian finishes, this file also
+                handles saving all the changes back to the shared vault.
+              </li>
+              <li>
+                <strong
+                  ><code>.github/scripts/abap-ingest.py</code> — the
+                  librarian.</strong
+                >
+                This is the worker that does the actual job when the bell rings.
+                Step by step, it:
+                <ol>
+                  <li>Picks up each new document from the inbox</li>
+                  <li>
+                    Checks "have I already read this exact document?" (so
+                    nothing gets processed twice)
+                  </li>
+                  <li>
+                    Converts it to readable text — whether it's a Word doc,
+                    Excel sheet, meeting transcript, or even a photo of a
+                    whiteboard
+                  </li>
+                  <li>
+                    Reads the rulebook and the catalog so it knows what already
+                    exists in the vault
+                  </li>
+                  <li>
+                    Asks Claude to extract the durable knowledge and decide
+                    which pages to create or update
+                  </li>
+                  <li>
+                    Writes those pages to the right shelves, updates its admin
+                    records, and files the original away in the archive
+                  </li>
+                </ol>
+              </li>
+            </ul>
+
+            <h3>The <code>meta/</code> folder — the librarian's desk</h3>
+            <p>
+              These five files are the librarian's admin records — not knowledge
+              itself, but the bookkeeping that keeps the library orderly:
+            </p>
+            <ul>
+              <li>
+                <strong><code>index.md</code> — the catalog.</strong> A table of
+                contents for the whole vault: every page, organized by section,
+                with a one-line description. If you want to find something, you
+                start here.
+              </li>
+              <li>
+                <strong><code>log.md</code> — the diary.</strong> A running
+                history of everything that was ever ingested: "On this date, I
+                read this document and updated these pages." Nothing is ever
+                erased from it. If you wonder when or why a page changed, the
+                diary tells you.
+              </li>
+              <li>
+                <strong
+                  ><code>inbox.md</code> — the "already read" list.</strong
+                >
+                A checklist of every document ever processed, with a fingerprint
+                of its contents. This is how the librarian knows to skip a
+                document someone accidentally drops twice — and to re-read one
+                that was dropped again with changes.
+              </li>
+              <li>
+                <strong><code>entities.md</code> — the name dictionary.</strong>
+                Teams call the same systems and workstreams by different names
+                ("Order-to-Cash", "O2C", "OTC"). This file says which name is
+                the official one, so the librarian never creates two folders for
+                the same thing.
+              </li>
+              <li>
+                <strong
+                  ><code>conventions.md</code> — the house style guide.</strong
+                >
+                A human-readable summary of the naming and formatting rules, for
+                team members who want to understand how pages are named and
+                organized.
+              </li>
+            </ul>
+
+            <h3>The <code>raw/</code> folder — the mailroom</h3>
+            <ul>
+              <li>
+                <strong><code>raw/inbox/</code> — the mail slot.</strong> This
+                is the only door into the vault. Anyone on the team drops raw
+                material here — meeting notes, specs, transcripts, code exports.
+                Dropping a file here is what rings the alarm bell.
+              </li>
+              <li>
+                <strong
+                  ><code>raw/processed/</code> — the archive drawer.</strong
+                >
+                After the librarian has read a document and extracted its
+                knowledge, the original is moved here and kept forever. Nothing
+                is thrown away, so you can always go back and check the original
+                source. (If a document can't be read — say a corrupted file — it
+                stays in the inbox with a note in the diary, so a human can deal
+                with it.)
+              </li>
+            </ul>
+
+            <h3>The knowledge itself — the four shelves</h3>
+            <ul>
+              <li>
+                <strong><code>01-standards/</code> — the rulebooks:</strong>
+                coding standards, architecture principles, system landscape.
+                Rarely changes.
+              </li>
+              <li>
+                <strong
+                  ><code>02-workstreams/</code> — the active project
+                  work:</strong
+                >
+                who's involved, what was decided, what's being built, open
+                questions. Changes constantly.
+              </li>
+              <li>
+                <strong><code>03-intelligence/</code> — the lessons:</strong>
+                things the team learned the hard way, written down so nobody
+                pays for the same mistake twice.
+              </li>
+              <li>
+                <strong><code>04-internal/</code> — team operations:</strong>
+                contacts, onboarding guides, step-by-step procedures.
+              </li>
+            </ul>
+
+            <h3>And the constitution</h3>
+            <p>
+              <strong><code>CLAUDE.md</code></strong> — the rulebook the
+              librarian must follow. It defines what counts as durable
+              knowledge, how pages must be named, where each type of page lives,
+              and how everything must link together. When the librarian reads a
+              new document, this rulebook is what keeps the output consistent no
+              matter who dropped the file or what it looked like.
+            </p>
+
+            <div class="win">
+              <span class="label"
+                >The one-sentence summary for your audience</span
+              >
+              <p>
+                Team members drop anything into a shared inbox; an AI librarian
+                automatically reads it, extracts the decisions and knowledge
+                worth keeping into a well-organized wiki, and keeps a full paper
+                trail — so the team's knowledge survives even when people move
+                on.
+              </p>
+            </div>
           </section>
 
           <div class="pager">

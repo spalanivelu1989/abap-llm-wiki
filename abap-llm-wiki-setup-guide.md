@@ -616,6 +616,54 @@ Claude returns a JSON object of creates and updates with full markdown content; 
 
 ---
 
+## Misc · A plain-language tour of the whole system
+
+### Can you explain the whole system in plain language, for someone who doesn't read code?
+
+The easiest way to picture the vault is as a **company library with a robot librarian**: people drop documents into a mail slot, the librarian reads them, files the knowledge in the right shelves, and keeps a catalog of everything.
+
+#### The two "robot" files
+
+- **`.github/workflows/abap-vault-ingest.yml` — the alarm bell.** This file doesn't do any thinking itself. It's a small set of instructions that tells GitHub: "whenever a new document lands in the inbox, wake up the librarian." It also rings the bell once a week (Monday mornings) as a safety net, in case something was missed, and it has a manual button you can press to trigger a run yourself. Once the librarian finishes, this file also handles saving all the changes back to the shared vault.
+- **`.github/scripts/abap-ingest.py` — the librarian.** This is the worker that does the actual job when the bell rings. Step by step, it:
+  1. Picks up each new document from the inbox
+  2. Checks "have I already read this exact document?" (so nothing gets processed twice)
+  3. Converts it to readable text — whether it's a Word doc, Excel sheet, meeting transcript, or even a photo of a whiteboard
+  4. Reads the rulebook and the catalog so it knows what already exists in the vault
+  5. Asks Claude to extract the durable knowledge and decide which pages to create or update
+  6. Writes those pages to the right shelves, updates its admin records, and files the original away in the archive
+
+#### The `meta/` folder — the librarian's desk
+
+These five files are the librarian's admin records — not knowledge itself, but the bookkeeping that keeps the library orderly:
+
+- **`index.md` — the catalog.** A table of contents for the whole vault: every page, organized by section, with a one-line description. If you want to find something, you start here.
+- **`log.md` — the diary.** A running history of everything that was ever ingested: "On this date, I read this document and updated these pages." Nothing is ever erased from it. If you wonder when or why a page changed, the diary tells you.
+- **`inbox.md` — the "already read" list.** A checklist of every document ever processed, with a fingerprint of its contents. This is how the librarian knows to skip a document someone accidentally drops twice — and to re-read one that was dropped again with changes.
+- **`entities.md` — the name dictionary.** Teams call the same systems and workstreams by different names ("Order-to-Cash", "O2C", "OTC"). This file says which name is the official one, so the librarian never creates two folders for the same thing.
+- **`conventions.md` — the house style guide.** A human-readable summary of the naming and formatting rules, for team members who want to understand how pages are named and organized.
+
+#### The `raw/` folder — the mailroom
+
+- **`raw/inbox/` — the mail slot.** This is the only door into the vault. Anyone on the team drops raw material here — meeting notes, specs, transcripts, code exports. Dropping a file here is what rings the alarm bell.
+- **`raw/processed/` — the archive drawer.** After the librarian has read a document and extracted its knowledge, the original is moved here and kept forever. Nothing is thrown away, so you can always go back and check the original source. (If a document can't be read — say a corrupted file — it stays in the inbox with a note in the diary, so a human can deal with it.)
+
+#### The knowledge itself — the four shelves
+
+- **`01-standards/` — the rulebooks:** coding standards, architecture principles, system landscape. Rarely changes.
+- **`02-workstreams/` — the active project work:** who's involved, what was decided, what's being built, open questions. Changes constantly.
+- **`03-intelligence/` — the lessons:** things the team learned the hard way, written down so nobody pays for the same mistake twice.
+- **`04-internal/` — team operations:** contacts, onboarding guides, step-by-step procedures.
+
+#### And the constitution
+
+**`CLAUDE.md`** — the rulebook the librarian must follow. It defines what counts as durable knowledge, how pages must be named, where each type of page lives, and how everything must link together. When the librarian reads a new document, this rulebook is what keeps the output consistent no matter who dropped the file or what it looked like.
+
+> ✅ **The one-sentence summary for your audience.**
+> Team members drop anything into a shared inbox; an AI librarian automatically reads it, extracts the decisions and knowledge worth keeping into a well-organized wiki, and keeps a full paper trail — so the team's knowledge survives even when people move on.
+
+---
+
 **Reusing this guide for future projects:** only Phase 2 (structure design) is real work the second time — everything else is copy, rename, and re-key. Consider keeping a `vault-template` repository with the skeleton, workflow, and script ready to fork.
 
 Live implementation: [github.com/t-labs-buy/abap-wiki](https://github.com/t-labs-buy/abap-wiki). External references: [GitHub Contents API](https://docs.github.com/en/rest/repos/contents) · [Power Automate + SharePoint](https://learn.microsoft.com/en-us/power-automate/sharepoint-overview) · [Anthropic Console](https://console.anthropic.com) · [Obsidian](https://obsidian.md) · [Git](https://git-scm.com).
