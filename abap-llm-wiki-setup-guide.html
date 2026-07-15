@@ -859,7 +859,35 @@
                 >
                 in the Misc tab — it explains this exact machinery as a company
                 library with a robot librarian, and it's the right link to share
-                with stakeholders and non-technical teammates.
+                with stakeholders and non-technical teammates. The same story
+                also exists as a standalone illustrated page:
+                <a
+                  href="abap-vault-explainer.html"
+                  target="_blank"
+                  rel="noopener"
+                  >The ABAP Knowledge Vault — How It Works</a
+                >.
+              </p>
+            </div>
+
+            <div class="why">
+              <span class="label"
+                >Companion page — the condensed implementation plan</span
+              >
+              <p>
+                Want the whole journey on one page before diving into the
+                phases? Read
+                <a
+                  href="llm-wiki-implementation-plan.html"
+                  target="_blank"
+                  rel="noopener"
+                  >Building an LLM Wiki from Scratch — Implementation Plan</a
+                >
+                — the big picture, prerequisites, tech stack, how the pieces
+                work in unison, and the six implementation phases in summary
+                form. It's the right document for planning discussions and
+                management briefings; this guide is the hands-on version of the
+                same plan.
               </p>
             </div>
 
@@ -1174,6 +1202,25 @@
               <a href="#plain-tour">plain-language tour</a>, this file is "the
               constitution" — the rulebook the robot librarian must follow.)
             </p>
+
+            <div class="why">
+              <span class="label"
+                >Companion page — run a discovery interview first</span
+              >
+              <p>
+                Before the workshop, interview the team with
+                <a
+                  href="abap-wiki-discovery-questions.html"
+                  target="_blank"
+                  rel="noopener"
+                  >Fifty-six questions before we build the habit</a
+                >. Part 1 of that kit (themes A–I) surfaces exactly what this
+                phase needs: where knowledge lives today, the questions people
+                answer over and over, and what the wiki should contain. It also
+                includes a 30-minute shortlist if you can't run the full
+                interview.
+              </p>
+            </div>
 
             <h3>2a — Decide your zones (do this as a 1-hour team workshop)</h3>
             <p>
@@ -2508,7 +2555,35 @@ claude</pre>
                   >A plain-language tour of the whole system</a
                 >
                 — it explains the whole vault as a library with a robot
-                librarian, with no code or GitHub knowledge required.
+                librarian, with no code or GitHub knowledge required. For a
+                shareable standalone version, send
+                <a
+                  href="abap-vault-explainer.html"
+                  target="_blank"
+                  rel="noopener"
+                  >The ABAP Knowledge Vault — How It Works</a
+                >.
+              </p>
+            </div>
+
+            <div class="why">
+              <span class="label"
+                >Companion page — discover how the team will actually use
+                it</span
+              >
+              <p>
+                Adoption starts with listening. Part 2 (themes J–N) of
+                <a
+                  href="abap-wiki-discovery-questions.html"
+                  target="_blank"
+                  rel="noopener"
+                  >Fifty-six questions before we build the habit</a
+                >
+                maps the moments people would open the wiki, who uses it
+                differently, and what the first ninety days need — and running
+                the interview doubles as the vault's first stakeholder-signal
+                ingestion when you drop the write-up into
+                <code>raw/inbox/</code>.
               </p>
             </div>
 
@@ -2632,6 +2707,74 @@ claude</pre>
             <span class="phase-tag"
               >Resources · Tooling &amp; further reading</span
             >
+            <h2>Companion pages in this folder</h2>
+            <p>
+              Three standalone pages that travel with this guide — each is
+              self-contained, so you can also send the file directly to anyone.
+            </p>
+            <div class="tablewrap">
+              <table>
+                <tr>
+                  <th>Page</th>
+                  <th>What it is</th>
+                  <th>Best for</th>
+                </tr>
+                <tr>
+                  <td>
+                    <a
+                      href="llm-wiki-implementation-plan.html"
+                      target="_blank"
+                      rel="noopener"
+                      >Building an LLM Wiki from Scratch — Implementation
+                      Plan</a
+                    >
+                  </td>
+                  <td>
+                    The condensed one-page plan: big picture, prerequisites,
+                    tech stack, how the pieces work in unison, and the six
+                    implementation phases. The summary version of this guide
+                    (see <a href="#part0">Part 0</a>).
+                  </td>
+                  <td>Planning discussions and management briefings.</td>
+                </tr>
+                <tr>
+                  <td>
+                    <a
+                      href="abap-wiki-discovery-questions.html"
+                      target="_blank"
+                      rel="noopener"
+                      >Fifty-six questions before we build the habit</a
+                    >
+                  </td>
+                  <td>
+                    The team discovery kit: Part 1 asks what the wiki should
+                    contain, Part 2 asks how the team will actually use it —
+                    plus a 30-minute shortlist, facilitation tips, and further
+                    reading. Feeds <a href="#phase2">Phase 2</a> and
+                    <a href="#phase8">Phase 8</a>.
+                  </td>
+                  <td>Interviewing the team before and during rollout.</td>
+                </tr>
+                <tr>
+                  <td>
+                    <a
+                      href="abap-vault-explainer.html"
+                      target="_blank"
+                      rel="noopener"
+                      >The ABAP Knowledge Vault — How It Works</a
+                    >
+                  </td>
+                  <td>
+                    The illustrated non-technical story: a library with a robot
+                    librarian, told one scene at a time. The visual companion to
+                    the <a href="#plain-tour">plain-language tour</a> in the
+                    Misc tab.
+                  </td>
+                  <td>Stakeholders and non-technical teammates.</td>
+                </tr>
+              </table>
+            </div>
+
             <h2>Useful ABAP repositories</h2>
             <p>
               Open-source projects worth knowing about — for the wiki itself,
@@ -2884,7 +3027,10 @@ claude</pre>
               <span class="label">Prefer a visual version?</span>
               <p>
                 This same story also exists as a standalone illustrated page —
-                <a href="abap-vault-explainer.html"
+                <a
+                  href="abap-vault-explainer.html"
+                  target="_blank"
+                  rel="noopener"
                   >The ABAP Knowledge Vault — How It Works</a
                 >
                 — which walks through the mail slot, the librarian, the four
@@ -3231,12 +3377,16 @@ claude</pre>
         });
         syncToHash(true);
 
-        // --- External links (GitHub etc.) open in a new tab ---
+        // --- External links (GitHub etc.) and companion pages open in a
+        // new tab; only in-page #hash links stay in this tab ---
         Array.prototype.forEach.call(
-          document.querySelectorAll('a[href^="http"]'),
+          document.querySelectorAll("a[href]"),
           function (a) {
-            a.setAttribute("target", "_blank");
-            a.setAttribute("rel", "noopener");
+            var href = a.getAttribute("href");
+            if (href && href.charAt(0) !== "#") {
+              a.setAttribute("target", "_blank");
+              a.setAttribute("rel", "noopener");
+            }
           },
         );
       })();

@@ -1,0 +1,988 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Building an LLM Wiki from Scratch — Implementation Plan</title>
+    <style>
+      :root {
+        --paper: #f3f5f4;
+        --card: #fdfefd;
+        --ink: #1f2b28;
+        --muted: #5c6b67;
+        --teal: #0e6b5b;
+        --teal-soft: #e3eeeb;
+        --amber: #a9701f;
+        --amber-soft: #f4eadb;
+        --line: #c9d4d0;
+        --chip-bg: #e9eeec;
+        --shadow: 0 1px 3px rgba(31, 43, 40, 0.08);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --paper: #131d1a;
+          --card: #1b2723;
+          --ink: #e4ece9;
+          --muted: #93a5a0;
+          --teal: #5bbfa9;
+          --teal-soft: #1e332e;
+          --amber: #d9a05b;
+          --amber-soft: #33281a;
+          --line: #33443f;
+          --chip-bg: #24322d;
+          --shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+        }
+      }
+      :root[data-theme="dark"] {
+        --paper: #131d1a;
+        --card: #1b2723;
+        --ink: #e4ece9;
+        --muted: #93a5a0;
+        --teal: #5bbfa9;
+        --teal-soft: #1e332e;
+        --amber: #d9a05b;
+        --amber-soft: #33281a;
+        --line: #33443f;
+        --chip-bg: #24322d;
+        --shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+      }
+      :root[data-theme="light"] {
+        --paper: #f3f5f4;
+        --card: #fdfefd;
+        --ink: #1f2b28;
+        --muted: #5c6b67;
+        --teal: #0e6b5b;
+        --teal-soft: #e3eeeb;
+        --amber: #a9701f;
+        --amber-soft: #f4eadb;
+        --line: #c9d4d0;
+        --chip-bg: #e9eeec;
+        --shadow: 0 1px 3px rgba(31, 43, 40, 0.08);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        background: var(--paper);
+        color: var(--ink);
+        font-family:
+          "Avenir Next",
+          "Segoe UI",
+          system-ui,
+          -apple-system,
+          sans-serif;
+        line-height: 1.55;
+        margin: 0;
+        padding: 3rem 1.25rem 4rem;
+      }
+      .page {
+        max-width: 1500px;
+        width: 100%;
+        margin: 0 auto;
+        padding: 0 clamp(0.5rem, 3vw, 3rem);
+      }
+      .display {
+        font-family:
+          "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+      }
+
+      header.masthead {
+        margin-bottom: 2.4rem;
+      }
+      .eyebrow {
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        font-size: 0.72rem;
+        font-weight: 600;
+        color: var(--teal);
+        margin: 0 0 0.75rem;
+      }
+      h1 {
+        font-family: "Iowan Old Style", Palatino, Georgia, serif;
+        font-size: clamp(1.8rem, 4.5vw, 2.5rem);
+        line-height: 1.15;
+        margin: 0 0 0.9rem;
+        text-wrap: balance;
+        font-weight: 600;
+      }
+      .lede {
+        font-size: 1.05rem;
+        color: var(--muted);
+        margin: 0;
+      }
+      .lede strong {
+        color: var(--ink);
+        font-weight: 600;
+      }
+
+      h2.section {
+        font-family: "Iowan Old Style", Palatino, Georgia, serif;
+        font-size: 1.45rem;
+        font-weight: 600;
+        margin: 2.8rem 0 0.4rem;
+        padding-bottom: 0.4rem;
+        border-bottom: 2px solid var(--teal);
+      }
+      p.section-sub {
+        margin: 0.35rem 0 1.1rem;
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+
+      /* flow diagram */
+      .flow {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: stretch;
+        gap: 0.5rem;
+        margin: 1.2rem 0;
+      }
+      .flow .node {
+        flex: 1 1 140px;
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-top: 3px solid var(--teal);
+        border-radius: 8px;
+        padding: 0.7rem 0.8rem;
+        box-shadow: var(--shadow);
+        min-width: 130px;
+      }
+      .flow .node.brain {
+        border-top-color: var(--amber);
+      }
+      .flow .node h4 {
+        margin: 0 0 0.15rem;
+        font-family: "Iowan Old Style", Palatino, Georgia, serif;
+        font-size: 0.95rem;
+      }
+      .flow .node p {
+        margin: 0;
+        font-size: 0.8rem;
+        color: var(--muted);
+      }
+      .flow .arrow {
+        align-self: center;
+        color: var(--teal);
+        font-size: 1.2rem;
+        flex: none;
+        padding: 0 0.1rem;
+      }
+
+      /* tables */
+      .tablewrap {
+        overflow-x: auto;
+        margin: 1rem 0;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        box-shadow: var(--shadow);
+        font-size: 0.93rem;
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 0.6rem 0.8rem;
+        border-bottom: 1px solid var(--line);
+        vertical-align: top;
+      }
+      th {
+        font-family: "Iowan Old Style", Palatino, Georgia, serif;
+        font-size: 0.9rem;
+        color: var(--teal);
+        white-space: nowrap;
+      }
+      tr:last-child td {
+        border-bottom: none;
+      }
+      td b {
+        font-weight: 600;
+      }
+      .cost {
+        white-space: nowrap;
+        color: var(--muted);
+      }
+
+      .chip {
+        display: inline-block;
+        font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+        font-size: 0.78em;
+        background: var(--chip-bg);
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        padding: 0.06em 0.4em;
+        white-space: nowrap;
+      }
+
+      /* phases */
+      .phase {
+        display: grid;
+        grid-template-columns: 3rem 1fr;
+        gap: 0 1rem;
+        position: relative;
+      }
+      .phase .marker {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .phase .num {
+        flex: none;
+        width: 3rem;
+        height: 3rem;
+        border-radius: 50%;
+        background: var(--teal-soft);
+        color: var(--teal);
+        border: 1.5px solid var(--teal);
+        display: grid;
+        place-items: center;
+        font-family: "Iowan Old Style", Palatino, Georgia, serif;
+        font-size: 1.15rem;
+        font-weight: 600;
+      }
+      .phase .rule {
+        flex: 1;
+        width: 1.5px;
+        background: var(--line);
+        margin: 0.35rem 0;
+      }
+      .phase:last-of-type .rule {
+        display: none;
+      }
+      .phase-body {
+        padding-bottom: 1.9rem;
+        min-width: 0;
+      }
+      .phase h3 {
+        font-family: "Iowan Old Style", Palatino, Georgia, serif;
+        font-size: 1.15rem;
+        margin: 0.55rem 0 0.1rem;
+        font-weight: 600;
+      }
+      .phase .meta {
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--amber);
+        font-weight: 600;
+      }
+      .phase p {
+        margin: 0.45rem 0 0;
+        font-size: 0.96rem;
+      }
+      .phase ul {
+        margin: 0.45rem 0 0;
+        padding-left: 1.15rem;
+        font-size: 0.96rem;
+      }
+      .phase li {
+        margin: 0.25rem 0;
+      }
+
+      .callout {
+        border-radius: 10px;
+        padding: 1.2rem 1.4rem;
+        margin: 1.6rem 0;
+      }
+      .callout.teal {
+        background: var(--teal-soft);
+        border: 1px solid var(--teal);
+      }
+      .callout.amber {
+        background: var(--amber-soft);
+        border: 1px solid var(--amber);
+      }
+      .callout h3 {
+        font-family: "Iowan Old Style", Palatino, Georgia, serif;
+        font-size: 1.1rem;
+        margin: 0 0 0.4rem;
+      }
+      .callout.teal h3 {
+        color: var(--teal);
+      }
+      .callout.amber h3 {
+        color: var(--amber);
+      }
+      .callout p,
+      .callout li {
+        font-size: 0.95rem;
+      }
+      .callout p {
+        margin: 0.4rem 0 0;
+      }
+      .callout ul {
+        margin: 0.4rem 0 0;
+        padding-left: 1.15rem;
+      }
+      .callout li {
+        margin: 0.35rem 0;
+      }
+
+      footer.tagline {
+        margin-top: 2.8rem;
+        padding-top: 1.4rem;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      .theme-toggle {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        z-index: 10;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        background: var(--card);
+        color: var(--ink);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 0.42rem 0.9rem;
+        font:
+          600 0.78rem "Avenir Next",
+          "Segoe UI",
+          system-ui,
+          -apple-system,
+          sans-serif;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        cursor: pointer;
+        box-shadow: var(--shadow);
+      }
+      .theme-toggle:hover {
+        border-color: var(--teal);
+        color: var(--teal);
+      }
+      .theme-toggle:focus-visible {
+        outline: 2px solid var(--teal);
+        outline-offset: 2px;
+      }
+      .theme-toggle .glyph {
+        font-size: 1rem;
+        line-height: 1;
+      }
+
+      @media print {
+        .theme-toggle {
+          display: none;
+        }
+        body {
+          padding: 0.5rem;
+        }
+        .phase,
+        .callout,
+        .flow {
+          break-inside: avoid-page;
+        }
+        table,
+        .callout,
+        .flow .node {
+          box-shadow: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <button
+      class="theme-toggle"
+      id="themeToggle"
+      type="button"
+      aria-label="Switch between light and dark mode"
+    >
+      <span class="glyph" id="themeGlyph">☾</span>
+      <span id="themeLabel">Dark</span>
+    </button>
+
+    <div class="page">
+      <header class="masthead">
+        <p class="eyebrow">LLM Wiki · Implementation Plan</p>
+        <h1>Building an LLM Wiki for your project, from scratch</h1>
+        <p class="lede">
+          A concise plan anyone can follow: what you need before you start,
+          which building blocks to assemble, how they work together, and the six
+          phases that take you from an empty folder to a
+          <strong>self-maintaining project knowledge base</strong>.
+        </p>
+      </header>
+
+      <!-- ================= BIG PICTURE ================= -->
+      <h2 class="section">1 · The big picture</h2>
+      <p class="section-sub">
+        One sentence: team members drop any document into a shared folder, and
+        an AI automatically turns it into organized, searchable wiki pages —
+        with a full audit trail.
+      </p>
+
+      <div class="flow">
+        <div class="node">
+          <h4>Drop zone</h4>
+          <p>
+            A shared OneDrive folder. Anyone drops meeting notes, specs,
+            transcripts, photos.
+          </p>
+        </div>
+        <div class="arrow">→</div>
+        <div class="node">
+          <h4>Courier</h4>
+          <p>
+            Power Automate notices the new file and delivers it to the vault.
+          </p>
+        </div>
+        <div class="arrow">→</div>
+        <div class="node">
+          <h4>Vault</h4>
+          <p>
+            A GitHub repository — the wiki's permanent, version-controlled home.
+          </p>
+        </div>
+        <div class="arrow">→</div>
+        <div class="node brain">
+          <h4>Librarian</h4>
+          <p>
+            GitHub Actions wakes a script that asks the AI to read the file and
+            write wiki pages.
+          </p>
+        </div>
+        <div class="arrow">→</div>
+        <div class="node">
+          <h4>Reading room</h4>
+          <p>
+            The team browses and searches the wiki in Obsidian (or on GitHub
+            itself).
+          </p>
+        </div>
+      </div>
+
+      <p>
+        Every piece is a standard, off-the-shelf service — nothing custom-built
+        except one Python script (the librarian's brain-stem) and one rulebook
+        file (the constitution). That's what makes this buildable in about two
+        weeks.
+      </p>
+
+      <!-- ================= PREREQUISITES ================= -->
+      <h2 class="section">2 · What you need before you start</h2>
+      <p class="section-sub">
+        Four accounts, two people, one decision workshop.
+      </p>
+
+      <div class="tablewrap">
+        <table>
+          <tr>
+            <th>Prerequisite</th>
+            <th>Details</th>
+            <th>Cost</th>
+          </tr>
+          <tr>
+            <td><b>Microsoft 365 account</b></td>
+            <td>
+              You almost certainly have this. It provides OneDrive (the drop
+              zone) and Power Automate (the courier). No premium Power Automate
+              license needed for this flow.
+            </td>
+            <td class="cost">Already owned</td>
+          </tr>
+          <tr>
+            <td><b>GitHub account</b></td>
+            <td>
+              Hosts the vault (a private repository) and runs the automation
+              (GitHub Actions). The free tier covers a small team; GitHub Team
+              adds finer access control.
+            </td>
+            <td class="cost">Free–$4/user/mo</td>
+          </tr>
+          <tr>
+            <td><b>Anthropic API key</b></td>
+            <td>
+              The AI brain (Claude). You pay per document processed — a typical
+              meeting transcript costs cents, not dollars. Set a monthly spend
+              cap in the console.
+            </td>
+            <td class="cost">~$10–50/mo typical</td>
+          </tr>
+          <tr>
+            <td><b>Obsidian</b></td>
+            <td>
+              Free desktop app for reading and lightly editing the wiki.
+              Optional — the wiki is readable on GitHub in any browser — but
+              Obsidian makes the page links clickable and pretty.
+            </td>
+            <td class="cost">Free</td>
+          </tr>
+          <tr>
+            <td><b>One technical person</b></td>
+            <td>
+              Someone comfortable with Python and GitHub for the two-week setup.
+              After setup, no ongoing technical skill is needed for daily use.
+            </td>
+            <td class="cost">~2 weeks, once</td>
+          </tr>
+          <tr>
+            <td><b>One named curator</b></td>
+            <td>
+              A team member who owns quality: reviews AI-written pages, merges
+              duplicates, and keeps the rulebook honest. Roughly 30 minutes a
+              week.
+            </td>
+            <td class="cost">30 min/week</td>
+          </tr>
+          <tr>
+            <td><b>A decision workshop</b></td>
+            <td>
+              Half a day with the team to decide what the wiki is for, what its
+              sections are, and what the naming rules should be. Do this
+              <em>before</em> building anything — it becomes the constitution.
+            </td>
+            <td class="cost">Half a day</td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- ================= TECH STACK ================= -->
+      <h2 class="section">3 · The tech stack</h2>
+      <p class="section-sub">
+        Seven components. Five are services you configure; two are things you
+        write.
+      </p>
+
+      <div class="tablewrap">
+        <table>
+          <tr>
+            <th>Component</th>
+            <th>What it is</th>
+            <th>Its job in the system</th>
+          </tr>
+          <tr>
+            <td><b>OneDrive</b></td>
+            <td>Cloud file storage (Microsoft 365)</td>
+            <td>
+              The <b>drop zone</b> — one shared folder where the team drops raw
+              documents. No formatting, no rules, just drop.
+            </td>
+          </tr>
+          <tr>
+            <td><b>Power Automate</b></td>
+            <td>Microsoft's point-and-click automation tool</td>
+            <td>
+              The <b>courier</b> — a small "flow" that watches the drop-zone
+              folder and, when a file appears, copies it into the GitHub
+              repository's inbox folder via the GitHub connector.
+            </td>
+          </tr>
+          <tr>
+            <td><b>GitHub repository</b></td>
+            <td>Version-controlled file storage</td>
+            <td>
+              The <b>vault</b> — holds the wiki pages, the inbox, the archive,
+              and the rulebook. Every change ever made is preserved, so nothing
+              can be lost or silently overwritten.
+            </td>
+          </tr>
+          <tr>
+            <td><b>GitHub Actions</b></td>
+            <td>GitHub's built-in automation runner</td>
+            <td>
+              The <b>alarm bell</b> — a small instruction file that triggers the
+              librarian whenever a new file lands in the inbox, plus a weekly
+              safety sweep for anything missed.
+            </td>
+          </tr>
+          <tr>
+            <td><b>Python script</b></td>
+            <td>~800 lines of code you write once</td>
+            <td>
+              The <b>librarian</b> — extracts text from any format (Word, PDF,
+              PowerPoint, Excel, transcripts, images), checks for duplicates,
+              sends the content to the AI with the rulebook, writes the
+              resulting pages, and logs everything.
+            </td>
+          </tr>
+          <tr>
+            <td><b>Claude API</b></td>
+            <td>Anthropic's AI, called over the internet</td>
+            <td>
+              The <b>brain</b> — reads each document and decides what's worth
+              keeping: decisions, lessons, who owns what. Writes or updates wiki
+              pages following the constitution.
+            </td>
+          </tr>
+          <tr>
+            <td><b>Constitution file</b></td>
+            <td>One markdown document (<span class="chip">CLAUDE.md</span>)</td>
+            <td>
+              The <b>rulebook</b> — defines the wiki's sections, naming rules,
+              quality bar, and what counts as knowledge worth keeping. This is
+              where your workshop decisions live, and it's what keeps the AI's
+              output consistent.
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- ================= HOW IT WORKS TOGETHER ================= -->
+      <h2 class="section">4 · How the pieces work in unison</h2>
+      <p class="section-sub">Follow one document through the system.</p>
+
+      <div class="phase">
+        <div class="marker">
+          <div class="num">1</div>
+          <div class="rule"></div>
+        </div>
+        <div class="phase-body">
+          <h3>
+            A consultant drops "Design Review Notes.docx" into the OneDrive
+            folder
+          </h3>
+          <p>
+            That's the entire human effort. No template, no tagging, no form to
+            fill in.
+          </p>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="marker">
+          <div class="num">2</div>
+          <div class="rule"></div>
+        </div>
+        <div class="phase-body">
+          <h3>Power Automate delivers it to GitHub within a minute</h3>
+          <p>
+            The flow authenticates to GitHub, places the file in the
+            repository's <span class="chip">raw/inbox/</span> folder, and
+            commits it. That commit is the trigger.
+          </p>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="marker">
+          <div class="num">3</div>
+          <div class="rule"></div>
+        </div>
+        <div class="phase-body">
+          <h3>GitHub Actions wakes the librarian script</h3>
+          <p>
+            The script converts the Word file to text, confirms it hasn't been
+            seen before, and sends the text to Claude — together with the
+            constitution, the current page catalog, and the full content of
+            existing pages so the AI updates rather than duplicates.
+          </p>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="marker">
+          <div class="num">4</div>
+          <div class="rule"></div>
+        </div>
+        <div class="phase-body">
+          <h3>The AI files the knowledge</h3>
+          <p>
+            It might update the project overview, create a decision page with
+            the rationale, add two questions to the open-questions list, and
+            record a hard-won lesson. Every AI-written page is tagged as
+            machine-generated until a human validates it.
+          </p>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="marker">
+          <div class="num">5</div>
+          <div class="rule"></div>
+        </div>
+        <div class="phase-body">
+          <h3>Everything is recorded, then saved back</h3>
+          <p>
+            The catalog is updated, a diary entry says exactly what changed and
+            why, the original document moves to the permanent archive, and
+            GitHub Actions commits it all. Minutes after the drop, the team can
+            read the new pages in Obsidian or the browser.
+          </p>
+        </div>
+      </div>
+
+      <div class="callout teal">
+        <h3 class="display">Why this architecture is safe</h3>
+        <p>
+          Three properties protect you: <b>nothing is deleted</b> (originals are
+          archived, pages are marked outdated rather than removed),
+          <b>everything is versioned</b> (GitHub keeps every historical state,
+          so any mistake can be undone), and
+          <b>every AI action is logged</b> (the diary shows what was read and
+          what was written, so trust is verifiable, not assumed).
+        </p>
+      </div>
+
+      <!-- ================= IMPLEMENTATION PHASES ================= -->
+      <h2 class="section">5 · Implementation plan — six phases</h2>
+      <p class="section-sub">
+        Realistic total: about two calendar weeks of setup, then a four-week
+        pilot.
+      </p>
+
+      <div class="phase">
+        <div class="marker">
+          <div class="num">0</div>
+          <div class="rule"></div>
+        </div>
+        <div class="phase-body">
+          <p class="meta">Half a day · whole team</p>
+          <h3>Decide before you build</h3>
+          <ul>
+            <li>
+              Run the decision workshop: what is this wiki for, who reads it,
+              what are its sections?
+            </li>
+            <li>
+              Interview the team on how they'd use it (use a discovery
+              questionnaire).
+            </li>
+            <li>
+              Write the outcomes into the constitution file — sections, naming
+              rules, quality bar.
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="phase">
+        <div class="marker">
+          <div class="num">1</div>
+          <div class="rule"></div>
+        </div>
+        <div class="phase-body">
+          <p class="meta">1–2 days · technical person</p>
+          <h3>Build the vault skeleton</h3>
+          <ul>
+            <li>Create a private GitHub repository.</li>
+            <li>
+              Create the folder structure: the content sections,
+              <span class="chip">raw/inbox/</span>,
+              <span class="chip">raw/processed/</span>, and
+              <span class="chip">meta/</span> (catalog, diary,
+              duplicate-checklist, name dictionary).
+            </li>
+            <li>
+              Add a page template inside each folder so humans and the AI see
+              the expected format.
+            </li>
+            <li>Commit the constitution file at the root.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="phase">
+        <div class="marker">
+          <div class="num">2</div>
+          <div class="rule"></div>
+        </div>
+        <div class="phase-body">
+          <p class="meta">3–5 days · technical person</p>
+          <h3>Build the librarian</h3>
+          <ul>
+            <li>
+              Write the Python ingestion script: text extraction for each file
+              type, duplicate check, the AI prompt (embedding the constitution),
+              page writing, catalog/diary updates.
+            </li>
+            <li>
+              Create the GitHub Actions workflow: trigger on inbox changes +
+              weekly sweep + manual button.
+            </li>
+            <li>
+              Store the Anthropic API key as a GitHub secret — never in the
+              code.
+            </li>
+            <li>
+              Build in the safety rails: retries on network hiccups, failed
+              files stay in the inbox for retry, unreadable files get logged for
+              the curator.
+            </li>
+            <li>Test with a handful of real documents of each type.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="phase">
+        <div class="marker">
+          <div class="num">3</div>
+          <div class="rule"></div>
+        </div>
+        <div class="phase-body">
+          <p class="meta">Half a day · technical person</p>
+          <h3>Build the bridge</h3>
+          <ul>
+            <li>Create the shared OneDrive folder and give the team access.</li>
+            <li>
+              Build the Power Automate flow: trigger "when a file is created" on
+              that folder, action "create/update file" in the GitHub repository
+              via the GitHub connector.
+            </li>
+            <li>
+              Test end-to-end: drop a file in OneDrive, watch pages appear in
+              the wiki.
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="phase">
+        <div class="marker">
+          <div class="num">4</div>
+          <div class="rule"></div>
+        </div>
+        <div class="phase-body">
+          <p class="meta">Half a day · everyone</p>
+          <h3>Open the reading room</h3>
+          <ul>
+            <li>
+              Install Obsidian for team members who want it; point it at a
+              synced copy of the repository.
+            </li>
+            <li>
+              Everyone else reads via the GitHub web interface — no install
+              needed.
+            </li>
+            <li>Agree the correction path: who fixes a wrong page, and how.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="phase">
+        <div class="marker">
+          <div class="num">5</div>
+          <div class="rule"></div>
+        </div>
+        <div class="phase-body">
+          <p class="meta">1 week · curator + team</p>
+          <h3>Seed it</h3>
+          <ul>
+            <li>
+              Back-ingest the twenty most valuable existing documents — old
+              specs, decision records, the defect log. An empty wiki wins no
+              converts.
+            </li>
+            <li>
+              Curator reviews the AI-generated pages: validate the good, correct
+              the wrong.
+            </li>
+            <li>
+              Pick <em>one</em> flagship use case to nail first (e.g. "explain
+              our legacy code" or "answer new-joiner questions").
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="phase">
+        <div class="marker">
+          <div class="num">6</div>
+          <div class="rule"></div>
+        </div>
+        <div class="phase-body">
+          <p class="meta">4 weeks · whole team</p>
+          <h3>Pilot, then make it a habit</h3>
+          <ul>
+            <li>
+              Run a four-week pilot with one project/workstream. Every meeting's
+              notes get dropped.
+            </li>
+            <li>
+              Weekly 20-minute review: what failed to ingest, what needs
+              correcting, what repeated this week that deserves a permanent
+              page?
+            </li>
+            <li>
+              Measure the signal the team chose (fewer repeated questions,
+              faster onboarding, wiki links appearing in tickets) — then decide
+              to expand or adjust.
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ================= WATCH OUT ================= -->
+      <div class="callout amber">
+        <h3 class="display">The three things that decide success</h3>
+        <ul>
+          <li>
+            <b>The drop habit.</b> The technology works from day one; adoption
+            doesn't. Make dropping files someone's named responsibility per
+            meeting until it's reflex.
+          </li>
+          <li>
+            <b>Trust through honesty.</b> Keep AI-written pages visibly tagged
+            until a human validates them. One confidently-wrong page hurts more
+            than ten missing ones.
+          </li>
+          <li>
+            <b>The curator role.</b> Thirty minutes a week of human curation is
+            the difference between a compounding knowledge base and an abandoned
+            folder of robot notes.
+          </li>
+        </ul>
+      </div>
+
+      <footer class="tagline">
+        LLM Wiki implementation plan · Based on the OneDrive + Power Automate +
+        GitHub Actions + Claude architecture and published implementations of
+        the "LLM Wiki" pattern · Prepared July 2026
+      </footer>
+    </div>
+
+    <script>
+      (function () {
+        var root = document.documentElement;
+        var button = document.getElementById("themeToggle");
+        var glyph = document.getElementById("themeGlyph");
+        var label = document.getElementById("themeLabel");
+
+        function currentTheme() {
+          var forced = root.getAttribute("data-theme");
+          if (forced) return forced;
+          return window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light";
+        }
+
+        function render() {
+          if (currentTheme() === "dark") {
+            glyph.textContent = "☀";
+            label.textContent = "Light";
+          } else {
+            glyph.textContent = "☾";
+            label.textContent = "Dark";
+          }
+        }
+
+        function apply(theme) {
+          root.setAttribute("data-theme", theme);
+          try {
+            localStorage.setItem("llm-wiki-plan-theme", theme);
+          } catch (e) {}
+          render();
+        }
+
+        var saved = null;
+        try {
+          saved = localStorage.getItem("llm-wiki-plan-theme");
+        } catch (e) {}
+        if (saved === "dark" || saved === "light") {
+          root.setAttribute("data-theme", saved);
+        }
+
+        button.addEventListener("click", function () {
+          apply(currentTheme() === "dark" ? "light" : "dark");
+        });
+
+        window
+          .matchMedia("(prefers-color-scheme: dark)")
+          .addEventListener("change", render);
+        render();
+      })();
+    </script>
+  </body>
+</html>
