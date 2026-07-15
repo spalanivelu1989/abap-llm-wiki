@@ -265,6 +265,52 @@
         border-color: transparent;
         color: #fff;
       }
+      .sidebar-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+      }
+      .sidebar-toggle {
+        flex: none;
+        width: 1.7rem;
+        height: 1.7rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        background: var(--code-bg);
+        color: var(--muted);
+        font-size: 0.85rem;
+        line-height: 1;
+        cursor: pointer;
+        margin: 0 0 0.5rem;
+      }
+      .sidebar-toggle:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+      }
+      .sidebar-toggle:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+      nav.sidebar.collapsed {
+        width: auto;
+        padding: 0.6rem;
+      }
+      nav.sidebar.collapsed .sidebar-head {
+        justify-content: center;
+      }
+      nav.sidebar.collapsed .label {
+        display: none;
+      }
+      nav.sidebar.collapsed a.tab {
+        font-size: 0;
+        gap: 0;
+        padding: 0.4rem;
+        justify-content: center;
+      }
       .content {
         flex: 1;
         min-width: 0;
@@ -316,13 +362,24 @@
           gap: 4px;
           padding: 0.6rem;
         }
-        nav.sidebar .label {
+        nav.sidebar .label,
+        .sidebar-head {
           display: none;
         }
         nav.sidebar a.tab {
           flex: none;
           white-space: nowrap;
           margin-bottom: 0;
+        }
+        nav.sidebar.collapsed {
+          width: 100%;
+          padding: 0.6rem;
+        }
+        nav.sidebar.collapsed a.tab {
+          font-size: 0.87rem;
+          gap: 0.6rem;
+          padding: 0.5rem 0.65rem;
+          justify-content: flex-start;
         }
       }
 
@@ -772,7 +829,19 @@
 
       <div class="layout">
         <nav class="sidebar" aria-label="Sections">
-          <span class="label">The journey</span>
+          <div class="sidebar-head">
+            <span class="label">The journey</span>
+            <button
+              class="sidebar-toggle"
+              id="sidebarToggle"
+              type="button"
+              aria-expanded="true"
+              aria-label="Minimize sidebar"
+              title="Minimize sidebar"
+            >
+              «
+            </button>
+          </div>
           <a class="tab" href="#part0"
             ><span class="num">0</span>Understand what you're building (read
             first)</a
@@ -3461,6 +3530,39 @@ claude</pre>
           syncToHash(false);
         });
         syncToHash(true);
+
+        // --- Sidebar minimize toggle ---
+        var sidebar = document.querySelector("nav.sidebar");
+        var sidebarToggle = document.getElementById("sidebarToggle");
+        tabs.forEach(function (t, i) {
+          t.title = titleOf(i);
+        });
+
+        function renderSidebar(collapsed) {
+          sidebar.classList.toggle("collapsed", collapsed);
+          sidebarToggle.textContent = collapsed ? "»" : "«";
+          sidebarToggle.setAttribute("aria-expanded", String(!collapsed));
+          var verb = collapsed ? "Expand sidebar" : "Minimize sidebar";
+          sidebarToggle.setAttribute("aria-label", verb);
+          sidebarToggle.title = verb;
+        }
+
+        var sidebarSaved = null;
+        try {
+          sidebarSaved = localStorage.getItem("abap-guide-sidebar");
+        } catch (e) {}
+        renderSidebar(sidebarSaved === "collapsed");
+
+        sidebarToggle.addEventListener("click", function () {
+          var collapsed = !sidebar.classList.contains("collapsed");
+          renderSidebar(collapsed);
+          try {
+            localStorage.setItem(
+              "abap-guide-sidebar",
+              collapsed ? "collapsed" : "expanded",
+            );
+          } catch (e) {}
+        });
 
         // --- External links (GitHub etc.) and companion pages open in a
         // new tab; only in-page #hash links stay in this tab ---
