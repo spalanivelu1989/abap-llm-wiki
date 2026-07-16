@@ -4,6 +4,16 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>ABAP LLM Wiki — Setup Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
     <style>
       :root {
         --bg: #f6f8f8;
@@ -21,40 +31,41 @@
         --code-bg: #eef2f2;
         --code-ink: #17332f;
       }
+      /* Dark mode: Catppuccin Frappé — https://catppuccin.com/palette/ */
       @media (prefers-color-scheme: dark) {
         :root {
-          --bg: #131a1c;
-          --card: #1a2326;
-          --ink: #e3eae9;
-          --muted: #9db0ae;
-          --accent: #55c2b8;
-          --accent-soft: #173733;
-          --win-bg: #16301f;
-          --win-border: #4caf7a;
-          --warn-bg: #33290f;
-          --warn-border: #d9a53a;
-          --why-bg: #1e282c;
-          --border: #2b3a3d;
-          --code-bg: #101a1c;
-          --code-ink: #c6e5df;
+          --bg: #303446; /* Base */
+          --card: #414559; /* Surface 0 */
+          --ink: #c6d0f5; /* Text */
+          --muted: #a5adce; /* Subtext 0 */
+          --accent: #81c8be; /* Teal */
+          --accent-soft: #51576d; /* Surface 1 */
+          --win-bg: #292c3c; /* Mantle */
+          --win-border: #a6d189; /* Green */
+          --warn-bg: #292c3c; /* Mantle */
+          --warn-border: #e5c890; /* Yellow */
+          --why-bg: #292c3c; /* Mantle */
+          --border: #51576d; /* Surface 1 */
+          --code-bg: #292c3c; /* Mantle */
+          --code-ink: #99d1db; /* Sky */
         }
       }
       /* Manual toggle overrides — must win over the OS preference in both directions */
       :root[data-theme="dark"] {
-        --bg: #131a1c;
-        --card: #1a2326;
-        --ink: #e3eae9;
-        --muted: #9db0ae;
-        --accent: #55c2b8;
-        --accent-soft: #173733;
-        --win-bg: #16301f;
-        --win-border: #4caf7a;
-        --warn-bg: #33290f;
-        --warn-border: #d9a53a;
-        --why-bg: #1e282c;
-        --border: #2b3a3d;
-        --code-bg: #101a1c;
-        --code-ink: #c6e5df;
+        --bg: #303446; /* Base */
+        --card: #414559; /* Surface 0 */
+        --ink: #c6d0f5; /* Text */
+        --muted: #a5adce; /* Subtext 0 */
+        --accent: #81c8be; /* Teal */
+        --accent-soft: #51576d; /* Surface 1 */
+        --win-bg: #292c3c; /* Mantle */
+        --win-border: #a6d189; /* Green */
+        --warn-bg: #292c3c; /* Mantle */
+        --warn-border: #e5c890; /* Yellow */
+        --why-bg: #292c3c; /* Mantle */
+        --border: #51576d; /* Surface 1 */
+        --code-bg: #292c3c; /* Mantle */
+        --code-ink: #99d1db; /* Sky */
       }
       :root[data-theme="light"] {
         --bg: #f6f8f8;
@@ -86,7 +97,7 @@
         border: 1px solid var(--border);
         border-radius: 999px;
         padding: 0.35rem 0.85rem;
-        font-family: "Avenir Next", "Segoe UI", system-ui, sans-serif;
+        font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
         font-size: 0.78rem;
         font-weight: 600;
         letter-spacing: 0.04em;
@@ -126,8 +137,7 @@
       body {
         background: var(--bg);
         color: var(--ink);
-        font-family:
-          Charter, "Bitstream Charter", "Source Serif Pro", Georgia, serif;
+        font-family: "Work Sans", "Segoe UI", system-ui, sans-serif;
         font-size: 17px;
         line-height: 1.65;
         margin: 0;
@@ -145,7 +155,7 @@
       nav,
       .phase-tag {
         font-family:
-          "Avenir Next",
+          "Nunito",
           "Segoe UI",
           system-ui,
           -apple-system,
@@ -187,7 +197,7 @@
       }
 
       .eyebrow {
-        font-family: "Avenir Next", "Segoe UI", system-ui, sans-serif;
+        font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
         text-transform: uppercase;
         letter-spacing: 0.14em;
         font-size: 0.72rem;
@@ -206,7 +216,7 @@
         display: flex;
         flex-wrap: wrap;
         gap: 0.5rem 1.75rem;
-        font-family: "Avenir Next", "Segoe UI", system-ui, sans-serif;
+        font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
         font-size: 0.85rem;
         color: var(--muted);
         border-top: 1px solid var(--border);
@@ -344,7 +354,7 @@
         margin-top: 1.5rem;
       }
       .pager button {
-        font-family: "Avenir Next", "Segoe UI", system-ui, sans-serif;
+        font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
         font-size: 0.85rem;
         font-weight: 600;
         color: var(--accent);
@@ -514,7 +524,7 @@
         vertical-align: top;
       }
       th {
-        font-family: "Avenir Next", "Segoe UI", system-ui, sans-serif;
+        font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
         font-size: 0.72rem;
         text-transform: uppercase;
         letter-spacing: 0.1em;
@@ -548,7 +558,7 @@
         align-items: stretch;
         gap: 0.6rem;
         margin: 1.25rem 0 1.75rem;
-        font-family: "Avenir Next", "Segoe UI", system-ui, sans-serif;
+        font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
         font-size: 0.85rem;
         line-height: 1.45;
       }
@@ -644,7 +654,7 @@
         margin: -0.4rem 0 1.3rem;
       }
       .chip {
-        font-family: "Avenir Next", "Segoe UI", system-ui, sans-serif;
+        font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
         font-size: 0.72rem;
         font-weight: 600;
         letter-spacing: 0.05em;
@@ -662,7 +672,7 @@
         display: flex;
         align-items: center;
         gap: 0.65rem;
-        font-family: "Avenir Next", "Segoe UI", system-ui, sans-serif;
+        font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
         font-size: 1rem;
         font-weight: 700;
         margin: 2.1rem 0 0.8rem;
@@ -698,7 +708,7 @@
       }
       .card .card-title {
         display: block;
-        font-family: "Avenir Next", "Segoe UI", system-ui, sans-serif;
+        font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
         font-size: 0.82rem;
         font-weight: 700;
         text-transform: uppercase;
@@ -715,7 +725,7 @@
         margin: 2rem 0 1.5rem;
       }
       .qa .q {
-        font-family: "Avenir Next", "Segoe UI", system-ui, sans-serif;
+        font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
         font-size: 1.05rem;
         font-weight: 700;
         margin: 0 0 0.6rem;
@@ -754,7 +764,7 @@
       }
       .choice-box .ct {
         display: block;
-        font-family: "Avenir Next", "Segoe UI", system-ui, sans-serif;
+        font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
         font-size: 0.82rem;
         font-weight: 700;
         text-transform: uppercase;
@@ -817,7 +827,6 @@
       <span id="themeLabel">Dark mode</span>
     </button>
     <main>
-      <p class="eyebrow">Internal playbook · Knowledge engineering</p>
       <h1>Setting up an LLM Wiki for the ABAP project</h1>
       <p class="lede">
         A start-to-finish walkthrough for building an AI-maintained knowledge

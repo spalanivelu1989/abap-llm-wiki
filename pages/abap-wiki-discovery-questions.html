@@ -4,6 +4,16 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>ABAP LLM Wiki — Team Discovery Questions</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
     <style>
       :root {
         --paper: #f3f5f4;
@@ -20,30 +30,30 @@
       }
       @media (prefers-color-scheme: dark) {
         :root {
-          --paper: #131d1a;
-          --card: #1b2723;
-          --ink: #e4ece9;
-          --muted: #93a5a0;
-          --teal: #5bbfa9;
-          --teal-soft: #1e332e;
-          --amber: #d9a05b;
-          --amber-soft: #33281a;
-          --line: #33443f;
-          --chip-bg: #24322d;
+          --paper: #303446;
+          --card: #414559;
+          --ink: #c6d0f5;
+          --muted: #a5adce;
+          --teal: #81c8be;
+          --teal-soft: #51576d;
+          --amber: #e5c890;
+          --amber-soft: #292c3c;
+          --line: #51576d;
+          --chip-bg: #292c3c;
           --shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
         }
       }
       :root[data-theme="dark"] {
-        --paper: #131d1a;
-        --card: #1b2723;
-        --ink: #e4ece9;
-        --muted: #93a5a0;
-        --teal: #5bbfa9;
-        --teal-soft: #1e332e;
-        --amber: #d9a05b;
-        --amber-soft: #33281a;
-        --line: #33443f;
-        --chip-bg: #24322d;
+        --paper: #303446;
+        --card: #414559;
+        --ink: #c6d0f5;
+        --muted: #a5adce;
+        --teal: #81c8be;
+        --teal-soft: #51576d;
+        --amber: #e5c890;
+        --amber-soft: #292c3c;
+        --line: #51576d;
+        --chip-bg: #292c3c;
         --shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
       }
       :root[data-theme="light"] {
@@ -66,12 +76,7 @@
       body {
         background: var(--paper);
         color: var(--ink);
-        font-family:
-          "Avenir Next",
-          "Segoe UI",
-          system-ui,
-          -apple-system,
-          sans-serif;
+        font-family: "Work Sans", "Segoe UI", system-ui, sans-serif;
         line-height: 1.55;
         margin: 0;
         padding: 3rem 1.25rem 4rem;
@@ -83,8 +88,7 @@
         padding: 0 clamp(0.5rem, 3vw, 3rem);
       }
       .display {
-        font-family:
-          "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+        font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
       }
 
       header.masthead {
@@ -99,7 +103,7 @@
         margin: 0 0 0.75rem;
       }
       h1 {
-        font-family: "Iowan Old Style", Palatino, Georgia, serif;
+        font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
         font-size: clamp(1.8rem, 4.5vw, 2.5rem);
         line-height: 1.15;
         margin: 0 0 0.9rem;
@@ -126,7 +130,7 @@
         box-shadow: var(--shadow);
       }
       .context h2 {
-        font-family: "Iowan Old Style", Palatino, Georgia, serif;
+        font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
         font-size: 1.1rem;
         margin: 0 0 0.5rem;
       }
@@ -141,7 +145,7 @@
         border-bottom: 2px solid var(--teal);
       }
       .part-banner h2 {
-        font-family: "Iowan Old Style", Palatino, Georgia, serif;
+        font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
         font-size: 1.45rem;
         margin: 0;
         font-weight: 600;
@@ -171,13 +175,13 @@
         border: 1.5px solid var(--teal);
         display: grid;
         place-items: center;
-        font-family: "Iowan Old Style", Palatino, Georgia, serif;
+        font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
         font-weight: 600;
         font-size: 0.95rem;
         align-self: center;
       }
       section.theme h3 {
-        font-family: "Iowan Old Style", Palatino, Georgia, serif;
+        font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
         font-size: 1.2rem;
         margin: 0;
         font-weight: 600;
@@ -209,7 +213,7 @@
         font-size: 0.97rem;
       }
       ol.questions li .qnum {
-        font-family: "Iowan Old Style", Palatino, Georgia, serif;
+        font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
         font-weight: 600;
         color: var(--teal);
         text-align: right;
@@ -244,7 +248,7 @@
         margin: 2.4rem 0;
       }
       .shortlist h2 {
-        font-family: "Iowan Old Style", Palatino, Georgia, serif;
+        font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
         font-size: 1.15rem;
         margin: 0 0 0.4rem;
         color: var(--amber);
@@ -262,7 +266,7 @@
         margin: 2.4rem 0 0;
       }
       .tips h2 {
-        font-family: "Iowan Old Style", Palatino, Georgia, serif;
+        font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
         font-size: 1.15rem;
         margin: 0 0 0.4rem;
         color: var(--teal);
@@ -317,7 +321,7 @@
         border-radius: 999px;
         padding: 0.42rem 0.9rem;
         font:
-          600 0.78rem "Avenir Next",
+          600 0.78rem "Nunito",
           "Segoe UI",
           system-ui,
           -apple-system,
@@ -359,13 +363,13 @@
         font-size: 0.95rem;
       }
       ol.resources li .rnum {
-        font-family: "Iowan Old Style", Palatino, Georgia, serif;
+        font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
         font-weight: 600;
         color: var(--teal);
         text-align: right;
       }
       ol.resources h4 {
-        font-family: "Iowan Old Style", Palatino, Georgia, serif;
+        font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
         font-size: 1.02rem;
         font-weight: 600;
         margin: 0;

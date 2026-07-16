@@ -4,6 +4,16 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Writing the Constitution — CLAUDE.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
     <style>
       :root {
         --paper: #f3f5f4;
@@ -20,30 +30,30 @@
       }
       @media (prefers-color-scheme: dark) {
         :root {
-          --paper: #131d1a;
-          --card: #1b2723;
-          --ink: #e4ece9;
-          --muted: #93a5a0;
-          --teal: #5bbfa9;
-          --teal-soft: #1e332e;
-          --amber: #d9a05b;
-          --amber-soft: #33281a;
-          --line: #33443f;
-          --chip-bg: #24322d;
+          --paper: #303446;
+          --card: #414559;
+          --ink: #c6d0f5;
+          --muted: #a5adce;
+          --teal: #81c8be;
+          --teal-soft: #51576d;
+          --amber: #e5c890;
+          --amber-soft: #292c3c;
+          --line: #51576d;
+          --chip-bg: #292c3c;
           --shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
         }
       }
       :root[data-theme="dark"] {
-        --paper: #131d1a;
-        --card: #1b2723;
-        --ink: #e4ece9;
-        --muted: #93a5a0;
-        --teal: #5bbfa9;
-        --teal-soft: #1e332e;
-        --amber: #d9a05b;
-        --amber-soft: #33281a;
-        --line: #33443f;
-        --chip-bg: #24322d;
+        --paper: #303446;
+        --card: #414559;
+        --ink: #c6d0f5;
+        --muted: #a5adce;
+        --teal: #81c8be;
+        --teal-soft: #51576d;
+        --amber: #e5c890;
+        --amber-soft: #292c3c;
+        --line: #51576d;
+        --chip-bg: #292c3c;
         --shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
       }
       :root[data-theme="light"] {
@@ -76,7 +86,7 @@
         border: 1px solid var(--line);
         border-radius: 999px;
         padding: 0.35rem 0.85rem;
-        font-family: "Avenir Next", "Segoe UI", system-ui, sans-serif;
+        font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
         font-size: 0.78rem;
         font-weight: 600;
         letter-spacing: 0.04em;
@@ -99,15 +109,17 @@
       body {
         background: var(--paper);
         color: var(--ink);
-        font-family:
-          "Avenir Next",
-          "Segoe UI",
-          system-ui,
-          -apple-system,
-          sans-serif;
+        font-family: "Work Sans", "Segoe UI", system-ui, sans-serif;
         line-height: 1.55;
         margin: 0;
         padding: 3rem 1.25rem 4rem;
+      }
+      h1,
+      h2,
+      h3,
+      .kicker,
+      .ref-button {
+        font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
       }
       .page {
         max-width: 1500px;
@@ -205,7 +217,7 @@
         border: 1px solid var(--teal);
         border-radius: 999px;
         padding: 0.4rem 0.95rem;
-        font-family: inherit;
+        font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
         font-size: 0.85rem;
         font-weight: 600;
         cursor: pointer;

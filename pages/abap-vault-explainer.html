@@ -4,6 +4,16 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>The ABAP Knowledge Vault — How It Works</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
     <style>
       :root {
         --paper: #f3f5f4;
@@ -20,30 +30,30 @@
       }
       @media (prefers-color-scheme: dark) {
         :root {
-          --paper: #131d1a;
-          --card: #1b2723;
-          --ink: #e4ece9;
-          --muted: #93a5a0;
-          --teal: #5bbfa9;
-          --teal-soft: #1e332e;
-          --amber: #d9a05b;
-          --amber-soft: #33281a;
-          --line: #33443f;
-          --chip-bg: #24322d;
+          --paper: #303446;
+          --card: #414559;
+          --ink: #c6d0f5;
+          --muted: #a5adce;
+          --teal: #81c8be;
+          --teal-soft: #51576d;
+          --amber: #e5c890;
+          --amber-soft: #292c3c;
+          --line: #51576d;
+          --chip-bg: #292c3c;
           --shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
         }
       }
       :root[data-theme="dark"] {
-        --paper: #131d1a;
-        --card: #1b2723;
-        --ink: #e4ece9;
-        --muted: #93a5a0;
-        --teal: #5bbfa9;
-        --teal-soft: #1e332e;
-        --amber: #d9a05b;
-        --amber-soft: #33281a;
-        --line: #33443f;
-        --chip-bg: #24322d;
+        --paper: #303446;
+        --card: #414559;
+        --ink: #c6d0f5;
+        --muted: #a5adce;
+        --teal: #81c8be;
+        --teal-soft: #51576d;
+        --amber: #e5c890;
+        --amber-soft: #292c3c;
+        --line: #51576d;
+        --chip-bg: #292c3c;
         --shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
       }
       :root[data-theme="light"] {
@@ -66,12 +76,7 @@
       body {
         background: var(--paper);
         color: var(--ink);
-        font-family:
-          "Avenir Next",
-          "Segoe UI",
-          system-ui,
-          -apple-system,
-          sans-serif;
+        font-family: "Work Sans", "Segoe UI", system-ui, sans-serif;
         line-height: 1.55;
         margin: 0;
         padding: 3rem 1.25rem 4rem;
@@ -84,8 +89,7 @@
       }
 
       .display {
-        font-family:
-          "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+        font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
       }
 
       header.masthead {
@@ -141,7 +145,7 @@
         border: 1.5px solid var(--teal);
         display: grid;
         place-items: center;
-        font-family: "Iowan Old Style", Palatino, Georgia, serif;
+        font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
         font-size: 1.25rem;
         font-weight: 600;
       }
@@ -165,7 +169,7 @@
         min-width: 0;
       }
       .stage h2 {
-        font-family: "Iowan Old Style", Palatino, Georgia, serif;
+        font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
         font-size: 1.35rem;
         font-weight: 600;
         margin: 0.45rem 0 0.15rem;
@@ -233,7 +237,7 @@
       .task .tick {
         color: var(--amber);
         font-weight: 700;
-        font-family: "Iowan Old Style", Palatino, Georgia, serif;
+        font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
       }
 
       /* shelves grid */
@@ -254,7 +258,7 @@
       .shelf h3 {
         margin: 0 0 0.2rem;
         font-size: 1rem;
-        font-family: "Iowan Old Style", Palatino, Georgia, serif;
+        font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
         font-weight: 600;
       }
       .shelf .zone {
@@ -292,7 +296,7 @@
         box-shadow: var(--shadow);
       }
       .ledger-row .what {
-        font-family: "Iowan Old Style", Palatino, Georgia, serif;
+        font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
         font-weight: 600;
         font-size: 0.95rem;
       }
@@ -324,7 +328,7 @@
         padding: 1.3rem 1.5rem;
       }
       .rulebook h2 {
-        font-family: "Iowan Old Style", Palatino, Georgia, serif;
+        font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
         font-size: 1.2rem;
         margin: 0 0 0.4rem;
         color: var(--teal);
@@ -341,7 +345,7 @@
         font-size: 0.95rem;
       }
       footer.tagline em {
-        font-family: "Iowan Old Style", Palatino, Georgia, serif;
+        font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
         color: var(--ink);
       }
 
@@ -360,7 +364,7 @@
         border-radius: 999px;
         padding: 0.42rem 0.9rem;
         font:
-          600 0.78rem "Avenir Next",
+          600 0.78rem "Nunito",
           "Segoe UI",
           system-ui,
           -apple-system,
