@@ -1,0 +1,854 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Writing the Constitution — CLAUDE.md</title>
+    <style>
+      :root {
+        --paper: #f3f5f4;
+        --card: #fdfefd;
+        --ink: #1f2b28;
+        --muted: #5c6b67;
+        --teal: #0e6b5b;
+        --teal-soft: #e3eeeb;
+        --amber: #a9701f;
+        --amber-soft: #f4eadb;
+        --line: #c9d4d0;
+        --chip-bg: #e9eeec;
+        --shadow: 0 1px 3px rgba(31, 43, 40, 0.08);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --paper: #131d1a;
+          --card: #1b2723;
+          --ink: #e4ece9;
+          --muted: #93a5a0;
+          --teal: #5bbfa9;
+          --teal-soft: #1e332e;
+          --amber: #d9a05b;
+          --amber-soft: #33281a;
+          --line: #33443f;
+          --chip-bg: #24322d;
+          --shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+        }
+      }
+      :root[data-theme="dark"] {
+        --paper: #131d1a;
+        --card: #1b2723;
+        --ink: #e4ece9;
+        --muted: #93a5a0;
+        --teal: #5bbfa9;
+        --teal-soft: #1e332e;
+        --amber: #d9a05b;
+        --amber-soft: #33281a;
+        --line: #33443f;
+        --chip-bg: #24322d;
+        --shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+      }
+      :root[data-theme="light"] {
+        --paper: #f3f5f4;
+        --card: #fdfefd;
+        --ink: #1f2b28;
+        --muted: #5c6b67;
+        --teal: #0e6b5b;
+        --teal-soft: #e3eeeb;
+        --amber: #a9701f;
+        --amber-soft: #f4eadb;
+        --line: #c9d4d0;
+        --chip-bg: #e9eeec;
+        --shadow: 0 1px 3px rgba(31, 43, 40, 0.08);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      .theme-toggle {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        z-index: 10;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        background: var(--card);
+        color: var(--muted);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 0.35rem 0.85rem;
+        font-family: "Avenir Next", "Segoe UI", system-ui, sans-serif;
+        font-size: 0.78rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        cursor: pointer;
+        box-shadow: var(--shadow);
+      }
+      .theme-toggle:hover {
+        color: var(--teal);
+        border-color: var(--teal);
+      }
+      .theme-toggle:focus-visible {
+        outline: 2px solid var(--teal);
+        outline-offset: 2px;
+      }
+      @media print {
+        .theme-toggle {
+          display: none;
+        }
+      }
+      body {
+        background: var(--paper);
+        color: var(--ink);
+        font-family:
+          "Avenir Next",
+          "Segoe UI",
+          system-ui,
+          -apple-system,
+          sans-serif;
+        line-height: 1.55;
+        margin: 0;
+        padding: 3rem 1.25rem 4rem;
+      }
+      .page {
+        max-width: 1500px;
+        margin: 0 auto;
+      }
+      header.masthead {
+        margin-bottom: 2.5rem;
+      }
+      .kicker {
+        display: inline-block;
+        background: var(--teal-soft);
+        color: var(--teal);
+        font-size: 0.78rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 0.3rem 0.7rem;
+        border-radius: 999px;
+        margin-bottom: 0.9rem;
+      }
+      h1 {
+        font-size: 1.9rem;
+        line-height: 1.25;
+        margin: 0 0 0.5rem;
+      }
+      .subtitle {
+        color: var(--muted);
+        margin: 0;
+        max-width: 60ch;
+      }
+      section.card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+        padding: 1.6rem 1.8rem;
+        margin-bottom: 1.6rem;
+      }
+      h2 {
+        font-size: 1.3rem;
+        margin: 0 0 0.9rem;
+        color: var(--teal);
+      }
+      h3 {
+        font-size: 1.02rem;
+        margin: 1.4rem 0 0.4rem;
+      }
+      h3:first-of-type {
+        margin-top: 0.2rem;
+      }
+      p {
+        margin: 0.55rem 0;
+      }
+      ul,
+      ol {
+        margin: 0.5rem 0 0.9rem;
+        padding-left: 1.4rem;
+      }
+      li {
+        margin: 0.35rem 0;
+      }
+      code {
+        background: var(--chip-bg);
+        border-radius: 5px;
+        padding: 0.1rem 0.35rem;
+        font-family: "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+        font-size: 0.88em;
+      }
+      .note {
+        background: var(--amber-soft);
+        border-left: 4px solid var(--amber);
+        border-radius: 0 8px 8px 0;
+        padding: 0.8rem 1rem;
+        margin: 0.9rem 0;
+      }
+      .note strong {
+        color: var(--amber);
+      }
+      footer {
+        color: var(--muted);
+        font-size: 0.88rem;
+        margin-top: 2.5rem;
+        border-top: 1px solid var(--line);
+        padding-top: 1rem;
+      }
+      a {
+        color: var(--teal);
+      }
+      .ref-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        background: var(--teal-soft);
+        color: var(--teal);
+        border: 1px solid var(--teal);
+        border-radius: 999px;
+        padding: 0.4rem 0.95rem;
+        font-family: inherit;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        margin: 0.5rem 0 0.3rem;
+      }
+      .ref-button:hover {
+        background: var(--teal);
+        color: var(--card);
+      }
+      .ref-button:focus-visible {
+        outline: 2px solid var(--teal);
+        outline-offset: 2px;
+      }
+      dialog.ref-dialog {
+        background: var(--card);
+        color: var(--ink);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+        padding: 1.8rem 2rem;
+        max-width: 720px;
+        width: calc(100vw - 2.5rem);
+        max-height: 85vh;
+        overflow-y: auto;
+      }
+      dialog.ref-dialog::backdrop {
+        background: rgba(0, 0, 0, 0.45);
+      }
+      dialog.ref-dialog h2 {
+        margin-top: 0;
+        padding-right: 2.5rem;
+      }
+      dialog.ref-dialog h3 {
+        color: var(--amber);
+      }
+      .ref-close {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: var(--chip-bg);
+        color: var(--muted);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        width: 2rem;
+        height: 2rem;
+        font-size: 1rem;
+        line-height: 1;
+        cursor: pointer;
+      }
+      .ref-close:hover {
+        color: var(--teal);
+        border-color: var(--teal);
+      }
+    </style>
+  </head>
+  <body>
+    <button
+      class="theme-toggle"
+      id="themeToggle"
+      type="button"
+      aria-live="polite"
+    >
+      <span id="themeIcon" aria-hidden="true">◐</span>
+      <span id="themeLabel">Dark mode</span>
+    </button>
+    <div class="page">
+      <header class="masthead">
+        <span class="kicker">Constitution · CLAUDE.md</span>
+        <h1>Writing the Constitution</h1>
+        <p class="subtitle">
+          What the vault's rulebook really is, the requirements to gather from
+          the ABAP team before finalizing it, and rules for writing rules.
+        </p>
+      </header>
+
+      <section class="card">
+        <h2>What a constitution actually is</h2>
+        <p>
+          Concretely, <code>CLAUDE.md</code> is the instruction file the
+          pipeline pastes into every Claude prompt before Claude reads a new
+          document. It tells Claude what knowledge to extract, how to name
+          pages, which folder each page type belongs in, and how pages must link
+          together. It is the <em>only</em> guidance Claude receives — nobody
+          reviews the output before it lands in the vault, so whatever this file
+          says (or fails to say) directly becomes the shape and quality of the
+          wiki.
+        </p>
+        <p>
+          That's why it helps to think of it as a contract between three
+          parties, each of whom depends on it in a different way:
+        </p>
+        <ul>
+          <li>
+            <strong>The team</strong> drops files in and reads pages out. The
+            constitution is their guarantee that pages will be named
+            predictably, filed where they expect, and worth trusting.
+          </li>
+          <li>
+            <strong>The pipeline</strong> runs automatically with no human
+            watching. It can't ask clarifying questions — it can only follow
+            what's written.
+          </li>
+          <li>
+            <strong>The AI</strong> makes every judgment call alone: is this a
+            decision or an open question? Is "O2C" the same as "OTC"? Does this
+            deserve a new page or an update to an existing one? The constitution
+            is the only thing standing in for a human reviewer.
+          </li>
+        </ul>
+        <p>
+          This leads to a simple litmus test for every rule you write:
+          <strong
+            >"When the AI hits an ambiguous situation at 2 AM with nobody
+            watching, does this rule tell it exactly what to do?"</strong
+          >
+        </p>
+        <ul>
+          <li>
+            <strong>Fails the test:</strong> "Keep notes high quality." Two runs
+            of the pipeline can interpret this differently, and you can't look
+            at a page and say whether the rule was followed.
+          </li>
+          <li>
+            <strong>Passes the test:</strong> "If you cannot link a new page
+            upward to a parent page, do not create it — append the content to an
+            existing page instead." Given any input, there is exactly one
+            correct behavior, and you can verify it by looking at the output.
+          </li>
+        </ul>
+        <p>
+          In short: the constitution is not a mission statement about good
+          documentation. It is a decision procedure — a set of "if this, then do
+          that" rules precise enough that an unattended AI produces the same
+          clean, consistent vault no matter who dropped the file or what it
+          looked like.
+        </p>
+      </section>
+
+      <section class="card">
+        <h2>Requirements to gather from the ABAP team</h2>
+
+        <h3>1. The entity universe (highest priority — dedup depends on it)</h3>
+        <p>
+          In plain terms: an <strong>"entity"</strong> is anything the team
+          talks about that could show up under more than one name — a
+          workstream, a system, a vendor, a person. The
+          <strong>"entity universe"</strong> is the complete list of those
+          things, together with every nickname, abbreviation, and misspelling
+          people actually use for them.
+        </p>
+        <p>
+          Why it matters: when the AI reads a document, it looks up every name
+          it encounters in <code>meta/entities.md</code> (the name dictionary)
+          and converts it to the one official spelling before creating or
+          linking pages — that's the "harmonization check." If the dictionary
+          knows that "O2C", "OTC", and "Order-to-Cash" are all the same
+          workstream, everything files onto one page. If it doesn't, the AI has
+          no way to tell they're the same thing, and you get two or three
+          duplicate pages for one topic — which is why deduplication depends
+          entirely on this list, and why it's the highest-priority thing to
+          collect. The dictionary is only as good as what the team tells you, so
+          gather from them, exhaustively:
+        </p>
+        <ul>
+          <li>
+            Every workstream name and every alias people actually use in emails,
+            transcripts, and file names (O2C vs OTC vs "Order-to-Cash stream")
+          </li>
+          <li>SAP module slugs in scope (SD, MM, FI, CO, PP…)</li>
+          <li>
+            System SIDs and their nicknames ("the quality box", "Q-system", QAS)
+          </li>
+          <li>Vendor/partner/client names with spelling variants</li>
+          <li>
+            Key people and how their names get mangled in transcripts
+            (auto-transcription butchers names — get a roster)
+          </li>
+        </ul>
+        <button
+          type="button"
+          class="ref-button"
+          id="entityRefOpen"
+          aria-haspopup="dialog"
+        >
+          📖 Reference: what entities does an ABAP team usually work with?
+        </button>
+        <button
+          type="button"
+          class="ref-button"
+          id="emailTplOpen"
+          aria-haspopup="dialog"
+        >
+          ✉️ Template: email asking the team for their entities
+        </button>
+
+        <h3>2. What actually flows through the pipeline</h3>
+        <p>
+          Ask for real samples of every document type they produce: meeting
+          transcripts, FS/TS documents, WRICEF lists, estimation spreadsheets,
+          code exports, defect logs, email chains. Your format table is generic
+          until you've seen their actual artifacts. A CR document like the FTDS
+          one you already ingested tells you more than any interview.
+        </p>
+
+        <h3>3. Consumption patterns (this shapes everything)</h3>
+        <p>
+          The vault's structure should be derived from the questions the team
+          actually asks, not from a taxonomy that looks tidy. Gather: What do
+          you look up repeatedly? What did you ask a colleague last week? What
+          would you have wanted on day one of joining this project? What breaks
+          when someone leaves?
+        </p>
+
+        <h3>4. Existing standards and their real status</h3>
+        <p>
+          Which coding/naming standards exist on paper vs. are actually
+          followed? Ingesting a dead standard as evergreen poisons the vault's
+          credibility.
+        </p>
+
+        <h3>5. Effort and estimation culture</h3>
+        <p>
+          Your calibration loop (estimates + actuals + variance) is one of the
+          highest-value features, but only if actuals get recorded. Who tracks
+          effort today, in what tool, at what granularity? If the answer is
+          "nobody," you need a lighter rule or it will silently fail.
+        </p>
+
+        <h3>
+          6. Confidentiality and data boundaries — currently missing from your
+          draft
+        </h3>
+        <p>
+          This is the biggest gap in v1.0. Ask: Can client names appear in the
+          vault? Salary/rate info in estimation docs? PII in transcripts (who
+          said what)? Is there content that must never be committed to GitHub?
+          You likely need a "do not ingest / redact on ingest" rule, and the
+          team must define it — you can't.
+        </p>
+
+        <h3>7. Governance and trust</h3>
+        <p>
+          Who is the Curator (your draft says TBD — resolve this before go-live,
+          not after)? What's the SLA for SME review of ai-generated pages? What
+          happens when the AI writes something wrong and a client sees it? Who
+          arbitrates when two workstreams record conflicting decisions?
+        </p>
+      </section>
+
+      <section class="card">
+        <h2>Questions to ask, by audience</h2>
+
+        <h3>Developers:</h3>
+        <ul>
+          <li>
+            "What did you have to reverse-engineer from code because it wasn't
+            written down? What would have saved you?"
+          </li>
+          <li>
+            "What non-obvious SAP behavior cost you more than a day?" (seeds
+            your gotchas)
+          </li>
+          <li>
+            "When you finish an object, what's the minimum you'd actually write
+            down — honestly?"
+          </li>
+        </ul>
+
+        <h3>Team/workstream leads:</h3>
+        <ul>
+          <li>"Walk me through your last handover. What was missing?"</li>
+          <li>
+            "What question do junior team members ask you repeatedly?" (seeds
+            FAQs)
+          </li>
+          <li>
+            "How do you estimate today, and would you trust past actuals from
+            this vault to quote future work?"
+          </li>
+        </ul>
+
+        <h3>Functional consultants / client-facing people:</h3>
+        <ul>
+          <li>
+            "What decisions get relitigated because nobody wrote down the
+            rationale?"
+          </li>
+          <li>
+            "What client questions come back every phase?" (testing, transports,
+            access — your FAQ topics)
+          </li>
+        </ul>
+
+        <h3>Everyone:</h3>
+        <ul>
+          <li>
+            "When you need to know something today, where do you look first, and
+            where do you actually find it?" (the delta is your value
+            proposition)
+          </li>
+          <li>
+            "What would make you stop trusting this wiki after one bad
+            experience?" (this defines your quality bar concretely)
+          </li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>How to run the gathering process</h2>
+        <ol>
+          <li>
+            <strong>Shadow before you interview.</strong> Sit in one design
+            review and one defect triage. Watch what knowledge gets created and
+            lost in real time — you'll find requirements nobody would
+            articulate.
+          </li>
+          <li>
+            <strong
+              >Pilot ingest with real documents, before finalizing.</strong
+            >
+            Take 5–10 real artifacts, run them through the pipeline, and review
+            the output with the people who wrote the originals. Their
+            corrections are your requirements. "The AI put this in Decisions but
+            it's really an open question" → that's a triage rule you were
+            missing.
+          </li>
+          <li>
+            <strong>Run one 60–90 min workshop, not a survey.</strong>
+            Agenda: 15 min walking through one ingested page (make it concrete),
+            30 min on entity naming (project the entities.md draft, argue
+            aliases live), 20 min on the confidentiality boundary, 15 min
+            assigning the Curator and Intelligence Lead by name. Surveys about
+            hypothetical knowledge bases get hypothetical answers.
+          </li>
+          <li>
+            <strong
+              >Establish a feedback channel with near-zero friction.</strong
+            >
+            A rule like "if a page is wrong, fix it in Obsidian" only works if
+            people know it's allowed and takes seconds. Ask the team what
+            channel they'd actually use to flag "the AI got this wrong."
+          </li>
+        </ol>
+      </section>
+
+      <section class="card">
+        <h2>Rules for writing the constitution itself</h2>
+        <ul>
+          <li>
+            <strong>Every rule must be enforceable or observable.</strong> If
+            you can't tell whether the rule was followed by looking at the
+            output, rewrite it as something you can check (your naming tables do
+            this well; "written for reuse" doesn't).
+          </li>
+          <li>
+            <strong>Every naming rule gets a right/wrong example.</strong> Your
+            harmonization table is the best part of the current draft precisely
+            because it does this. Extend that style everywhere.
+          </li>
+          <li>
+            <strong>Define failure behavior, not just success behavior.</strong>
+            What does the AI do with a file it can't classify? A transcript in
+            German? A 200-page PDF? A file that contradicts an existing
+            decision? Every unhandled case becomes a silent inconsistency.
+          </li>
+          <li>
+            <strong>Prefer fewer, harder rules over many soft ones.</strong> A
+            12-rule constitution the AI always follows beats a 40-rule one it
+            follows probabilistically. Every rule you add dilutes attention on
+            the others.
+          </li>
+          <li>
+            <strong>Version it and log changes.</strong> Add a changelog
+            section; when ingestion behavior changes, the team should be able to
+            see why pages from March look different from pages from July.
+          </li>
+          <li>
+            <strong>Write the escape hatch explicitly.</strong> "When in doubt,
+            do X" (your "err toward matching an existing entity" is a good
+            example). The AI will hit doubt constantly; every ambiguous area
+            needs a default.
+          </li>
+        </ul>
+      </section>
+
+      <footer>
+        <p>
+          Companion to the
+          <a href="abap-llm-wiki-setup-guide.html">ABAP LLM Wiki setup guide</a>
+          — guidance for drafting and validating <code>CLAUDE.md</code>, the
+          vault's constitution.
+        </p>
+      </footer>
+    </div>
+
+    <dialog
+      class="ref-dialog"
+      id="entityRefDialog"
+      aria-labelledby="entityRefTitle"
+    >
+      <button
+        type="button"
+        class="ref-close"
+        id="entityRefClose"
+        aria-label="Close"
+      >
+        ✕
+      </button>
+      <h2 id="entityRefTitle">Entities an ABAP team usually works with</h2>
+      <p>
+        In the vault's sense of the word — things that show up under multiple
+        names and deserve one canonical page — an ABAP delivery team typically
+        deals with these categories:
+      </p>
+
+      <h3>Organizational entities</h3>
+      <ul>
+        <li>
+          <strong>Workstreams / process areas</strong> — Order-to-Cash
+          (O2C/OTC), Procure-to-Pay (P2P/PTP), Record-to-Report (R2R),
+          Plan-to-Produce. These are the worst alias offenders, since every
+          client and SI abbreviates them differently.
+        </li>
+        <li>
+          <strong>Projects and releases</strong> — the program name, wave/phase
+          names ("Wave 2", "R2 go-live"), sprint or drop identifiers.
+        </li>
+        <li>
+          <strong>People and roles</strong> — developers, functional
+          consultants, workstream leads, the client's process owners, basis
+          admins. Transcripts mangle names constantly.
+        </li>
+        <li>
+          <strong>Vendors, partners, and the client</strong> — often with
+          legal-name vs. everyday-name variants.
+        </li>
+      </ul>
+
+      <h3>SAP landscape entities</h3>
+      <ul>
+        <li>
+          <strong>Systems and clients</strong> — SIDs like DEV/QAS/PRD plus
+          nicknames ("the quality box", "sandbox", "the golden client"), and
+          client numbers (100, 200).
+        </li>
+        <li>
+          <strong>Modules / functional areas</strong> — SD, MM, FI, CO, PP,
+          WM/EWM, PM, QM. Also newer stacks: S/4HANA, Fiori, BTP.
+        </li>
+        <li>
+          <strong>Transport routes and landscapes</strong> — transport requests,
+          the DEV→QAS→PRD path.
+        </li>
+      </ul>
+
+      <h3>Technical/code entities (the biggest volume for an ABAP team)</h3>
+      <ul>
+        <li>
+          <strong>WRICEF objects</strong> — the classic inventory: Workflows,
+          Reports, Interfaces, Conversions, Enhancements, Forms, each usually
+          with an ID like "E-001" or "RICEF-042".
+        </li>
+        <li>
+          <strong>Repository objects</strong> — programs, function modules,
+          classes, methods, includes, packages.
+        </li>
+        <li>
+          <strong>Data dictionary objects</strong> — tables (VBAK, EKKO, BSEG…),
+          structures, data elements, domains, CDS views.
+        </li>
+        <li>
+          <strong>Integration artifacts</strong> — IDocs (message types, basic
+          types), BAPIs, RFCs, OData services, proxies, PI/CPI iFlows.
+        </li>
+        <li>
+          <strong>Enhancement points</strong> — user exits, BAdIs, enhancement
+          spots, implicit enhancements.
+        </li>
+        <li>
+          <strong>Forms and outputs</strong> — SmartForms, Adobe Forms,
+          SAPscript.
+        </li>
+      </ul>
+
+      <h3>Process/document entities</h3>
+      <ul>
+        <li>
+          <strong>Change requests and defects</strong> — CR numbers, ticket IDs
+          from whatever ALM tool is in use (Solution Manager, Jira, ServiceNow),
+          which people cite inconsistently ("CR-1023" vs "the FTDS change").
+        </li>
+        <li>
+          <strong>Specs</strong> — FS/TS documents, often referenced by object
+          ID in one place and document title in another.
+        </li>
+      </ul>
+
+      <div class="note">
+        <p>
+          <strong>Where to start:</strong> the highest-payoff entities to nail
+          down first in <code>meta/entities.md</code> are workstreams, system
+          SIDs/nicknames, people, and WRICEF object IDs — they appear in nearly
+          every document and have the most alias drift. Table names and standard
+          SAP objects (VBAK, BAPI names) are lower risk: people rarely invent
+          nicknames for them, so the technical name <em>is</em> the canonical
+          name.
+        </p>
+      </div>
+    </dialog>
+
+    <dialog
+      class="ref-dialog"
+      id="emailTplDialog"
+      aria-labelledby="emailTplTitle"
+    >
+      <button
+        type="button"
+        class="ref-close"
+        id="emailTplClose"
+        aria-label="Close"
+      >
+        ✕
+      </button>
+      <h2 id="emailTplTitle">
+        Email template — asking the team for their entities
+      </h2>
+      <p>Hi team,</p>
+      <p>
+        To get started, let's begin with a simple, high-impact step: defining
+        the core technical entities. We need to map out the systems, SAP
+        modules, and development objects our wiki will cover, along with any
+        alternate names they go by. Aligning these terms ensures the AI
+        recognizes when different names refer to the same thing (for example,
+        "QAS" in one document and "quality box" in another). This allows the AI
+        to file everything onto a single page and prevents duplicate clutter.
+      </p>
+      <p>Could you share the following details?</p>
+      <h3>Development Standards &amp; Tracking</h3>
+      <ol>
+        <li>
+          <strong>Naming Conventions:</strong> Is there a standard document for
+          ABAP coding and object naming conventions that I should review?
+        </li>
+        <li>
+          <strong>WRICEF &amp; Transports:</strong> How are development objects
+          and transports named or numbered today (e.g., RICEF-042), and where is
+          the master tracker kept?
+        </li>
+        <li>
+          <strong>Tickets &amp; Specs:</strong> What tools are you using to
+          track Change Requests (CRs), defects, and Technical Specs (TS)?
+        </li>
+      </ol>
+      <h3>Landscape &amp; Environments</h3>
+      <ol>
+        <li>
+          <strong>Systems:</strong> What are the relevant SIDs (DEV/QAS/PRD) and
+          specific client numbers we develop and test in?
+        </li>
+        <li>
+          <strong>SAP Modules:</strong> Which main modules (like SD, MM, FI)
+          does the team build for most frequently?
+        </li>
+      </ol>
+      <p>
+        If it's easier, we can also discuss these in a call next week. I'd also
+        be happy to sit down with someone from your team and work through this.
+      </p>
+      <p>Senthil</p>
+    </dialog>
+
+    <script>
+      (function () {
+        var root = document.documentElement;
+        var button = document.getElementById("themeToggle");
+        var icon = document.getElementById("themeIcon");
+        var label = document.getElementById("themeLabel");
+        var media = window.matchMedia("(prefers-color-scheme: dark)");
+
+        function currentTheme() {
+          var forced = root.getAttribute("data-theme");
+          if (forced === "dark" || forced === "light") return forced;
+          return media.matches ? "dark" : "light";
+        }
+
+        // The button describes the mode you'll switch TO.
+        function render() {
+          var theme = currentTheme();
+          if (theme === "dark") {
+            icon.textContent = "☀";
+            label.textContent = "Light mode";
+          } else {
+            icon.textContent = "◐";
+            label.textContent = "Dark mode";
+          }
+        }
+
+        function apply(theme) {
+          root.setAttribute("data-theme", theme);
+          try {
+            localStorage.setItem("abap-guide-theme", theme);
+          } catch (e) {
+            /* private browsing — toggle still works for this visit */
+          }
+          render();
+        }
+
+        button.addEventListener("click", function () {
+          apply(currentTheme() === "dark" ? "light" : "dark");
+        });
+
+        // Restore a saved choice; otherwise follow the OS (and track OS changes live).
+        var saved = null;
+        try {
+          saved = localStorage.getItem("abap-guide-theme");
+        } catch (e) {}
+        if (saved === "dark" || saved === "light") {
+          root.setAttribute("data-theme", saved);
+        }
+        media.addEventListener("change", render);
+        render();
+      })();
+
+      (function () {
+        function wire(dialogId, openId, closeId) {
+          var dialog = document.getElementById(dialogId);
+          var openBtn = document.getElementById(openId);
+          var closeBtn = document.getElementById(closeId);
+
+          openBtn.addEventListener("click", function () {
+            dialog.showModal();
+          });
+          closeBtn.addEventListener("click", function () {
+            dialog.close();
+          });
+          // Clicking the dimmed backdrop closes the popup; clicks inside don't.
+          dialog.addEventListener("click", function (e) {
+            if (e.target === dialog) dialog.close();
+          });
+        }
+        wire("entityRefDialog", "entityRefOpen", "entityRefClose");
+        wire("emailTplDialog", "emailTplOpen", "emailTplClose");
+      })();
+    </script>
+  </body>
+</html>

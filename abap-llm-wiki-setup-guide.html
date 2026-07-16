@@ -1287,7 +1287,13 @@
                 phase needs: where knowledge lives today, the questions people
                 answer over and over, and what the wiki should contain. It also
                 includes a 30-minute shortlist if you can't run the full
-                interview.
+                interview. Then, before drafting <code>CLAUDE.md</code>, read
+                <a href="constitution.html" target="_blank" rel="noopener"
+                  >Writing the Constitution</a
+                >
+                — what the rulebook really is, the requirements to gather from
+                the ABAP team, and rules for writing rules that an unattended AI
+                can actually follow.
               </p>
             </div>
 
@@ -3307,6 +3313,30 @@ claude</pre>
                 with it.)
               </li>
             </ul>
+
+            <h3>How files get from OneDrive into the mail slot</h3>
+            <div class="qa">
+              <p class="q">
+                So does uploading a file to OneDrive automatically put it into
+                the repository — and is that what starts the pipeline?
+              </p>
+              <p>
+                Yes. Power Automate acts as the bridge from OneDrive to GitHub:
+                when a file is uploaded to the designated OneDrive folder, the
+                flow commits it into this repository under
+                <code>raw/inbox/</code> — the drop zone (documented in
+                <code>raw/inbox/README.md</code>).
+              </p>
+              <p>
+                That push is also what kicks off the rest of the pipeline: the
+                GitHub Actions workflow
+                <code>.github/workflows/abap-vault-ingest.yml</code> triggers on
+                any change matching <code>raw/inbox/**</code>, runs the
+                ingestion (extracting durable knowledge into the vault zones),
+                and then moves the file to <code>raw/processed/</code> as the
+                archive.
+              </p>
+            </div>
 
             <h3>The knowledge itself — the four shelves</h3>
             <ul>
