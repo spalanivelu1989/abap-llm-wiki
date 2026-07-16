@@ -2080,6 +2080,30 @@ jobs:
                 that exact folder, not subfolders.
               </li>
             </ol>
+            <p>
+              <strong
+                >Then, for either connector, one more setting on the trigger
+                card:</strong
+              >
+              open the trigger's <strong>Settings</strong> tab →
+              <strong>Concurrency control</strong> → switch it
+              <strong>On</strong> → set
+              <strong>Degree of parallelism = 1</strong>.
+            </p>
+            <div class="why">
+              <span class="label">Why serialize the trigger?</span>
+              <p>
+                When someone drops five files at once, Power Automate starts
+                five flow runs <em>in parallel</em>, and each run commits to
+                <code>main</code> through the HTTP action. Concurrent commits
+                race on the branch head, and GitHub fails the losers with
+                <code>409 Conflict</code> — some files silently never arrive in
+                the repo. Degree of parallelism = 1 makes the runs queue up one
+                after another instead. (The GitHub Actions side already queues
+                ingestion runs via its <code>concurrency</code> group in Phase 5
+                — the flow trigger is the only other place racing can happen.)
+              </p>
+            </div>
             <p>This is what the finished trigger looks like (Case A setup):</p>
             <figure class="shot">
               <img
@@ -2090,6 +2114,20 @@ jobs:
               <figcaption>
                 The trigger's <strong>Parameters</strong> tab — OneDrive for
                 Business connector, Folder set to <code>/abap_wiki/inbox</code>.
+              </figcaption>
+            </figure>
+            <figure class="shot">
+              <img
+                src="images/power-automate/1a.png"
+                alt="The trigger's Settings tab showing Concurrency control switched on with Degree of parallelism set to 1 and Maximum waiting runs 10"
+                loading="lazy"
+              />
+              <figcaption>
+                The trigger's <strong>Settings</strong> tab —
+                <strong>Concurrency control</strong> On,
+                <strong>Degree of parallelism = 1</strong>, so simultaneous file
+                drops queue up instead of racing commits to
+                <code>main</code> (Maximum waiting runs 10 is the default).
               </figcaption>
             </figure>
             <figure class="shot">
@@ -2306,6 +2344,12 @@ decodeBase64(triggerOutputs()?['headers']?['x-ms-file-name-encoded'])</pre>
                     — this expression does that.
                   </li>
                 </ul>
+                Optional but recommended: add a third line
+                <code>"branch": "main"</code> to the skeleton (after the
+                <code>"content"</code> line, with a comma between them). The API
+                defaults to the repo's default branch, so the flow works without
+                it — but naming the branch explicitly protects the flow if the
+                default branch is ever renamed.
               </li>
               <li>
                 <strong>Verify in Code view</strong> before saving — click the
@@ -2321,6 +2365,8 @@ decodeBase64(triggerOutputs()?['headers']?['x-ms-file-name-encoded'])</pre>
                 Checks: the URI has <code>inbox/@{</code> (slash before the
                 expression!), and <code>body('Get_file_content')</code> appears
                 <strong>only</strong> in <code>"content"</code> — nowhere else.
+                (If you added the optional <code>"branch": "main"</code>, it
+                shows as a third line inside <code>"body"</code>.)
               </li>
             </ol>
             <p>
@@ -2478,6 +2524,25 @@ decodeBase64(triggerOutputs()?['headers']?['x-ms-file-name-encoded'])</pre>
                 needs <strong>Contents: Read and write</strong> on
                 <code>abap-wiki</code> — GitHub confusingly answers
                 <code>404</code> (not 403) when the token can't write.
+              </p>
+            </div>
+            <div class="win">
+              <span class="label"
+                >Once the flow works: turn on Secure Inputs</span
+              >
+              <p>
+                By default, every flow run's history shows the HTTP action's
+                full inputs — <strong>including your GitHub token</strong> in
+                the Authorization header — in plain text to anyone who can open
+                the run. Once the flow is tested and working, click the HTTP
+                card → <strong>Settings</strong> tab → turn on
+                <strong>Secure Inputs</strong> (Secure Outputs is optional; the
+                response contains no secrets). Do this <em>last</em>, not first:
+                Secure Inputs also hides the run-history
+                <strong>Inputs → URI / Outputs → Body</strong> that the
+                troubleshooting table above depends on — so debug first, then
+                lock it down. If you ever need to troubleshoot again, toggle it
+                off temporarily.
               </p>
             </div>
 
