@@ -107,6 +107,22 @@
         }
       }
 
+      figure.shot {
+        margin: 1.2rem 0;
+      }
+      figure.shot img {
+        display: block;
+        width: 100%;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+      }
+      figure.shot figcaption {
+        font-size: 0.85rem;
+        color: var(--muted);
+        margin-top: 0.45rem;
+      }
+
       body {
         background: var(--bg);
         color: var(--ink);
@@ -2064,6 +2080,31 @@ jobs:
                 that exact folder, not subfolders.
               </li>
             </ol>
+            <p>This is what the finished trigger looks like (Case A setup):</p>
+            <figure class="shot">
+              <img
+                src="images/power-automate/1.png"
+                alt="Power Automate designer showing the When a file is created trigger's Parameters tab with Folder set to /abap_wiki/inbox"
+                loading="lazy"
+              />
+              <figcaption>
+                The trigger's <strong>Parameters</strong> tab — OneDrive for
+                Business connector, Folder set to <code>/abap_wiki/inbox</code>.
+              </figcaption>
+            </figure>
+            <figure class="shot">
+              <img
+                src="images/power-automate/2.png"
+                alt="Code view of the When a file is created trigger showing operationId OnNewFileV2 and a one-minute recurrence"
+                loading="lazy"
+              />
+              <figcaption>
+                The trigger's <strong>Code view</strong> —
+                <code>operationId: OnNewFileV2</code> on the
+                <code>shared_onedriveforbusiness</code> connection, checking the
+                folder every minute.
+              </figcaption>
+            </figure>
 
             <div class="step-h">
               <span class="n">3</span> Add the "Get file content" action
@@ -2131,6 +2172,33 @@ jobs:
               <strong>Identifier</strong> token into
               <strong>File Identifier</strong>.
             </p>
+            <p>The finished action:</p>
+            <figure class="shot">
+              <img
+                src="images/power-automate/3.png"
+                alt="Get file content action's Parameters tab with the File field holding the File identifier token and Infer Content Type set to Yes"
+                loading="lazy"
+              />
+              <figcaption>
+                <strong>Get file content</strong> Parameters — the
+                <strong>File</strong> field holds the trigger's
+                <strong>File identifier</strong> token (blue OneDrive pill, no
+                Site Address field anywhere), Infer Content Type =
+                <code>Yes</code>.
+              </figcaption>
+            </figure>
+            <figure class="shot">
+              <img
+                src="images/power-automate/4.png"
+                alt="Code view of Get file content showing operationId GetFileContent and the id expression from trigger headers"
+                loading="lazy"
+              />
+              <figcaption>
+                Its <strong>Code view</strong> —
+                <code>operationId: GetFileContent</code>, with
+                <code>"id": "@triggerOutputs()?['headers/x-ms-file-id']"</code>.
+              </figcaption>
+            </figure>
 
             <div class="step-h">
               <span class="n">4</span> Add the HTTP action
@@ -2255,6 +2323,61 @@ decodeBase64(triggerOutputs()?['headers']?['x-ms-file-name-encoded'])</pre>
                 <strong>only</strong> in <code>"content"</code> — nowhere else.
               </li>
             </ol>
+            <p>
+              The four screenshots below walk through the finished HTTP action
+              (the token in the Authorization header is redacted):
+            </p>
+            <figure class="shot">
+              <img
+                src="images/power-automate/5.png"
+                alt="HTTP action Parameters tab with the URI ending in an fx pill, method PUT, three headers, and the expression editor showing the decodeBase64 file-name expression"
+                loading="lazy"
+              />
+              <figcaption>
+                The <strong>URI</strong> — plain text ending in
+                <code>raw/inbox/</code> followed by one purple
+                <code>fx</code> pill; the expression editor shows the
+                <code>decodeBase64(triggerOutputs()...)</code> file-name
+                expression. Method <code>PUT</code>, the three headers below.
+              </figcaption>
+            </figure>
+            <figure class="shot">
+              <img
+                src="images/power-automate/6.png"
+                alt="HTTP action Body with the commit message expression pill after the word inbox and its decodeBase64 expression shown in a tooltip"
+                loading="lazy"
+              />
+              <figcaption>
+                The <strong>Body</strong>'s commit message — the same
+                <code>decodeBase64(...)</code> expression inserted right after
+                <code>inbox: </code>, still inside the quotes.
+              </figcaption>
+            </figure>
+            <figure class="shot">
+              <img
+                src="images/power-automate/7.png"
+                alt="HTTP action expression editor showing base64 of body of Get_file_content being added to the content field"
+                loading="lazy"
+              />
+              <figcaption>
+                The <strong>content</strong> field's expression —
+                <code>base64(body('Get_file_content'))</code> between the quotes
+                of <code>"content"</code>.
+              </figcaption>
+            </figure>
+            <figure class="shot">
+              <img
+                src="images/power-automate/8.png"
+                alt="Code view of the HTTP action showing the full uri, headers, and body configuration with runAfter Get_file_content Succeeded"
+                loading="lazy"
+              />
+              <figcaption>
+                The HTTP action's <strong>Code view</strong> — matches the
+                confirmed-working configuration from the verification sub-step,
+                and runs only after <code>Get_file_content</code> has
+                <code>Succeeded</code>.
+              </figcaption>
+            </figure>
             <div class="warn">
               <span class="label">Troubleshooting the HTTP action</span>
               <p>
@@ -2430,6 +2553,37 @@ decodeBase64(triggerOutputs()?['headers']?['x-ms-file-name-encoded'])</pre>
                 <strong>not</strong> <code>body('Get_file_content')</code>.
               </li>
             </ol>
+            <p>The finished action:</p>
+            <figure class="shot">
+              <img
+                src="images/power-automate/9.png"
+                alt="Move or rename a file Parameters tab with File identifier token, destination path /abap_wiki/inbox/sent/ followed by an fx pill, and Overwrite set to Yes"
+                loading="lazy"
+              />
+              <figcaption>
+                <strong>Move or rename a file</strong> Parameters —
+                <strong>File</strong> = the trigger's
+                <strong>File identifier</strong> token,
+                <strong>Destination File Path</strong> =
+                <code>/abap_wiki/inbox/sent/</code> plus one
+                <code>fx</code> pill (the plain
+                <code>decodeBase64</code> expression, shown in the editor),
+                <strong>Overwrite</strong> = <code>Yes</code>.
+              </figcaption>
+            </figure>
+            <figure class="shot">
+              <img
+                src="images/power-automate/10.png"
+                alt="Code view of Move or rename a file showing operationId MoveFile, the destination expression, overwrite true, and runAfter HTTP Succeeded"
+                loading="lazy"
+              />
+              <figcaption>
+                Its <strong>Code view</strong> —
+                <code>operationId: MoveFile</code>, the destination expression,
+                <code>"overwrite": true</code>, and <code>runAfter</code>: only
+                when <code>HTTP</code> has <code>Succeeded</code>.
+              </figcaption>
+            </figure>
             <div class="warn">
               <span class="label">
                 Troubleshooting: Action 'Move_or_rename_a_file' failed:
