@@ -508,7 +508,7 @@ try {
 // ============================================================================
 
 export function AbapVaultDemoFlow() {
-  const [theme, setTheme] = useState("dark");
+  const [theme, setTheme] = useState("light");
   const [speed, setSpeed] = useState(0.5);
   const [isPlaying, setIsPlaying] = useState(false);
   const [phaseText, setPhaseText] = useState("Ready");
