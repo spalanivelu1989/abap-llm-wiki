@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sample Questions — ABAP Knowledge Vault</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --paper: #f3f5f4;
+        --card: #fdfefd;
+        --ink: #1f2b28;
+        --muted: #5c6b67;
+        --teal: #0e6b5b;
+        --teal-soft: #e3eeeb;
+        --amber: #a9701f;
+        --amber-soft: #f4eadb;
+        --line: #c9d4d0;
+        --chip-bg: #e9eeec;
+        --shadow: 0 1px 3px rgba(31, 43, 40, 0.08);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --paper: #303446;
+          --card: #414559;
+          --ink: #c6d0f5;
+          --muted: #a5adce;
+          --teal: #81c8be;
+          --teal-soft: #51576d;
+          --amber: #e5c890;
+          --amber-soft: #292c3c;
+          --line: #51576d;
+          --chip-bg: #292c3c;
+          --shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+        }
+      }
+      :root[data-theme="dark"] {
+        --paper: #303446;
+        --card: #414559;
+        --ink: #c6d0f5;
+        --muted: #a5adce;
+        --teal: #81c8be;
+        --teal-soft: #51576d;
+        --amber: #e5c890;
+        --amber-soft: #292c3c;
+        --line: #51576d;
+        --chip-bg: #292c3c;
+        --shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+      }
+      :root[data-theme="light"] {
+        --paper: #f3f5f4;
+        --card: #fdfefd;
+        --ink: #1f2b28;
+        --muted: #5c6b67;
+        --teal: #0e6b5b;
+        --teal-soft: #e3eeeb;
+        --amber: #a9701f;
+        --amber-soft: #f4eadb;
+        --line: #c9d4d0;
+        --chip-bg: #e9eeec;
+        --shadow: 0 1px 3px rgba(31, 43, 40, 0.08);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        background: var(--paper);
+        color: var(--ink);
+        font-family: "Work Sans", "Segoe UI", system-ui, sans-serif;
+        line-height: 1.55;
+        margin: 0;
+        padding: 3rem 1.25rem 4rem;
+      }
+      .page {
+        max-width: 1100px;
+        width: 100%;
+        margin: 0 auto;
+        padding: 0 clamp(0.5rem, 3vw, 3rem);
+      }
+      .display {
+        font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
+      }
+
+      header.masthead {
+        margin-bottom: 2.6rem;
+      }
+      .eyebrow {
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        font-size: 0.72rem;
+        font-weight: 600;
+        color: var(--teal);
+        margin: 0 0 0.75rem;
+      }
+      h1 {
+        font-size: clamp(1.9rem, 4.5vw, 2.7rem);
+        line-height: 1.15;
+        margin: 0 0 0.9rem;
+        text-wrap: balance;
+        font-weight: 600;
+      }
+      .lede {
+        font-size: 1.08rem;
+        color: var(--muted);
+        margin: 0;
+        max-width: 62ch;
+      }
+      .lede strong {
+        color: var(--ink);
+        font-weight: 600;
+      }
+
+      .filechip {
+        display: inline-block;
+        font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+        font-size: 0.78em;
+        background: var(--chip-bg);
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        padding: 0.08em 0.45em;
+        white-space: nowrap;
+        color: var(--ink);
+      }
+
+      /* group heading */
+      .group {
+        margin-top: 2.4rem;
+      }
+      .group > h2 {
+        font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--muted);
+        margin: 0 0 0.85rem;
+      }
+
+      /* question cards */
+      .qlist {
+        display: grid;
+        gap: 0.75rem;
+      }
+      .q {
+        display: grid;
+        grid-template-columns: 2.4rem minmax(0, 1fr) auto;
+        gap: 0 0.9rem;
+        align-items: center;
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 0.95rem 1.1rem;
+        box-shadow: var(--shadow);
+      }
+      .q .num {
+        grid-column: 1;
+        grid-row: 1;
+        width: 2.4rem;
+        height: 2.4rem;
+        border-radius: 50%;
+        background: var(--teal-soft);
+        color: var(--teal);
+        border: 1.5px solid var(--teal);
+        display: grid;
+        place-items: center;
+        font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
+        font-size: 0.95rem;
+        font-weight: 700;
+      }
+      .q.amber .num {
+        background: var(--amber-soft);
+        color: var(--amber);
+        border-color: var(--amber);
+      }
+      .q .text {
+        grid-column: 2;
+        grid-row: 1;
+        font-size: 1.02rem;
+        margin: 0;
+        text-wrap: pretty;
+      }
+
+      .copy {
+        grid-column: 3;
+        grid-row: 1;
+        background: transparent;
+        color: var(--muted);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 0.3rem 0.75rem;
+        font:
+          600 0.7rem "Nunito",
+          "Segoe UI",
+          system-ui,
+          sans-serif;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        cursor: pointer;
+        white-space: nowrap;
+      }
+      .copy:hover {
+        border-color: var(--teal);
+        color: var(--teal);
+      }
+      .copy:focus-visible {
+        outline: 2px solid var(--teal);
+        outline-offset: 2px;
+      }
+      .copy.done {
+        border-color: var(--teal);
+        color: var(--teal);
+      }
+      @media (max-width: 620px) {
+        .q {
+          grid-template-columns: 2.4rem minmax(0, 1fr);
+          align-items: start;
+        }
+        .q .text {
+          text-wrap: wrap;
+        }
+        .copy {
+          grid-column: 2;
+          grid-row: 2;
+          justify-self: start;
+          margin-top: 0.7rem;
+        }
+      }
+
+      /* how-to band */
+      .howto {
+        margin-top: 2.8rem;
+        background: var(--teal-soft);
+        border: 1px solid var(--teal);
+        border-radius: 10px;
+        padding: 1.3rem 1.5rem;
+      }
+      .howto h2 {
+        font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
+        font-size: 1.2rem;
+        margin: 0 0 0.4rem;
+        color: var(--teal);
+      }
+      .howto p {
+        margin: 0 0 0.6rem;
+      }
+      .howto p:last-child {
+        margin-bottom: 0;
+      }
+
+      footer.tagline {
+        margin-top: 2.8rem;
+        padding-top: 1.4rem;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+      footer.tagline em {
+        font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
+        color: var(--ink);
+      }
+      footer.tagline a {
+        color: var(--teal);
+      }
+
+      /* theme toggle */
+      .theme-toggle {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        z-index: 10;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        background: var(--card);
+        color: var(--ink);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 0.42rem 0.9rem;
+        font:
+          600 0.78rem "Nunito",
+          "Segoe UI",
+          system-ui,
+          -apple-system,
+          sans-serif;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        cursor: pointer;
+        box-shadow: var(--shadow);
+      }
+      .theme-toggle:hover {
+        border-color: var(--teal);
+        color: var(--teal);
+      }
+      .theme-toggle:focus-visible {
+        outline: 2px solid var(--teal);
+        outline-offset: 2px;
+      }
+      .theme-toggle .glyph {
+        font-size: 1rem;
+        line-height: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <button
+      class="theme-toggle"
+      id="themeToggle"
+      type="button"
+      aria-label="Switch between light and dark mode"
+    >
+      <span class="glyph" id="themeGlyph">☾</span>
+      <span id="themeLabel">Dark</span>
+    </button>
+
+    <div class="page">
+      <header class="masthead">
+        <p class="eyebrow">ABAP Knowledge Vault</p>
+        <h1 class="display">Sample questions to ask the vault</h1>
+        <p class="lede">
+          Once the wiki is populated, you query it in plain English — no search
+          syntax, no folder hunting. These are
+          <strong>good first questions</strong> for a new team member, and a
+          quick way to check the vault actually holds what it should.
+        </p>
+      </header>
+
+      <section class="group">
+        <h2>Standards &amp; conventions</h2>
+        <div class="qlist">
+          <div class="q">
+            <div class="num">1</div>
+            <p class="text">
+              What are the ABAP naming conventions for declaring structures,
+              table types, variables, classes, and function modules?
+            </p>
+            <button class="copy" type="button">Copy</button>
+          </div>
+
+          <div class="q">
+            <div class="num">2</div>
+            <p class="text">
+              What are the general ABAP development guidelines?
+            </p>
+            <button class="copy" type="button">Copy</button>
+          </div>
+
+          <div class="q">
+            <div class="num">3</div>
+            <p class="text">
+              What is the recommended structure or template for an ABAP report
+              header block?
+            </p>
+            <button class="copy" type="button">Copy</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="group">
+        <h2>Performance &amp; tooling</h2>
+        <div class="qlist">
+          <div class="q amber">
+            <div class="num">4</div>
+            <p class="text">
+              What are the performance guidelines for SAP ECC systems?
+            </p>
+            <button class="copy" type="button">Copy</button>
+          </div>
+
+          <div class="q amber">
+            <div class="num">5</div>
+            <p class="text">
+              What SAP analysis tools can developers use to evaluate the
+              efficiency and performance of ABAP objects?
+            </p>
+            <button class="copy" type="button">Copy</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="group">
+        <h2>Language &amp; syntax</h2>
+        <div class="qlist">
+          <div class="q">
+            <div class="num">6</div>
+            <p class="text">
+              What are the alternative ways to declare a work area in ABAP?
+            </p>
+            <button class="copy" type="button">Copy</button>
+          </div>
+        </div>
+      </section>
+
+      <div class="howto">
+        <h2 class="display">How to ask</h2>
+        <p>
+          Open a terminal in the wiki folder and start Claude Code, then paste
+          the question. Claude reads the vault as its working context and
+          answers from the pages — citing which ones it used.
+        </p>
+        <p>
+          If an answer comes back thin, that is the signal: the knowledge is not
+          in the vault yet. Drop the source document into
+          <span class="filechip">raw/inbox/</span> and ask again after the next
+          ingest run.
+        </p>
+      </div>
+
+      <footer class="tagline">
+        <em>Why this page exists:</em> a vault is only as good as the answers it
+        gives. Keep this list handy as a smoke test — run it after every big
+        ingest and you will know immediately what the wiki still cannot answer.
+        See also the <a href="abap-vault-explainer.html">vault explainer</a> and
+        the
+        <a href="abap-wiki-discovery-questions.html">discovery questions</a>.
+      </footer>
+    </div>
+
+    <script>
+      (function () {
+        var root = document.documentElement;
+        var button = document.getElementById("themeToggle");
+        var glyph = document.getElementById("themeGlyph");
+        var label = document.getElementById("themeLabel");
+
+        function currentTheme() {
+          var forced = root.getAttribute("data-theme");
+          if (forced) return forced;
+          return window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light";
+        }
+
+        function render() {
+          // The button shows the mode you would switch TO
+          if (currentTheme() === "dark") {
+            glyph.textContent = "☀";
+            label.textContent = "Light";
+          } else {
+            glyph.textContent = "☾";
+            label.textContent = "Dark";
+          }
+        }
+
+        function apply(theme) {
+          root.setAttribute("data-theme", theme);
+          try {
+            localStorage.setItem("vault-explainer-theme", theme);
+          } catch (e) {
+            /* private browsing — theme just won't persist */
+          }
+          render();
+        }
+
+        var saved = null;
+        try {
+          saved = localStorage.getItem("vault-explainer-theme");
+        } catch (e) {}
+        if (saved === "dark" || saved === "light") {
+          root.setAttribute("data-theme", saved);
+        }
+
+        button.addEventListener("click", function () {
+          apply(currentTheme() === "dark" ? "light" : "dark");
+        });
+
+        window
+          .matchMedia("(prefers-color-scheme: dark)")
+          .addEventListener("change", render);
+
+        render();
+      })();
+
+      // Copy each question to the clipboard
+      (function () {
+        document.querySelectorAll(".q .copy").forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            var text = btn.parentElement
+              .querySelector(".text")
+              .textContent.replace(/\s+/g, " ")
+              .trim();
+            navigator.clipboard.writeText(text).then(
+              function () {
+                btn.textContent = "Copied";
+                btn.classList.add("done");
+                setTimeout(function () {
+                  btn.textContent = "Copy";
+                  btn.classList.remove("done");
+                }, 1600);
+              },
+              function () {
+                btn.textContent = "Failed";
+                setTimeout(function () {
+                  btn.textContent = "Copy";
+                }, 1600);
+              },
+            );
+          });
+        });
+      })();
+    </script>
+  </body>
+</html>
