@@ -1029,3 +1029,139 @@
   font-family: "JetBrains Mono", monospace;
   border-radius: 6px;
 }
+
+/* ---- Removable connections (click a link to inspect / remove it) ---- */
+
+/* A 2.2px path is nearly impossible to click. This invisible fat twin sits
+   under the node cards and gives every link a comfortable hit area. */
+.archflow-container .edge-hit {
+  fill: none;
+  stroke: transparent;
+  stroke-width: 16;
+  pointer-events: stroke;
+  cursor: pointer;
+}
+
+.archflow-container .edge.selected {
+  stroke: var(--accent);
+  stroke-width: 3.2;
+  opacity: 1;
+}
+
+/* Removed links stay visible but severed — the point of the feature is to
+   SEE what was cut, so they fade to a red hairline with an ✕ at midpoint. */
+.archflow-container .edge.removed {
+  stroke: #ef4444;
+  stroke-width: 1.6;
+  stroke-dasharray: 2 9;
+  opacity: 0.5;
+}
+
+.archflow-container .arrow.removed {
+  opacity: 0;
+}
+
+.archflow-container .edge-cut {
+  font-size: 15px;
+  font-weight: 700;
+  fill: #ef4444;
+  text-anchor: middle;
+  dominant-baseline: central;
+  pointer-events: none;
+}
+
+.archflow-container .edge.blocked-flash {
+  stroke: #ef4444;
+  stroke-width: 3.2;
+  opacity: 1;
+  animation: linkBlocked 0.45s ease-in-out 3;
+}
+
+@keyframes linkBlocked {
+  50% {
+    opacity: 0.12;
+  }
+}
+
+.archflow-container .node.blocked .node-card {
+  stroke: #ef4444;
+  stroke-width: 2.4;
+  filter: drop-shadow(0 2px 8px rgba(239, 68, 68, 0.35));
+}
+
+.archflow-container .log-item.blocked .log-num {
+  background: #ef4444;
+}
+
+.archflow-container .log-item.blocked .log-body {
+  color: var(--muted);
+}
+
+.archflow-container .log-blocked {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #ef4444;
+  margin-bottom: 2px;
+}
+
+/* Steps downstream of a cut: never ran, but not the cause either — grey,
+   not red. (Dimming via opacity would lose to the log-item pop animation's
+   fill-mode, so the colours are set directly.) */
+.archflow-container .log-item.unreachable .log-num {
+  background: var(--line);
+  color: var(--muted);
+}
+
+.archflow-container .log-item.unreachable .log-body {
+  color: var(--muted);
+}
+
+.archflow-container .log-skipped {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin-bottom: 2px;
+}
+
+.archflow-container .inspector-impact {
+  margin: 8px 0 0;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.archflow-container .inspector-icon.link-icon {
+  background: var(--line);
+  color: var(--ink);
+  font-size: 15px;
+}
+
+.archflow-container .inspector-badge.danger {
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  color: #ef4444;
+}
+
+.archflow-container .inspector-action {
+  margin-top: 12px;
+  width: 100%;
+  justify-content: center;
+  padding: 7px 10px;
+  font-size: 12px;
+  border-radius: 8px;
+}
+
+.archflow-container .inspector-action.danger {
+  border-color: rgba(239, 68, 68, 0.45);
+  color: #ef4444;
+}
+
+.archflow-container .inspector-action.danger:hover {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.7);
+}

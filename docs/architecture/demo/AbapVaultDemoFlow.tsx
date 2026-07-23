@@ -40,97 +40,14 @@ const NH = 76;
 //  - STAGE_W / STAGE_H = bounding box of (x + NW) / (y + NH) across all
 //    nodes, plus ~20-40px margin.
 const NODES = {
-  USER: {
-    x: 20,
-    y: 350,
-    icon: "👩‍💻",
-    title: "Team member",
-    sub: "drops docs · asks questions",
-    color: "#6366f1",
-    desc: "A member of the ABAP team. The same person can contribute documents and, later, ask the wiki questions — no GitHub knowledge needed.",
-  },
-  OD: {
-    x: 300,
-    y: 110,
-    icon: "📥",
-    title: "OneDrive Inbox",
-    sub: "abap_wiki/inbox",
-    color: "#0ea5e9",
-    desc: "The drop folder in the flow owner's personal OneDrive for Business (abap_wiki/inbox). Dropping any document here (PDF, PPTX, DOCX, XLSX, TXT, VTT) is the only step contributors ever perform; picked-up files are archived to inbox/sent.",
-  },
-  PA: {
-    x: 580,
-    y: 110,
-    icon: "🔁",
-    title: "Power Automate",
-    sub: "bridge flow",
-    color: "#0284c7",
-    desc: "The 'ABAP Wiki Inbox to GitHub' cloud flow. It watches the inbox, ferries each new file into the GitHub repository via one authenticated Contents-API PUT — the single link between Microsoft 365 and GitHub — then moves the source file to inbox/sent as a picked-up marker.",
-  },
-  REPO: {
-    x: 860,
-    y: 110,
-    icon: "📚",
-    title: "abap-wiki repo",
-    sub: "GitHub · source of truth",
-    color: "#f59e0b",
-    desc: "The private GitHub repository (t-labs-buy/abap-wiki): wiki pages in zone folders, the CLAUDE.md rulebook, meta/ system files and the raw/ pipeline folders. Every change is version-controlled.",
-  },
-  GHA: {
-    x: 1140,
-    y: 110,
-    icon: "🤖",
-    title: "GitHub Actions",
-    sub: "ingest workflow",
-    color: "#8b5cf6",
-    desc: "The ingest workflow (abap-wiki-ingest.yml). A push into raw/inbox/ wakes it; it checks out the vault, runs the ingest script on a cloud runner and commits the results. A weekly cron acts as a safety net.",
-  },
-  PY: {
-    x: 1140,
-    y: 330,
-    icon: "🐍",
-    title: "Ingest Script",
-    sub: "abap-ingest.py",
-    color: "#22c55e",
-    desc: "Python 3.11 script. Extracts text from each document, dedups against meta/inbox.md, sends the content to Claude with the CLAUDE.md rules, writes the returned pages, logs the run and archives the source.",
-  },
-  CLAUDE: {
-    x: 1140,
-    y: 550,
-    icon: "✨",
-    title: "Claude API",
-    sub: "claude-opus-4-8",
-    color: "#d97706",
-    external: true,
-    desc: "Anthropic's Claude API — the librarian. An external dependency, paid per use, authenticated with the ANTHROPIC_API_KEY repository secret (ingestion) or the user's own Claude auth (queries).",
-  },
-  CLONE: {
-    x: 580,
-    y: 350,
-    icon: "💻",
-    title: "Local clone",
-    sub: "per-user working copy",
-    color: "#64748b",
-    desc: "Each team member's local Git copy of the vault. The Obsidian Git plugin syncs it with GitHub every five minutes, in both directions.",
-  },
-  OBS: {
-    x: 400,
-    y: 570,
-    icon: "💎",
-    title: "Obsidian",
-    sub: "team reading room",
-    color: "#a855f7",
-    desc: "Renders the wiki with clickable [[wikilinks]], graph view and instant search. Also where the curator reviews and corrects AI-written pages.",
-  },
-  CC: {
-    x: 760,
-    y: 570,
-    icon: "💬",
-    title: "Claude Code",
-    sub: "ask the wiki",
-    color: "#ec4899",
-    desc: "Claude Code launched inside the vault folder. It reads CLAUDE.md on startup and answers plain-English questions with citations to the exact wiki pages.",
-  },
+  USER: { x: 20, y: 350, icon: "👩‍💻", title: "Team member", sub: "drops docs · asks questions", color: "#6366f1", desc: "A member of the ABAP team. The same person can contribute documents and, later, ask the wiki questions — no GitHub knowledge needed." },
+  OD: { x: 300, y: 110, icon: "📥", title: "OneDrive Inbox", sub: "abap_wiki/inbox", color: "#0ea5e9", desc: "The drop folder in the flow owner's personal OneDrive for Business (abap_wiki/inbox). Dropping any document here (PDF, PPTX, DOCX, XLSX, TXT, VTT) is the only step contributors ever perform; picked-up files are archived to inbox/sent." },
+  PA: { x: 580, y: 110, icon: "🔁", title: "Power Automate", sub: "bridge flow", color: "#0284c7", desc: "The 'ABAP Wiki Inbox to GitHub' cloud flow. It watches the inbox, ferries each new file into the GitHub repository via one authenticated Contents-API PUT — the single link between Microsoft 365 and GitHub — then moves the source file to inbox/sent as a picked-up marker." },
+  REPO: { x: 860, y: 110, icon: "📚", title: "abap-wiki repo", sub: "GitHub · source of truth", color: "#f59e0b", desc: "The private GitHub repository (t-labs-buy/abap-wiki): wiki pages in zone folders, the CLAUDE.md rulebook, meta/ system files and the raw/ pipeline folders. Every change is version-controlled." },
+  GHA: { x: 1140, y: 110, icon: "🤖", title: "GitHub Actions", sub: "ingest workflow", color: "#8b5cf6", desc: "The ingest workflow (abap-wiki-ingest.yml). A push into raw/inbox/ wakes it; it checks out the vault, runs the ingest script on a cloud runner and commits the results. A weekly cron acts as a safety net." },
+  PY: { x: 1140, y: 330, icon: "🐍", title: "Ingest Script", sub: "abap-ingest.py", color: "#22c55e", desc: "Python 3.11 script. Extracts text from each document, dedups against meta/inbox.md, sends the content to Claude with the CLAUDE.md rules, writes the returned pages, logs the run and archives the source." },
+  CLAUDE: { x: 1140, y: 550, icon: "✨", title: "Claude API", sub: "claude-opus-4-8", color: "#d97706", external: true, desc: "Anthropic's Claude API — the librarian. An external dependency, paid per use, authenticated with the ANTHROPIC_API_KEY repository secret. It is used only by the ingest script; questions never go through it, because Claude Code answers them itself." },
+  CC: { x: 580, y: 550, icon: "💬", title: "Claude Code", sub: "/abap-wiki skill", color: "#ec4899", desc: "Claude Code running the /abap-wiki skill. The skill pulls the latest vault straight from GitHub, reads the CLAUDE.md rulebook and answers plain-English questions with citations to the exact wiki pages — nothing for the team to install or keep in sync." },
 };
 
 const center = (n) => ({ x: NODES[n].x + NW / 2, y: NODES[n].y + NH / 2 });
@@ -163,240 +80,25 @@ const center = (n) => ({ x: NODES[n].x + NW / 2, y: NODES[n].y + NH / 2 });
 // IMPORTANT: every pair used with roundTrip: true MUST also be added to the
 // BIDIRECTIONAL set below (pairKey-sorted, e.g. ['A','B'].sort().join('|')),
 // or the return-arrow won't render.
-const STEPS = [
-  {
-    f: "USER",
-    t: "OD",
-    ph: 0,
-    k: "call",
-    route: "Team member → OneDrive",
-    m: "A meeting transcript is dropped into the shared Inbox folder — the only step the contributor performs.",
-    chat: [
-      ["USER", "Dropping today's OTC workshop transcript here."],
-      ["OD", "File received in abap_wiki/inbox."],
-    ],
-  },
-  {
-    f: "OD",
-    t: "PA",
-    ph: 1,
-    k: "call",
-    roundTrip: true,
-    route: "Power Automate ⇄ OneDrive",
-    m: "The bridge flow detects the new file and fetches its content.",
-    chat: [
-      ["PA", "New file detected — give me its content."],
-      ["OD", "Here you go: transcript.pdf, 2.4 MB."],
-    ],
-  },
-  {
-    f: "PA",
-    t: "REPO",
-    ph: 1,
-    k: "call",
-    route: "Power Automate → GitHub",
-    m: "One HTTPS PUT to the Contents API commits the file into raw/inbox/ (base64 body, URL-encoded filename, fine-grained PAT).",
-    chat: [
-      ["PA", "PUT /contents/raw/inbox/transcript.pdf"],
-      ["REPO", "Committed to raw/inbox/ — that is a push event."],
-    ],
-  },
-  {
-    f: "PA",
-    t: "OD",
-    ph: 1,
-    k: "call",
-    route: "Power Automate → OneDrive",
-    m: "The flow moves the source file to inbox/sent — a picked-up marker that can never re-trigger the flow, because the trigger watches only the inbox folder itself, not subfolders.",
-    chat: [
-      ["PA", "Upload confirmed — moving transcript.pdf to inbox/sent."],
-      ["OD", "Archived in inbox/sent. The inbox stays empty."],
-    ],
-  },
-  {
-    f: "REPO",
-    t: "GHA",
-    ph: 2,
-    k: "call",
-    route: "GitHub → Actions",
-    m: "The push touching raw/inbox/** triggers the ingest workflow — no polling, no second integration.",
-    chat: [
-      ["REPO", "Push touched raw/inbox/** — wake the ingest workflow."],
-      ["GHA", "Spinning up an ubuntu runner…"],
-    ],
-  },
-  {
-    f: "GHA",
-    t: "PY",
-    ph: 2,
-    k: "call",
-    route: "Actions → Ingest Script",
-    m: "The runner checks out the vault and runs abap-ingest.py with the ANTHROPIC_API_KEY secret in its environment.",
-    chat: [
-      ["GHA", "Vault checked out. Run abap-ingest.py."],
-      ["PY", "Scanning raw/inbox/ for unprocessed files…"],
-    ],
-  },
-  {
-    f: "PY",
-    t: "PY",
-    ph: 2,
-    k: "work",
-    route: "Ingest Script",
-    m: "Text is extracted with pdfplumber; the dedup table in meta/inbox.md confirms this file has never been processed.",
-    chat: [["PY", "14 pages extracted. Not in the dedup table — this is new."]],
-  },
-  {
-    f: "PY",
-    t: "PY",
-    ph: 3,
-    k: "work",
-    route: "Ingest Script",
-    m: "The script loads the CLAUDE.md rulebook plus the vault index and entity registry as context for Claude.",
-    chat: [["PY", "Loading CLAUDE.md rules + meta/index + entity registry…"]],
-  },
-  {
-    f: "CLAUDE",
-    t: "PY",
-    ph: 3,
-    k: "call",
-    roundTrip: true,
-    route: "Ingest Script ⇄ Claude API",
-    m: "One HTTPS call: rules + vault context + document text go in; page create/update instructions come back.",
-    chat: [
-      ["PY", "Here are the rules, the index and the transcript. File it."],
-      ["CLAUDE", "3 page updates + 1 new decision page, per the constitution."],
-    ],
-  },
-  {
-    f: "PY",
-    t: "PY",
-    ph: 3,
-    k: "work",
-    route: "Ingest Script",
-    m: "Pages are written into the zones, meta/log.md gets an entry, and the source file moves to raw/processed/.",
-    chat: [["PY", "Pages written. Log appended. Source archived."]],
-  },
-  {
-    f: "PY",
-    t: "REPO",
-    ph: 3,
-    k: "call",
-    route: "Ingest Script → GitHub",
-    m: "The workflow commits and pushes every change back to the vault — full history preserved.",
-    chat: [
-      ["PY", "git add -A · commit · pull --rebase · push"],
-      ["REPO", "Vault updated. Every change is in the history."],
-    ],
-  },
-  {
-    f: "REPO",
-    t: "CLONE",
-    ph: 4,
-    k: "data",
-    roundTrip: true,
-    route: "Local clone ⇄ GitHub",
-    m: "The Obsidian Git plugin runs its 5-minute sync and pulls the new pages down to every laptop.",
-    chat: [
-      ["CLONE", "Five-minute sync — anything new upstream?"],
-      ["REPO", "Yes: one new decision page and three updates."],
-    ],
-  },
-  {
-    f: "CLONE",
-    t: "OBS",
-    ph: 4,
-    k: "data",
-    route: "Local clone → Obsidian",
-    m: "The new pages appear in Obsidian for the whole team, linked into the rest of the wiki.",
-    chat: [["OBS", "New page: Decision — OTC custom BAPI approach."]],
-  },
-  {
-    f: "OBS",
-    t: "OBS",
-    ph: 4,
-    k: "work",
-    route: "Obsidian",
-    m: "The curator skims the AI-written pages and fixes one wrong name — two minutes of human review.",
-    chat: [["OBS", "Curator check: accurate. One stakeholder name fixed."]],
-  },
-  {
-    f: "REPO",
-    t: "CLONE",
-    ph: 4,
-    k: "call",
-    roundTrip: true,
-    route: "Local clone ⇄ GitHub",
-    m: "The curator's fix syncs back up, so everyone gets the corrected page on their next pull.",
-    chat: [
-      ["CLONE", "Pushing the curator's fix."],
-      ["REPO", "Merged — everyone gets it on their next sync."],
-    ],
-  },
-  {
-    f: "USER",
-    t: "CC",
-    ph: 5,
-    k: "call",
-    route: "Team member → Claude Code",
-    m: "Weeks later, a teammate asks the wiki a question instead of hunting through folders.",
-    chat: [
-      ["USER", "What did we decide about the custom BAPI approach?"],
-      ["CC", "Checking the vault…"],
-    ],
-  },
-  {
-    f: "CLONE",
-    t: "CC",
-    ph: 5,
-    k: "data",
-    roundTrip: true,
-    route: "Claude Code ⇄ Local clone",
-    m: "Claude Code reads CLAUDE.md and the relevant pages from the local clone — synthesized pages only, never raw files.",
-    chat: [
-      ["CC", "Reading the OTC decision page + linked meeting note…"],
-      ["CLONE", "Three pages match, joined by [[wikilinks]]."],
-    ],
-  },
-  {
-    f: "CLAUDE",
-    t: "CC",
-    ph: 5,
-    k: "call",
-    roundTrip: true,
-    route: "Claude Code ⇄ Claude API",
-    m: "The model synthesizes a cited answer from the retrieved pages.",
-    chat: [
-      ["CC", "Summarize these pages; cite every claim."],
-      ["CLAUDE", "Answer ready, citing the exact vault pages."],
-    ],
-  },
-  {
-    f: "CC",
-    t: "USER",
-    ph: 5,
-    k: "data",
-    route: "Claude Code → Team member",
-    m: "The answer arrives with citations to the exact wiki pages it came from. The loop is closed.",
-    chat: [
-      [
-        "CC",
-        "Approved 2026-07-15: custom BAPI wrapper — see the Decision page.",
-      ],
-      ["USER", "From a dropped file to a cited answer. No manual filing."],
-    ],
-  },
-];
+const STEPS = [{ f: "USER", t: "OD", ph: 0, k: "call", route: "Team member → OneDrive", m: "A meeting transcript is dropped into the shared Inbox folder — the only step the contributor performs.", chat: [["USER", "Dropping today's OTC workshop transcript here."], ["OD", "File received in abap_wiki/inbox."]] },
+  { f: "OD", t: "PA", ph: 1, k: "call", roundTrip: true, route: "Power Automate ⇄ OneDrive", m: "The bridge flow detects the new file and fetches its content.", chat: [["PA", "New file detected — give me its content."], ["OD", "Here you go: transcript.pdf, 2.4 MB."]] },
+  { f: "PA", t: "REPO", ph: 1, k: "call", route: "Power Automate → GitHub", m: "One HTTPS PUT to the Contents API commits the file into raw/inbox/ (base64 body, URL-encoded filename, fine-grained PAT).", chat: [["PA", "PUT /contents/raw/inbox/transcript.pdf"], ["REPO", "Committed to raw/inbox/ — that is a push event."]] },
+  { f: "PA", t: "OD", ph: 1, k: "call", route: "Power Automate → OneDrive", m: "The flow moves the source file to inbox/sent — a picked-up marker that can never re-trigger the flow, because the trigger watches only the inbox folder itself, not subfolders.", chat: [["PA", "Upload confirmed — moving transcript.pdf to inbox/sent."], ["OD", "Archived in inbox/sent. The inbox stays empty."]] },
+  { f: "REPO", t: "GHA", ph: 2, k: "call", route: "GitHub → Actions", m: "The push touching raw/inbox/** triggers the ingest workflow — no polling, no second integration.", chat: [["REPO", "Push touched raw/inbox/** — wake the ingest workflow."], ["GHA", "Spinning up an ubuntu runner…"]] },
+  { f: "GHA", t: "PY", ph: 2, k: "call", route: "Actions → Ingest Script", m: "The runner checks out the vault and runs abap-ingest.py with the ANTHROPIC_API_KEY secret in its environment.", chat: [["GHA", "Vault checked out. Run abap-ingest.py."], ["PY", "Scanning raw/inbox/ for unprocessed files…"]] },
+  { f: "PY", t: "PY", ph: 2, k: "work", route: "Ingest Script", m: "Text is extracted with pdfplumber; the dedup table in meta/inbox.md confirms this file has never been processed.", chat: [["PY", "14 pages extracted. Not in the dedup table — this is new."]] },
+  { f: "PY", t: "PY", ph: 3, k: "work", route: "Ingest Script", m: "The script loads the CLAUDE.md rulebook plus the vault index and entity registry as context for Claude.", chat: [["PY", "Loading CLAUDE.md rules + meta/index + entity registry…"]] },
+  { f: "CLAUDE", t: "PY", ph: 3, k: "call", roundTrip: true, route: "Ingest Script ⇄ Claude API", m: "One HTTPS call: rules + vault context + document text go in; page create/update instructions come back.", chat: [["PY", "Here are the rules, the index and the transcript. File it."], ["CLAUDE", "3 page updates + 1 new decision page, per the constitution."]] },
+  { f: "PY", t: "PY", ph: 3, k: "work", route: "Ingest Script", m: "Pages are written into the zones, meta/log.md gets an entry, and the source file moves to raw/processed/.", chat: [["PY", "Pages written. Log appended. Source archived."]] },
+  { f: "PY", t: "REPO", ph: 3, k: "call", route: "Ingest Script → GitHub", m: "The workflow commits and pushes every change back to the vault — full history preserved.", chat: [["PY", "git add -A · commit · pull --rebase · push"], ["REPO", "Vault updated. Every change is in the history."]] },
+  { f: "USER", t: "CC", ph: 4, k: "call", route: "Team member → Claude Code", m: "Weeks later, a teammate types /abap-wiki and asks the question in plain English instead of hunting through folders.", chat: [["USER", "/abap-wiki What did we decide about the custom BAPI approach?"], ["CC", "Syncing the vault, then I'll answer…"]] },
+  { f: "REPO", t: "CC", ph: 4, k: "data", roundTrip: true, route: "Claude Code ⇄ GitHub", m: "The skill's first move is to pull the latest vault from GitHub — no local clone to keep in sync, so every answer is written against the current pages.", chat: [["CC", "Fetching the latest t-labs-buy/abap-wiki…"], ["REPO", "Up to date — including this morning's decision page."]] },
+  { f: "CC", t: "CC", ph: 4, k: "work", route: "Claude Code", m: "It loads the CLAUDE.md rulebook and follows the [[wikilinks]] to the pages that matter — synthesized pages only, never raw files.", chat: [["CC", "CLAUDE.md loaded. Three pages match, joined by [[wikilinks]]."]] },
+  { f: "CC", t: "CC", ph: 4, k: "work", route: "Claude Code", m: "Claude Code summarizes those pages itself — no extra service in the loop — and cites every claim.", chat: [["CC", "Answer drafted from the three pages, each claim cited."]] },
+  { f: "CC", t: "USER", ph: 4, k: "data", route: "Claude Code → Team member", m: "The answer arrives with citations to the exact wiki pages it came from. The loop is closed.", chat: [["CC", "Approved 2026-07-15: custom BAPI wrapper — see the Decision page."], ["USER", "From a dropped file to a cited answer. No manual filing."]] }];
 
 // One label per phase index used in STEPS. Shown in the toolbar's phase tag.
-const PHASES = [
-  "Drop the document",
-  "Bridge to GitHub",
-  "The robot wakes up",
-  "Claude writes the wiki",
-  "Sync to the team",
-  "Ask the wiki",
-];
+const PHASES = ["Drop the document", "Bridge to GitHub", "The robot wakes up", "Claude writes the wiki", "Ask the wiki"];
 
 function buildPath(f, t) {
   const a = center(f);
@@ -436,16 +138,25 @@ function nodeInfo(id) {
   return { routes, stepIdxs };
 }
 
+// Same idea for the connection inspector (click a link on the stage): every
+// route label and step index that travels this one edge. Drives the "what
+// would break" list shown before a connection is removed.
+function linkInfo(key) {
+  const routes = [];
+  const stepIdxs = [];
+  STEPS.forEach((s, i) => {
+    if (s.f !== s.t && pairKey(s.f, s.t) === key) {
+      stepIdxs.push(i);
+      if (routes.indexOf(s.route) === -1) routes.push(s.route);
+    }
+  });
+  return { routes, stepIdxs };
+}
+
 // Pairs that need arrowheads on BOTH ends because the flow is a
 // request/response round-trip along one edge, not two distinct steps.
 // Must exactly match every pairKey(f, t) used with roundTrip: true above.
-const BIDIRECTIONAL = new Set([
-  "OD|PA",
-  "CLAUDE|PY",
-  "CLONE|REPO",
-  "CC|CLONE",
-  "CC|CLAUDE",
-]);
+const BIDIRECTIONAL = new Set(["OD|PA", "CLAUDE|PY", "CC|REPO"]);
 
 // OPTIONAL: dramatize one "persistence save" step (file-transfer console +
 // flying particles) — nice for a moment like "the run is written to the
@@ -457,14 +168,7 @@ const DB_INGEST_FROM = "PY"; // node id, e.g. 'API', or null
 const DB_INGEST_TO = "REPO"; // node id, e.g. 'DB', or null
 const DB_INGEST_ICON = "🐍 ➔ 📚"; // e.g. '🖥️ ➔ 🗄️'
 const DB_INGEST_TITLE = "Committing vault updates to GitHub…"; // e.g. 'Saving run to PostgreSQL...'
-const DB_INGEST_FILES = [
-  { name: "Decision - OTC Custom BAPI.md", size: "4 KB" },
-  { name: "Meeting - OTC Workshop.md", size: "6 KB" },
-  { name: "Pattern - IDoc error handling.md", size: "3 KB" },
-  { name: "meta/log.md", size: "1 KB" },
-  { name: "meta/inbox.md", size: "1 KB" },
-  { name: "transcript.pdf → processed/", size: "2.4 MB" },
-]; // [{name,size}, ...] cosmetic file list
+const DB_INGEST_FILES = [{ name: "Decision - OTC Custom BAPI.md", size: "4 KB" }, { name: "Meeting - OTC Workshop.md", size: "6 KB" }, { name: "Pattern - IDoc error handling.md", size: "3 KB" }, { name: "meta/log.md", size: "1 KB" }, { name: "meta/inbox.md", size: "1 KB" }, { name: "transcript.pdf → processed/", size: "2.4 MB" }]; // [{name,size}, ...] cosmetic file list
 // Place the console in genuinely empty canvas space near DB_INGEST_TO — check
 // your NODES layout for a gap, don't just guess.
 const DB_INGEST_CONSOLE_X = 640;
@@ -479,36 +183,150 @@ const DB_INGEST_PARTICLE_PATH = {
 };
 
 const TITLE = "ABAP LLM Wiki — Live Architecture Demo";
-const SUBTITLE =
-  "One meeting transcript travels from a OneDrive drop to a cited answer in Claude Code.";
-
-// ---- Saved layout persistence (ABAP demo addition) ----
-// The viewer can drag node cards, press "Save layout", and get the same
-// arrangement back the next time this file is opened. Positions live in
-// localStorage under a demo-specific key and are restored here, before the
-// stage is built, clamped to the canvas so a stale save can never hide a node.
-const LAYOUT_KEY = "archflow-layout:AbapVaultDemoFlow";
-try {
-  const savedLayout = JSON.parse(localStorage.getItem(LAYOUT_KEY) || "null");
-  if (savedLayout) {
-    Object.keys(savedLayout).forEach((id) => {
-      const p = savedLayout[id];
-      if (NODES[id] && p && Number.isFinite(p.x) && Number.isFinite(p.y)) {
-        NODES[id].x = Math.max(4, Math.min(STAGE_W - NW - 4, p.x));
-        NODES[id].y = Math.max(4, Math.min(STAGE_H - NH - 4, p.y));
-      }
-    });
-  }
-} catch (e) {
-  /* storage unavailable — demo still works, layout just is not persisted */
-}
+const SUBTITLE = "One meeting transcript travels from a OneDrive drop to a cited answer in Claude Code.";
 
 // ============================================================================
 // ArchFlow ENGINE — do not modify below this line.
 // ============================================================================
 
+// Dragged node positions persist per demo (keyed by TITLE) so a decluttered
+// layout survives reloads. Storage can be unavailable or stale (private mode,
+// cleared NODES entries), so everything is best-effort: failures fall back to
+// the authored layout.
+const LAYOUT_KEY = "archflow-layout:" + TITLE;
+const DEFAULT_POS = {};
+Object.keys(NODES).forEach((id) => {
+  DEFAULT_POS[id] = { x: NODES[id].x, y: NODES[id].y };
+});
+(function loadLayout() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(LAYOUT_KEY)) || {};
+    Object.keys(saved).forEach((id) => {
+      if (
+        NODES[id] &&
+        typeof saved[id].x === "number" &&
+        typeof saved[id].y === "number"
+      ) {
+        NODES[id].x = Math.max(4, Math.min(STAGE_W - NW - 4, saved[id].x));
+        NODES[id].y = Math.max(4, Math.min(STAGE_H - NH - 4, saved[id].y));
+      }
+    });
+  } catch (e) {
+    /* keep authored layout */
+  }
+})();
+function saveLayout() {
+  try {
+    const pos = {};
+    Object.keys(NODES).forEach((id) => {
+      pos[id] = { x: NODES[id].x, y: NODES[id].y };
+    });
+    localStorage.setItem(LAYOUT_KEY, JSON.stringify(pos));
+  } catch (e) {
+    /* storage unavailable — layout just won't persist */
+  }
+}
+
+// Removed connections ("what breaks if this link goes away?"). The set holds
+// pairKeys; it is the single source of truth for both the severed styling on
+// the stage and the blocked-step behaviour during a run. Persisted per demo
+// like the layout, and best-effort for the same reasons.
+const LINKS_KEY = "archflow-removed-links:" + TITLE;
+const REMOVED_LINKS = new Set();
+(function loadRemovedLinks() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(LINKS_KEY)) || [];
+    saved.forEach((k) => {
+      const ends = String(k).split("|");
+      if (NODES[ends[0]] && NODES[ends[1]]) REMOVED_LINKS.add(k);
+    });
+  } catch (e) {
+    /* every link stays connected */
+  }
+})();
+function saveRemovedLinks() {
+  try {
+    localStorage.setItem(LINKS_KEY, JSON.stringify(Array.from(REMOVED_LINKS)));
+  } catch (e) {
+    /* storage unavailable — removals just won't persist */
+  }
+}
+// Self-working steps (f === t) never travel a link, so they can't be blocked.
+const isLinkRemoved = (f, t) => f !== t && REMOVED_LINKS.has(pairKey(f, t));
+
+// Who *starts* a step. For roundTrip steps the engine's convention is
+// f = responder, t = asker, so the initiator is t — get this wrong and every
+// round-trip looks unreachable the moment anything upstream is cut.
+const stepInitiator = (s) => (s.roundTrip ? s.t : s.f);
+
+// Nodes that can start a flow on their own: the first time they appear in
+// STEPS, they appear as an initiator, so nothing upstream ever handed to
+// them. Usually just the entry point, but a demo may legitimately have a
+// later cold start (a scheduler firing in phase 4) — seeding those keeps
+// them running when an unrelated link is cut.
+const ORIGINS = new Set();
+(function computeOrigins() {
+  const seen = new Set();
+  STEPS.forEach((s) => {
+    if (!seen.has(stepInitiator(s))) ORIGINS.add(stepInitiator(s));
+    seen.add(s.f);
+    seen.add(s.t);
+  });
+})();
+
+// Every step's status for the CURRENT set of removed links:
+//   'ok'          — runs normally
+//   'blocked'     — its own link was cut
+//   'unreachable' — nothing ever reached its initiator, because an upstream
+//                   step was blocked (or itself unreachable)
+// Pure and order-independent, so an animated run and a scrubber jump always
+// agree. addKey / dropKey answer the hypothetical "what if this one link
+// were also cut / put back?" for the connection inspector's impact line.
+function computeStatuses(addKey, dropKey) {
+  const reached = new Set(ORIGINS);
+  // Nodes an earlier step failed to deliver to. A poller reading from a
+  // starved node gets nothing, so it can't restart the flow — without this,
+  // cutting "user uploads to OneDrive" left the scheduled Power Automate
+  // poll (an ORIGIN, since it first appears as a round-trip asker) happily
+  // picking up a file that never arrived, and the whole pipeline ran on.
+  const starved = new Set();
+  return STEPS.map((s) => {
+    const key = s.f !== s.t ? pairKey(s.f, s.t) : null;
+    const removed =
+      !!key && key !== dropKey && (REMOVED_LINKS.has(key) || key === addKey);
+    const initiator = stepInitiator(s);
+    // For a round-trip, f is the responder being read from. A node that has
+    // simply never been touched yet is fine (the first query to a database);
+    // only one that was *supposed* to have been fed counts as starved.
+    const readsStarved = s.roundTrip && starved.has(s.f);
+    if (removed || readsStarved || !reached.has(initiator)) {
+      // The request dies here. The initiator is no longer carrying a live
+      // flow, so every later step it would have started is stranded too, and
+      // whatever this step was meant to deliver never arrives.
+      reached.delete(initiator);
+      starved.add(s.t);
+      return removed ? "blocked" : "unreachable";
+    }
+    reached.add(s.f);
+    reached.add(s.t);
+    starved.delete(s.t);
+    return "ok";
+  });
+}
+
+// Cached because it is read once per log entry; invalidated on every
+// remove/restore.
+let STATUS_CACHE = null;
+function stepStatuses() {
+  if (!STATUS_CACHE) STATUS_CACHE = computeStatuses();
+  return STATUS_CACHE;
+}
+function invalidateStatuses() {
+  STATUS_CACHE = null;
+}
+
 export function AbapVaultDemoFlow() {
-  const [theme, setTheme] = useState("light");
+  const [theme, setTheme] = useState("dark");
   const [speed, setSpeed] = useState(0.5);
   const [isPlaying, setIsPlaying] = useState(false);
   const [phaseText, setPhaseText] = useState("Ready");
@@ -518,8 +336,11 @@ export function AbapVaultDemoFlow() {
   const [progress, setProgress] = useState(-1);
   // Node inspector: id of the clicked node, or null when closed.
   const [inspected, setInspected] = useState(null);
-  // "Save layout" button feedback ("✓ Layout saved" / "⚠ Could not save").
-  const [layoutMsg, setLayoutMsg] = useState(null);
+  // Connection inspector: pairKey of the clicked link, or null when closed.
+  const [selectedLink, setSelectedLink] = useState(null);
+  // Bumped on every remove/restore so the JSX (which reads REMOVED_LINKS
+  // directly) re-renders and the link-visual effect re-runs.
+  const [linkVersion, setLinkVersion] = useState(0);
 
   const stageRef = useRef(null);
   const logRef = useRef(null);
@@ -532,30 +353,11 @@ export function AbapVaultDemoFlow() {
   // True while a ⏭ Step single-step animation runs — jumpTo must not fire
   // then (DOM log-item listeners bypass the disabled-button guards).
   const ffRef = useRef(false);
+  // Set by the mount effect; restores the authored node layout.
+  const resetLayoutRef = useRef(null);
 
   const [isFullscreen, setIsFullscreen] = useState(false);
   const containerRef = useRef(null);
-
-  // Persist the current (possibly dragged) node positions; restore on reload.
-  const saveLayout = () => {
-    const layout = {};
-    Object.keys(NODES).forEach((id) => {
-      layout[id] = { x: NODES[id].x, y: NODES[id].y };
-    });
-    try {
-      localStorage.setItem(LAYOUT_KEY, JSON.stringify(layout));
-      setLayoutMsg("✓ Layout saved");
-    } catch (e) {
-      setLayoutMsg("⚠ Could not save");
-    }
-    setTimeout(() => setLayoutMsg(null), 2000);
-  };
-  const resetLayout = () => {
-    try {
-      localStorage.removeItem(LAYOUT_KEY);
-    } catch (e) {}
-    location.reload();
-  };
 
   const toggleFullscreen = () => {
     if (!containerRef.current) return;
@@ -634,14 +436,47 @@ export function AbapVaultDemoFlow() {
 
     const edgeLayer = el("g", {});
     stageRef.current.appendChild(edgeLayer);
+    // Transparent wide twins of every edge, so a link can actually be
+    // clicked; and the ✕ markers drawn over removed links. Both layers sit
+    // BELOW the node groups (appended later), so a node card always wins a
+    // click where the two overlap.
+    const hitLayer = el("g", {});
+    stageRef.current.appendChild(hitLayer);
+    const cutLayer = el("g", {});
+    stageRef.current.appendChild(cutLayer);
 
     const edgesCached = {};
     Object.keys(edges).forEach((key) => {
       const e = edges[key];
       const p = el("path", { d: e.d, class: "edge dashed" });
       edgeLayer.appendChild(p);
+
+      const hit = el("path", { d: e.d, class: "edge-hit" });
+      hit.appendChild(
+        el(
+          "title",
+          {},
+          NODES[e.from].title +
+            " ⇄ " +
+            NODES[e.to].title +
+            " — click to inspect or remove this connection",
+        ),
+      );
+      hit.addEventListener("click", (ev) => {
+        ev.stopPropagation();
+        setInspected(null);
+        setSelectedLink((prev) => (prev === key ? null : key));
+      });
+      hitLayer.appendChild(hit);
+
+      const cut = el("text", { class: "edge-cut", x: 0, y: 0 }, "✕");
+      cut.style.display = "none";
+      cutLayer.appendChild(cut);
+
       edgesCached[key] = {
         el: p,
+        hit,
+        cut,
         from: e.from,
         to: e.to,
         len: p.getTotalLength(),
@@ -761,6 +596,12 @@ export function AbapVaultDemoFlow() {
         if (e.from !== nodeId && e.to !== nodeId) return;
         e.el.setAttribute("d", buildPath(e.from, e.to));
         e.len = e.el.getTotalLength();
+        if (e.hit) e.hit.setAttribute("d", e.el.getAttribute("d"));
+        if (e.cut) {
+          const mid = e.el.getPointAtLength(e.len / 2);
+          e.cut.setAttribute("x", String(mid.x));
+          e.cut.setAttribute("y", String(mid.y));
+        }
         Object.keys(e.arrows).forEach((endId) => {
           e.arrows[endId].setAttribute(
             "points",
@@ -812,6 +653,7 @@ export function AbapVaultDemoFlow() {
       );
       g.addEventListener("click", () => {
         if (dragState.suppressClick) return;
+        setSelectedLink(null);
         setInspected((prev) => (prev === id ? null : id));
       });
       basePos[id] = { x: n.x, y: n.y };
@@ -844,6 +686,7 @@ export function AbapVaultDemoFlow() {
         if (dragState.id !== id) return;
         dragState.id = null;
         g.classList.remove("dragging");
+        if (dragState.suppressClick) saveLayout();
       };
       g.addEventListener("pointerup", endDrag);
       g.addEventListener("pointercancel", endDrag);
@@ -851,6 +694,27 @@ export function AbapVaultDemoFlow() {
       nodeEls[id] = g;
     });
     nodeElsRef.current = nodeEls;
+
+    // ⇱ Layout button: forget the saved layout and glide every node back to
+    // its authored position (links re-route along the way).
+    resetLayoutRef.current = () => {
+      try {
+        localStorage.removeItem(LAYOUT_KEY);
+      } catch (e) {}
+      Object.keys(NODES).forEach((id) => {
+        NODES[id].x = DEFAULT_POS[id].x;
+        NODES[id].y = DEFAULT_POS[id].y;
+        nodeEls[id].style.setProperty(
+          "--drag-x",
+          NODES[id].x - basePos[id].x + "px",
+        );
+        nodeEls[id].style.setProperty(
+          "--drag-y",
+          NODES[id].y - basePos[id].y + "px",
+        );
+        refreshEdgesFor(id);
+      });
+    };
 
     stageRef.current.appendChild(pulse);
 
@@ -902,12 +766,63 @@ export function AbapVaultDemoFlow() {
     resetAnimation(false);
   }, []);
 
+  // Paint selection + severed styling from the current REMOVED_LINKS set.
+  // Declared AFTER the build effect on purpose: effects run in declaration
+  // order, and this one needs the edges to exist (a demo reloaded with
+  // removals already in storage must show them severed on first paint).
+  useEffect(() => {
+    Object.keys(edgesRef.current).forEach((key) => {
+      const e = edgesRef.current[key];
+      const off = REMOVED_LINKS.has(key);
+      e.el.classList.toggle("removed", off);
+      e.el.classList.toggle("selected", key === selectedLink);
+      Object.values(e.arrows).forEach((a) =>
+        a.classList.toggle("removed", off),
+      );
+      if (e.cut) {
+        const mid = e.el.getPointAtLength(e.len / 2);
+        e.cut.setAttribute("x", String(mid.x));
+        e.cut.setAttribute("y", String(mid.y));
+        e.cut.style.display = off ? "" : "none";
+      }
+    });
+  }, [selectedLink, linkVersion]);
+
+  // Remove / restore one connection. The demo is re-rendered at the current
+  // step so the consequence is immediately visible: steps that need the link
+  // turn into blocked entries in the activity log (and vice versa).
+  function toggleLink(key) {
+    if (!key) return;
+    if (REMOVED_LINKS.has(key)) REMOVED_LINKS.delete(key);
+    else REMOVED_LINKS.add(key);
+    saveRemovedLinks();
+    invalidateStatuses();
+    setLinkVersion((v) => v + 1);
+    jumpTo(idxRef.current);
+  }
+
+  function restoreAllLinks() {
+    if (REMOVED_LINKS.size === 0) return;
+    REMOVED_LINKS.clear();
+    saveRemovedLinks();
+    invalidateStatuses();
+    setLinkVersion((v) => v + 1);
+    jumpTo(idxRef.current);
+  }
+
   function clearActive() {
     Object.values(edgesRef.current).forEach((e) =>
-      e.el.classList.remove("active", "flow", "call", "data", "flow-reverse"),
+      e.el.classList.remove(
+        "active",
+        "flow",
+        "call",
+        "data",
+        "flow-reverse",
+        "blocked-flash",
+      ),
     );
     Object.values(nodeElsRef.current).forEach((g) =>
-      g.classList.remove("active", "working", "db-ingesting"),
+      g.classList.remove("active", "working", "db-ingesting", "blocked"),
     );
     if (pulseRef.current) pulseRef.current.setAttribute("opacity", "0");
     allArrowsRef.current.forEach((a) => a.classList.remove("blink"));
@@ -1021,11 +936,20 @@ export function AbapVaultDemoFlow() {
       .querySelectorAll(".log-item.cur")
       .forEach((n) => n.classList.remove("cur"));
     const item = document.createElement("div");
-    item.className = "log-item cur " + s.k;
+    const st = stepStatuses()[i];
+    const note =
+      st === "blocked"
+        ? '<span class="log-blocked">blocked — connection removed</span>'
+        : st === "unreachable"
+          ? '<span class="log-skipped">skipped — never reached</span>'
+          : "";
+    const num = st === "blocked" ? "✕" : st === "unreachable" ? "–" : i + 1;
+    item.className = "log-item cur " + s.k + (st === "ok" ? "" : " " + st);
     item.innerHTML = `
-      <div class="log-num">${i + 1}</div>
+      <div class="log-num">${num}</div>
       <div class="log-body">
         <span class="log-route">${s.route}</span>
+        ${note}
         ${s.m}
       </div>
     `;
@@ -1227,6 +1151,42 @@ export function AbapVaultDemoFlow() {
       let dur = BASE / currentSpeed;
       const V = 0.125 * currentSpeed;
 
+      const status = stepStatuses()[i];
+
+      // The link this step needs was removed by the user: nothing travels.
+      // The source flashes red, says why, and the run carries on to the next
+      // step — that "what still works without this link?" read is the whole
+      // point of being able to cut a connection.
+      if (status === "blocked") {
+        const srcNode = nodeElsRef.current[stepInitiator(s)];
+        if (srcNode) srcNode.classList.add("active", "blocked");
+        const deadEdge = edgesRef.current[pairKey(s.f, s.t)];
+        if (deadEdge) deadEdge.el.classList.add("blocked-flash");
+        const other = stepInitiator(s) === s.f ? s.t : s.f;
+        addBubble(stepInitiator(s), "✕ No connection to " + NODES[other].title);
+        const tBlocked = performance.now();
+        const blockedTick = (now) => {
+          if (now - tBlocked >= 1300 / currentSpeed) resolve();
+          else animRef.current = requestAnimationFrame(blockedTick);
+        };
+        animRef.current = requestAnimationFrame(blockedTick);
+        return;
+      }
+
+      // Nothing ever reached this step's initiator, because an upstream step
+      // was blocked. It can't happen, so nothing is drawn — the log entry
+      // (already added above) carries the "skipped — never reached" note and
+      // the run moves on after a short beat.
+      if (status === "unreachable") {
+        const tSkipped = performance.now();
+        const skipTick = (now) => {
+          if (now - tSkipped >= 450 / currentSpeed) resolve();
+          else animRef.current = requestAnimationFrame(skipTick);
+        };
+        animRef.current = requestAnimationFrame(skipTick);
+        return;
+      }
+
       const chat = s.chat || [];
       const shownChat = new Array(chat.length).fill(false);
       const revealChat = (elapsed) => {
@@ -1366,13 +1326,19 @@ export function AbapVaultDemoFlow() {
     logRef.current
       .querySelectorAll(".log-item.cur")
       .forEach((n) => n.classList.remove("cur"));
+    const statuses = stepStatuses();
+    const blocked = statuses.filter((s) => s === "blocked").length;
+    const skipped = statuses.filter((s) => s === "unreachable").length;
+    const parts = [];
+    if (blocked) parts.push(blocked + " blocked");
+    if (skipped) parts.push(skipped + " never reached");
     const item = document.createElement("div");
     item.className = "log-item cur";
     item.innerHTML = `
-      <div class="log-num" style="background: #22c55e;">✓</div>
+      <div class="log-num" style="background: ${parts.length ? "#ef4444" : "#22c55e"};">${parts.length ? "!" : "✓"}</div>
       <div class="log-body">
         <span class="log-route">System</span>
-        Run completed
+        Run completed${parts.length ? " — " + parts.join(", ") : ""}
       </div>
     `;
     logRef.current.appendChild(item);
@@ -1430,9 +1396,14 @@ export function AbapVaultDemoFlow() {
       g.classList.remove("done"),
     );
     if (logRef.current) logRef.current.innerHTML = "";
+    const statuses = stepStatuses();
     for (let i = 0; i <= target; i++) {
-      markDone(STEPS[i].f);
-      markDone(STEPS[i].t);
+      // A blocked or unreachable step never ran, so neither end gets a
+      // done-mark.
+      if (statuses[i] === "ok") {
+        markDone(STEPS[i].f);
+        markDone(STEPS[i].t);
+      }
       addLog(i);
     }
     if (target < 0) {
@@ -1441,6 +1412,15 @@ export function AbapVaultDemoFlow() {
     }
     const s = STEPS[target];
     setPhaseText(PHASES[s.ph]);
+    if (statuses[target] === "blocked") {
+      const srcNode = nodeElsRef.current[stepInitiator(s)];
+      if (srcNode) srcNode.classList.add("active", "blocked");
+      const other = stepInitiator(s) === s.f ? s.t : s.f;
+      addBubble(stepInitiator(s), "✕ No connection to " + NODES[other].title);
+      return;
+    }
+    // An unreachable step has nothing to show on the stage.
+    if (statuses[target] === "unreachable") return;
     const fromNode = nodeElsRef.current[s.f];
     const toNode = nodeElsRef.current[s.t];
     if (fromNode) fromNode.classList.add("active");
@@ -1482,6 +1462,23 @@ export function AbapVaultDemoFlow() {
     if (nextSpeed >= 0.1 && nextSpeed <= 3.0) setSpeed(nextSpeed);
   }
 
+  // How many LATER steps this link strands (or, once cut, would get back) —
+  // the answer to "is this connection load-bearing?", shown in the inspector
+  // before the user commits to cutting it. linkVersion keeps it fresh.
+  function strandedBy(key) {
+    if (!key) return 0;
+    const now = stepStatuses();
+    if (REMOVED_LINKS.has(key)) {
+      const restored = computeStatuses(null, key);
+      return now.filter(
+        (s, i) => s === "unreachable" && restored[i] !== "unreachable",
+      ).length;
+    }
+    const cut = computeStatuses(key, null);
+    return cut.filter((s, i) => s === "unreachable" && now[i] !== "unreachable")
+      .length;
+  }
+
   return (
     <div
       ref={containerRef}
@@ -1498,18 +1495,6 @@ export function AbapVaultDemoFlow() {
             title="Toggle theme"
           >
             {theme === "dark" ? "☀ Light" : "🌙 Dark"}
-          </button>
-          <button
-            onClick={saveLayout}
-            title="Save the current node positions — the demo reopens with this layout"
-          >
-            {layoutMsg || "💾 Save layout"}
-          </button>
-          <button
-            onClick={resetLayout}
-            title="Forget the saved layout and restore the original"
-          >
-            ↺ Reset
           </button>
           <button
             onClick={toggleFullscreen}
@@ -1544,6 +1529,20 @@ export function AbapVaultDemoFlow() {
         </button>
         <button onClick={() => resetAnimation(true)} disabled={isDoneDisabled}>
           ↻ Restart
+        </button>
+        <button
+          onClick={() => resetLayoutRef.current && resetLayoutRef.current()}
+          title="Move all nodes back to their original positions"
+        >
+          ⇱ Layout
+        </button>
+        <button
+          onClick={restoreAllLinks}
+          disabled={REMOVED_LINKS.size === 0}
+          title="Reconnect every link you removed (click a link on the diagram to remove one)"
+        >
+          ⛓ Links
+          {REMOVED_LINKS.size > 0 ? ` (${REMOVED_LINKS.size})` : ""}
         </button>
         <span className="speed">
           Speed
@@ -1609,6 +1608,79 @@ export function AbapVaultDemoFlow() {
           ></svg>
         </div>
         <aside className="side">
+          {selectedLink &&
+            NODES[selectedLink.split("|")[0]] &&
+            NODES[selectedLink.split("|")[1]] && (
+              <div className="inspector">
+                <div className="inspector-head">
+                  <span className="inspector-icon link-icon">⇄</span>
+                  <div className="inspector-name">
+                    <div className="inspector-title">
+                      {NODES[selectedLink.split("|")[0]].title} ⇄{" "}
+                      {NODES[selectedLink.split("|")[1]].title}
+                    </div>
+                    <div className="inspector-sub">Connection</div>
+                  </div>
+                  <button
+                    className="inspector-close"
+                    onClick={() => setSelectedLink(null)}
+                    title="Close inspector"
+                  >
+                    ✕
+                  </button>
+                </div>
+                {REMOVED_LINKS.has(selectedLink) && (
+                  <span className="inspector-badge danger">
+                    Removed — every step over this link is blocked
+                  </span>
+                )}
+                {strandedBy(selectedLink) > 0 && (
+                  <p className="inspector-impact">
+                    {REMOVED_LINKS.has(selectedLink)
+                      ? `Restoring it also brings back ${strandedBy(selectedLink)} later step${strandedBy(selectedLink) === 1 ? "" : "s"} that nothing currently reaches.`
+                      : `Cutting it also strands ${strandedBy(selectedLink)} later step${strandedBy(selectedLink) === 1 ? "" : "s"} — nothing downstream would reach them.`}
+                  </p>
+                )}
+                <div className="inspector-section">Carries</div>
+                <ul className="inspector-routes">
+                  {linkInfo(selectedLink).routes.map((r) => (
+                    <li key={r}>{r}</li>
+                  ))}
+                </ul>
+                <div className="inspector-section">
+                  Used in steps
+                  {REMOVED_LINKS.has(selectedLink) ? " (blocked)" : ""}
+                </div>
+                <div className="inspector-steps">
+                  {linkInfo(selectedLink).stepIdxs.map((i) => (
+                    <button
+                      key={i}
+                      className="inspector-step-chip"
+                      onClick={() => jumpTo(i)}
+                      title={STEPS[i].m}
+                    >
+                      {i + 1}
+                    </button>
+                  ))}
+                </div>
+                <button
+                  className={
+                    "inspector-action" +
+                    (REMOVED_LINKS.has(selectedLink) ? "" : " danger")
+                  }
+                  onClick={() => toggleLink(selectedLink)}
+                  title={
+                    REMOVED_LINKS.has(selectedLink)
+                      ? "Put this connection back"
+                      : "Cut this connection and see which steps stop working"
+                  }
+                >
+                  {REMOVED_LINKS.has(selectedLink)
+                    ? "↺ Restore connection"
+                    : "✂ Remove connection"}
+                </button>
+              </div>
+            )}
           {inspected && NODES[inspected] && (
             <div className="inspector">
               <div className="inspector-head">
@@ -1686,17 +1758,14 @@ export function AbapVaultDemoFlow() {
             ></i>{" "}
             external system
           </span>
+          <span>
+            <i className="dot" style={{ background: "#ef4444" }}></i> click a
+            link to remove it
+          </span>
         </div>
         <p>
-          One small bridge holds the whole system together:{" "}
-          <b>Power Automate makes a single authenticated HTTPS PUT</b> into the
-          repo's raw/inbox/ folder — the only link between the Microsoft 365
-          world and GitHub. The commit itself is the trigger: GitHub's own{" "}
-          <b>push event</b> starts the ingest workflow, and one{" "}
-          <b>API-key-secured call to Claude</b> does the librarian work. Humans
-          never touch the pipeline — they meet the wiki through 5-minute Git
-          sync (Obsidian) and plain-English questions (Claude Code).
-        </p>
+                One small bridge holds the whole system together: <b>Power Automate makes a single authenticated HTTPS PUT</b> into the repo's raw/inbox/ folder — the only link between the Microsoft 365 world and GitHub. The commit itself is the trigger: GitHub's own <b>push event</b> starts the ingest workflow, and one <b>API-key-secured call to Claude</b> does the librarian work. Humans never touch the pipeline — they meet the wiki by asking Claude Code plain-English questions with the <b>/abap-wiki skill</b>, which pulls the current vault from GitHub before every answer.
+              </p>
       </footer>
     </div>
   );
