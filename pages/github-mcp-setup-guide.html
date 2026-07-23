@@ -1,0 +1,948 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ask the Knowledge Vaults — Setup Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --paper: #f3f5f4;
+        --card: #fdfefd;
+        --ink: #1f2b28;
+        --muted: #5c6b67;
+        --teal: #0e6b5b;
+        --teal-soft: #e3eeeb;
+        --amber: #a9701f;
+        --amber-soft: #f4eadb;
+        --line: #c9d4d0;
+        --chip-bg: #e9eeec;
+        --code-bg: #eef2f0;
+        --shadow: 0 1px 3px rgba(31, 43, 40, 0.08);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --paper: #303446;
+          --card: #414559;
+          --ink: #c6d0f5;
+          --muted: #a5adce;
+          --teal: #81c8be;
+          --teal-soft: #51576d;
+          --amber: #e5c890;
+          --amber-soft: #292c3c;
+          --line: #51576d;
+          --chip-bg: #292c3c;
+          --code-bg: #292c3c;
+          --shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+        }
+      }
+      :root[data-theme="dark"] {
+        --paper: #303446;
+        --card: #414559;
+        --ink: #c6d0f5;
+        --muted: #a5adce;
+        --teal: #81c8be;
+        --teal-soft: #51576d;
+        --amber: #e5c890;
+        --amber-soft: #292c3c;
+        --line: #51576d;
+        --chip-bg: #292c3c;
+        --code-bg: #292c3c;
+        --shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+      }
+      :root[data-theme="light"] {
+        --paper: #f3f5f4;
+        --card: #fdfefd;
+        --ink: #1f2b28;
+        --muted: #5c6b67;
+        --teal: #0e6b5b;
+        --teal-soft: #e3eeeb;
+        --amber: #a9701f;
+        --amber-soft: #f4eadb;
+        --line: #c9d4d0;
+        --chip-bg: #e9eeec;
+        --code-bg: #eef2f0;
+        --shadow: 0 1px 3px rgba(31, 43, 40, 0.08);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        background: var(--paper);
+        color: var(--ink);
+        font-family: "Work Sans", "Segoe UI", system-ui, sans-serif;
+        line-height: 1.55;
+        margin: 0;
+        padding: 2.5rem 1.25rem 4rem;
+      }
+      main {
+        max-width: 64rem;
+        margin: 0 auto;
+      }
+      h1,
+      h2,
+      h3 {
+        font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
+        line-height: 1.2;
+      }
+      h1 {
+        font-size: 2rem;
+        font-weight: 800;
+        margin: 0 0 0.5rem;
+      }
+      h2 {
+        font-size: 1.35rem;
+        font-weight: 800;
+        color: var(--teal);
+        margin: 2.5rem 0 0.75rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--line);
+      }
+      h3 {
+        font-size: 1.05rem;
+        font-weight: 700;
+        margin: 1.5rem 0 0.5rem;
+      }
+      p {
+        margin: 0.75rem 0;
+      }
+      .lede {
+        font-size: 1.1rem;
+        color: var(--muted);
+        margin-bottom: 2rem;
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+        padding: 1.25rem 1.5rem;
+        margin: 1.25rem 0;
+      }
+      .callout {
+        background: var(--teal-soft);
+        border-left: 4px solid var(--teal);
+        border-radius: 8px;
+        padding: 0.9rem 1.2rem;
+        margin: 1.25rem 0;
+      }
+      .callout.amber {
+        background: var(--amber-soft);
+        border-left-color: var(--amber);
+      }
+      .callout p:first-child {
+        margin-top: 0;
+      }
+      .callout p:last-child {
+        margin-bottom: 0;
+      }
+      code {
+        font-family: "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+        font-size: 0.88em;
+        background: var(--code-bg);
+        border-radius: 4px;
+        padding: 0.1em 0.35em;
+      }
+      pre {
+        background: var(--code-bg);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 0.9rem 2.9rem 0.9rem 1.1rem;
+        overflow-x: auto;
+        margin: 0.9rem 0;
+        position: relative;
+      }
+      pre code {
+        background: none;
+        padding: 0;
+        font-size: 0.85rem;
+        line-height: 1.5;
+      }
+      .table-wrap {
+        overflow-x: auto;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0.9rem 0;
+        font-size: 0.95rem;
+        border: 1px solid var(--line);
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 0.6rem 0.9rem;
+        border: 1px solid var(--line);
+        vertical-align: top;
+      }
+      th {
+        font-family: "Nunito", sans-serif;
+        font-weight: 700;
+        background: var(--chip-bg);
+        white-space: nowrap;
+      }
+      td code {
+        white-space: nowrap;
+      }
+      .copy-btn {
+        position: absolute;
+        top: 0.55rem;
+        right: 0.55rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2rem;
+        height: 2rem;
+        padding: 0;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: var(--card);
+        color: var(--muted);
+        cursor: pointer;
+        transition:
+          color 0.15s,
+          border-color 0.15s;
+      }
+      .copy-btn:hover {
+        color: var(--teal);
+        border-color: var(--teal);
+      }
+      .copy-btn.copied {
+        color: var(--teal);
+        border-color: var(--teal);
+      }
+      .copy-btn svg {
+        width: 1rem;
+        height: 1rem;
+        pointer-events: none;
+      }
+      .theme-toggle {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        z-index: 10;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.5rem;
+        height: 2.5rem;
+        padding: 0;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: var(--card);
+        color: var(--ink);
+        cursor: pointer;
+        box-shadow: var(--shadow);
+        transition:
+          color 0.15s,
+          border-color 0.15s;
+      }
+      .theme-toggle:hover {
+        color: var(--teal);
+        border-color: var(--teal);
+      }
+      .theme-toggle svg {
+        width: 1.15rem;
+        height: 1.15rem;
+        pointer-events: none;
+      }
+      .theme-toggle .icon-sun,
+      .theme-toggle .icon-moon {
+        display: none;
+      }
+      html[data-theme="dark"] .theme-toggle .icon-sun {
+        display: block;
+      }
+      html[data-theme="light"] .theme-toggle .icon-moon {
+        display: block;
+      }
+      ol,
+      ul {
+        padding-left: 1.4rem;
+      }
+      li {
+        margin: 0.45rem 0;
+      }
+      .step-label {
+        display: inline-block;
+        font-family: "Nunito", sans-serif;
+        font-weight: 800;
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--teal);
+        background: var(--teal-soft);
+        border-radius: 999px;
+        padding: 0.15rem 0.7rem;
+        margin-bottom: 0.35rem;
+      }
+      .chip {
+        display: inline-block;
+        background: var(--chip-bg);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        font-size: 0.82rem;
+        padding: 0.12rem 0.65rem;
+        color: var(--muted);
+      }
+      blockquote {
+        border-left: 3px solid var(--amber);
+        margin: 0.9rem 0;
+        padding: 0.4rem 0 0.4rem 1rem;
+        color: var(--muted);
+        font-style: italic;
+      }
+      footer {
+        margin-top: 3rem;
+        padding-top: 1.25rem;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 0.85rem;
+      }
+      a {
+        color: var(--teal);
+      }
+    </style>
+  </head>
+  <body>
+    <button
+      class="theme-toggle"
+      type="button"
+      aria-label="Switch between light and dark mode"
+      title="Switch light / dark mode"
+    >
+      <svg
+        class="icon-sun"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <circle cx="12" cy="12" r="4" />
+        <path
+          d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
+        />
+      </svg>
+      <svg
+        class="icon-moon"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+      </svg>
+    </button>
+    <main>
+      <h1>Ask the Knowledge Vaults</h1>
+      <p class="lede">
+        Two ways to let your AI tool answer questions from the team knowledge
+        vaults. Both work in Claude&nbsp;Code, VS&nbsp;Code and Antigravity.
+      </p>
+
+      <div class="card">
+        <h3 style="margin-top: 0">Which one should I use?</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th></th>
+                <th>Option A — Vault skill</th>
+                <th>Option B — GitHub MCP server</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>GitHub account</strong></td>
+                <td>Not needed</td>
+                <td>Required</td>
+              </tr>
+              <tr>
+                <td><strong>Token / sign-in</strong></td>
+                <td>None</td>
+                <td>Personal Access Token or browser sign-in</td>
+              </tr>
+              <tr>
+                <td><strong>Setup</strong></td>
+                <td>Copy one folder</td>
+                <td>One config entry per tool</td>
+              </tr>
+              <tr>
+                <td><strong>How you ask</strong></td>
+                <td>Plain English — it knows the vault</td>
+                <td>Name the repo in every question</td>
+              </tr>
+              <tr>
+                <td><strong>Needs</strong></td>
+                <td>
+                  <code>git</code> installed (Mac, Linux and Windows all
+                  supported)
+                </td>
+                <td>Nothing installed</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="margin-bottom: 0">
+          <strong>Use Option A unless you can't.</strong> It is simpler for the
+          people asking questions and needs no GitHub access at all. Option B is
+          the fallback when <code>git</code> isn't available on the machine, or
+          your tool is too old to support skills.
+        </p>
+      </div>
+
+      <h2>Why we standardised on the skill</h2>
+      <p>
+        The deciding factor was <strong>authentication</strong>. GitHub's MCP
+        server makes every single person create a personal access token before
+        they can read anything — even though our vault repos are public. That is
+        a setup hurdle for non-technical users, and tokens to manage and rotate
+        indefinitely.
+      </p>
+      <p>
+        The skill needs none of that. It is one folder people drop in once, and
+        it pulls the latest vault straight from GitHub each time they ask. No
+        GitHub account, no token, no sign-in. It works in Claude&nbsp;Code,
+        VS&nbsp;Code and Antigravity, on Mac, Windows and Linux — the only
+        requirement is <code>git</code>.
+      </p>
+      <p>
+        It is also better day to day: people just ask in plain English, whereas
+        with MCP they have to name the repo and repeat the ground rules in every
+        question. MCP stays documented as a fallback for anyone who cannot
+        install <code>git</code>.
+      </p>
+
+      <h2>The vaults</h2>
+      <p>Each team has its own vault. Both options reach all of them:</p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Team</th>
+              <th>Vault repo</th>
+              <th>Skill</th>
+              <th>How you invoke it</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>ABAP</td>
+              <td><code>t-labs-buy/abap-wiki</code></td>
+              <td><code>abap-wiki</code></td>
+              <td><code>/abap-wiki {question}</code></td>
+            </tr>
+            <tr>
+              <td>Infor</td>
+              <td><code>t-labs-buy/infor-wiki</code></td>
+              <td><code>infor-wiki</code></td>
+              <td><code>/infor-wiki {question}</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        Install only the vault(s) you need, or both if you work across teams —
+        the AI picks the right one from your question, so the
+        <code>/</code> command is only needed when you want to be certain.
+        (Option B has no <code>/</code> command; you name the repo instead — see
+        "How to ask" below.)
+      </p>
+
+      <h2>Option A — The vault skill</h2>
+
+      <p>
+        A skill is a small folder that teaches your AI tool how to answer from
+        the vault. Because the vault repos are public, the skill keeps its own
+        copy on your machine and refreshes it from GitHub every time you ask —
+        so there is <strong>no token, no sign-in and no GitHub account</strong>,
+        and answers are fast because the pages are read locally.
+      </p>
+
+      <p><span class="step-label">Step 1</span> — Get the skill folder.</p>
+      <p>
+        The skill lives in the vault repo itself, at
+        <code>.claude/skills/abap-wiki/</code>. Download that folder from
+        GitHub, or ask the vault curator for it. It contains three files:
+      </p>
+      <pre><code>abap-wiki/
+├── SKILL.md
+└── scripts/
+    ├── sync-vault.sh      (macOS / Linux)
+    └── sync-vault.ps1     (Windows)</code></pre>
+      <p>
+        The only requirement on your machine is <strong>git</strong> — check
+        with <code>git --version</code>. If it's missing, install it from
+        <a href="https://git-scm.com/downloads">git-scm.com</a>. The skill picks
+        the right script for your operating system automatically.
+      </p>
+
+      <p>
+        <span class="step-label">Step 2</span> — Drop it in the right place for
+        your tool.
+      </p>
+      <p>
+        Each tool looks for skills in its own folder. Copy the whole
+        <code>abap-wiki</code> folder into the one that matches:
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Tool</th>
+              <th>Where the folder goes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Claude Code</strong></td>
+              <td><code>~/.claude/skills/abap-wiki/</code></td>
+            </tr>
+            <tr>
+              <td><strong>VS&nbsp;Code</strong> (Copilot)</td>
+              <td>
+                <code>~/.claude/skills/abap-wiki/</code> — the same folder.
+                VS&nbsp;Code reads it directly, so if you already use Claude
+                Code there is <strong>nothing more to do</strong>.
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Antigravity</strong></td>
+              <td><code>~/.gemini/config/skills/abap-wiki/</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        On Windows, <code>~</code> means <code>C:\Users\{your name}\</code> —
+        e.g. <code>C:\Users\{you}\.claude\skills\abap-wiki\</code>.
+      </p>
+      <p>Copy-paste versions:</p>
+      <pre><code># Claude Code and VS Code (same folder)
+mkdir -p ~/.claude/skills && cp -R abap-wiki ~/.claude/skills/
+
+# Antigravity
+mkdir -p ~/.gemini/config/skills && cp -R abap-wiki ~/.gemini/config/skills/</code></pre>
+      <p>Restart your tool so it picks the skill up.</p>
+
+      <div class="callout">
+        <p>
+          <strong>Working in a shared project?</strong> Instead of the personal
+          folders above you can commit the skill into the repository everyone
+          uses — <code>.github/skills/abap-wiki/</code> for VS&nbsp;Code, or
+          <code>.agents/skills/abap-wiki/</code> for Antigravity and
+          VS&nbsp;Code. Then teammates get it automatically with a
+          <code>git pull</code>.
+        </p>
+      </div>
+
+      <p><span class="step-label">Step 3</span> — Ask.</p>
+      <p>
+        Just ask in plain English. The AI recognises vault questions and uses
+        the skill by itself:
+      </p>
+      <blockquote>
+        "What did we decide about the credit auto-release job?"<br />
+        "Which custom objects exist in the OTC workstream?"<br />
+        "What's still open on integrations, and who owns it?"
+      </blockquote>
+      <p>
+        If you want to be certain it uses the vault, name the skill:
+        <code>use the abap-wiki skill — {your question}</code>. In Claude Code
+        you can also type <code>/abap-wiki {your question}</code>.
+      </p>
+
+      <div class="callout">
+        <p>
+          <strong>What happens under the hood:</strong> the skill pulls the
+          latest vault from GitHub (a few seconds the first time, instant after
+          that), reads <code>meta/index.md</code> to orient itself, translates
+          your wording to the vault's canonical names (so "Order-to-Cash" finds
+          <code>OTC</code>), opens the relevant pages, and answers with
+          citations — never from the <code>raw/</code> folder, and never
+          guessing when the vault is silent. Offline, it answers from the last
+          synced copy and says so.
+        </p>
+      </div>
+
+      <h2>Option B — GitHub MCP server</h2>
+
+      <p>
+        This route gives your AI tool a phone line to GitHub's official
+        <a href="https://github.com/github/github-mcp-server"
+          >github-mcp-server</a
+        >, which reads the repos live. There is nothing to install, but it needs
+        a GitHub account, and you must name the repo in every question.
+      </p>
+
+      <div class="card">
+        <h3 style="margin-top: 0">Before you start</h3>
+        <ul style="margin-bottom: 0">
+          <li>
+            The service already runs at
+            <code>https://api.githubcopilot.com/mcp/</code>. You only tell your
+            tool that it exists and prove who you are.
+          </li>
+          <li>
+            The vaults are <strong>public</strong>, so any GitHub account works
+            — including a brand-new free one (<a
+              href="https://github.com/signup"
+              >github.com/signup</a
+            >). No invitation or org membership needed.
+          </li>
+          <li>
+            Despite "copilot" in the address, you do <strong>not</strong> need a
+            Copilot subscription.
+          </li>
+        </ul>
+      </div>
+
+      <h3>Claude Code</h3>
+      <div class="callout amber">
+        <p>
+          <strong>Heads-up:</strong> the browser sign-in does <em>not</em> work
+          in Claude Code — it fails with "Incompatible auth server: does not
+          support dynamic client registration". Use the token method below; it
+          is the officially documented path.
+        </p>
+      </div>
+      <p>
+        <strong>1. Create a token.</strong> On github.com: profile picture
+        &rarr; <strong>Settings</strong> &rarr;
+        <strong>Developer settings</strong> &rarr;
+        <strong>Personal access tokens</strong> &rarr;
+        <strong>Fine-grained tokens</strong> &rarr;
+        <strong>Generate new token</strong>. Name it, and under
+        <strong>Repository access</strong> choose
+        <strong>Public repositories</strong>. Because the vaults are public it
+        needs <em>no</em> extra permissions. Copy the token — it is shown once.
+        Treat it like a password.
+      </p>
+      <p>
+        <strong>2. Add the server</strong>, pasting your token in place of
+        <code>YOUR_TOKEN_HERE</code>:
+      </p>
+      <pre><code>claude mcp add-json -s user github '{"type":"http","url":"https://api.githubcopilot.com/mcp/","headers":{"Authorization":"Bearer YOUR_TOKEN_HERE"}}'</code></pre>
+      <p>
+        (<code>-s user</code> makes it work in every session.) Verify with
+        <code>claude mcp list</code>.
+      </p>
+      <div class="callout">
+        <p>
+          <strong>Optional:</strong> add
+          <code>"X-MCP-Readonly":"true"</code> and
+          <code>"X-MCP-Toolsets":"context,repos"</code> to the headers. The
+          connection becomes read-only and drops from 44 tools to 16. Skip it if
+          you also use this connection for issues and pull requests.
+        </p>
+      </div>
+
+      <h3>VS Code (Copilot)</h3>
+      <p>
+        Command Palette (<code>Cmd/Ctrl+Shift+P</code>) &rarr;
+        <strong>"MCP: Add Server"</strong> &rarr; choose
+        <strong>HTTP</strong> &rarr; address
+        <code>https://api.githubcopilot.com/mcp/</code> &rarr; name it
+        <code>github</code>. Sign in with any GitHub account when the browser
+        opens — no token needed here.
+      </p>
+      <p>
+        If your version lacks that command, run
+        <strong>"MCP: Open User Configuration"</strong> and paste:
+      </p>
+      <pre><code>{
+  "servers": {
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/"
+    }
+  }
+}</code></pre>
+
+      <h3>Antigravity</h3>
+      <p>
+        Settings &rarr; <strong>MCP Servers &rarr; Manage/Add</strong>. If it
+        asks for JSON:
+      </p>
+      <pre><code>{
+  "mcpServers": {
+    "github": {
+      "serverUrl": "https://api.githubcopilot.com/mcp/"
+    }
+  }
+}</code></pre>
+      <p>
+        If it offers no browser sign-in, create the same token as in the Claude
+        Code section and add it:
+      </p>
+      <pre><code>{
+  "mcpServers": {
+    "github": {
+      "serverUrl": "https://api.githubcopilot.com/mcp/",
+      "headers": { "Authorization": "Bearer YOUR_TOKEN_HERE" }
+    }
+  }
+}</code></pre>
+
+      <h3>How to ask (Option B only)</h3>
+      <p>
+        The AI doesn't know which repo you mean, so every question must carry
+        the repo name and the ground rules:
+      </p>
+      <blockquote>
+        "Using the github tools, first read <code>meta/index.md</code> from
+        <code>t-labs-buy/abap-wiki</code>, then answer from the vault pages
+        (never from the <code>raw/</code> folder) and cite which page you used:
+        <strong>{your question}</strong>"
+      </blockquote>
+      <p>
+        Save that sentence somewhere reusable — a prompt file at
+        <code>.github/prompts/abap-wiki.prompt.md</code> in VS&nbsp;Code, or
+        just a note you paste from. Swap in your team's repo from the vaults
+        table.
+      </p>
+
+      <h2>Example — the same question, three ways</h2>
+
+      <p>
+        Take a real question:
+        <em>"What are the alternative ways to declare a work area in ABAP?"</em>
+        Here is what you actually type in each setup.
+      </p>
+
+      <h3>1. ABAP vault skill (Option A)</h3>
+      <p>Ask it plainly — nothing else needed:</p>
+      <pre><code>What are the alternative ways to declare a work area in ABAP?</code></pre>
+      <p>
+        Claude recognises this as a vault question and runs the skill on its
+        own. To be explicit, name it instead:
+      </p>
+      <pre><code>/abap-wiki What are the alternative ways to declare a work area in ABAP?</code></pre>
+
+      <h3>2. Infor vault skill (Option A, second vault)</h3>
+      <p>
+        Same pattern, different vault — you only change the command. If you have
+        both skills installed, this is how you force the Infor one:
+      </p>
+      <pre><code>/infor-wiki What are the alternative ways to declare a work area in ABAP?</code></pre>
+      <div class="callout amber">
+        <p>
+          This particular question belongs to the ABAP vault, so the Infor vault
+          will correctly answer
+          <em>"the vault doesn't have this yet"</em> rather than inventing
+          something. That is the guardrail working — each skill only answers
+          from its own vault. Normally you don't pick at all: just ask, and the
+          right vault answers.
+        </p>
+      </div>
+
+      <h3>3. GitHub MCP server (Option B)</h3>
+      <p>
+        No skill is involved, so the question has to carry the repo and the
+        rules every time:
+      </p>
+      <pre><code>Using the github tools, first read meta/index.md from t-labs-buy/abap-wiki,
+then answer from the vault pages (never from the raw/ folder) and cite which
+page you used: What are the alternative ways to declare a work area in ABAP?</code></pre>
+
+      <div class="callout">
+        <p>
+          <strong>What a good answer looks like.</strong> For this question the
+          vault holds the team's <em>rules</em> about work areas — the
+          <code>LS_</code> / <code>GS_</code> naming prefixes, "use field
+          symbols rather than work areas", "CLEAR the work area at the end of
+          each LOOP pass", "internal tables with header line are not allowed" —
+          cited from
+          <em>Standard&nbsp;-&nbsp;ABAP&nbsp;Naming&nbsp;Conventions</em> and
+          <em>Standard&nbsp;-&nbsp;ABAP&nbsp;Performance&nbsp;Guidelines</em>.
+          It is not an ABAP language tutorial, so it should say the plain-syntax
+          alternatives aren't recorded rather than filling the gap from general
+          knowledge. An answer with no page citation means the tool skipped the
+          vault — ask again.
+        </p>
+      </div>
+
+      <h2>Troubleshooting</h2>
+      <div class="card">
+        <p style="margin-top: 0; margin-bottom: 0.35rem">
+          <strong>Option A — skill</strong>
+        </p>
+        <ul style="margin: 0">
+          <li>
+            <strong>The AI ignores the skill</strong> — check the folder is in
+            the exact location for your tool (table above) and that
+            <code>SKILL.md</code> sits directly inside it, then restart the
+            tool. Force it with "use the abap-wiki skill".
+          </li>
+          <li>
+            <strong>VS&nbsp;Code doesn't see it</strong> — update VS&nbsp;Code.
+            Skill support arrived in recent versions; older builds ignore the
+            folder entirely.
+          </li>
+          <li>
+            <strong>"could not clone"</strong> — you're offline, or
+            <code>git</code> isn't installed. Check with
+            <code>git --version</code>.
+          </li>
+          <li>
+            <strong
+              >Windows: "running scripts is disabled on this system"</strong
+            >
+            — PowerShell blocked the script. It is meant to be run as
+            <code
+              >powershell -ExecutionPolicy Bypass -File …\sync-vault.ps1</code
+            >, which the skill does automatically; if you ran it by hand, add
+            that flag. Nothing needs to be changed permanently.
+          </li>
+          <li>
+            <strong>Answers look out of date</strong> — the skill reports
+            <code>offline (using cached copy)</code> when it can't reach GitHub.
+            Reconnect and ask again; it re-syncs on every question.
+          </li>
+          <li>
+            <strong>The local copy got into a bad state</strong> — nothing to
+            do. The skill detects a corrupted copy and rebuilds it
+            automatically, reporting <code>repaired</code>.
+          </li>
+        </ul>
+        <p style="margin-bottom: 0.35rem">
+          <strong>Option B — MCP server</strong>
+        </p>
+        <ul style="margin: 0">
+          <li>
+            <strong
+              >"Incompatible auth server: does not support dynamic client
+              registration"</strong
+            >
+            — you tried browser sign-in in Claude Code. Use the token method.
+          </li>
+          <li>
+            <strong>Your fine-grained token is rejected</strong> — create a
+            <em>classic</em> token instead (Settings &rarr; Developer settings
+            &rarr; Tokens (classic)) with the <code>public_repo</code> scope.
+          </li>
+          <li>
+            <strong>"Repository not found"</strong> — the repo name is
+            misspelled. Check the vaults table.
+          </li>
+          <li>
+            <strong>The AI answers from memory</strong> — it skipped the tools.
+            Ask again and say "using the github tools".
+          </li>
+        </ul>
+        <p style="margin-bottom: 0.35rem"><strong>Either option</strong></p>
+        <ul style="margin: 0">
+          <li>
+            <strong>The AI quotes raw meeting transcripts</strong> — remind it:
+            answer only from the synthesized vault pages, never from the
+            <code>raw/</code> folder.
+          </li>
+        </ul>
+      </div>
+
+      <footer>
+        <span class="chip">Knowledge Vaults</span>
+        &nbsp;Option A uses the open
+        <a href="https://agentskills.io">Agent Skills</a> format and syncs the
+        public vault repos with <code>git</code>. Option B uses GitHub's
+        official
+        <a href="https://github.com/github/github-mcp-server"
+          >github-mcp-server</a
+        >. &middot; July 2026
+      </footer>
+    </main>
+
+    <script>
+      (function () {
+        var root = document.documentElement;
+
+        function systemTheme() {
+          return window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light";
+        }
+
+        var saved = null;
+        try {
+          saved = localStorage.getItem("abap-guide-theme");
+        } catch (e) {}
+        root.dataset.theme = saved || systemTheme();
+
+        document
+          .querySelector(".theme-toggle")
+          .addEventListener("click", function () {
+            var next = root.dataset.theme === "dark" ? "light" : "dark";
+            root.dataset.theme = next;
+            try {
+              localStorage.setItem("abap-guide-theme", next);
+            } catch (e) {}
+          });
+
+        var copyIcon =
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+        var checkIcon =
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+
+        document.querySelectorAll("pre").forEach(function (pre) {
+          var btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "copy-btn";
+          btn.setAttribute("aria-label", "Copy code to clipboard");
+          btn.title = "Copy";
+          btn.innerHTML = copyIcon;
+
+          btn.addEventListener("click", function () {
+            var text = (pre.querySelector("code") || pre).innerText;
+            var done = function () {
+              btn.innerHTML = checkIcon;
+              btn.classList.add("copied");
+              btn.title = "Copied!";
+              setTimeout(function () {
+                btn.innerHTML = copyIcon;
+                btn.classList.remove("copied");
+                btn.title = "Copy";
+              }, 1600);
+            };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              navigator.clipboard.writeText(text).then(done, function () {
+                fallbackCopy(text, done);
+              });
+            } else {
+              fallbackCopy(text, done);
+            }
+          });
+
+          pre.appendChild(btn);
+        });
+
+        function fallbackCopy(text, done) {
+          var ta = document.createElement("textarea");
+          ta.value = text;
+          ta.style.position = "fixed";
+          ta.style.opacity = "0";
+          document.body.appendChild(ta);
+          ta.select();
+          try {
+            document.execCommand("copy");
+            done();
+          } catch (e) {}
+          document.body.removeChild(ta);
+        }
+      })();
+    </script>
+  </body>
+</html>

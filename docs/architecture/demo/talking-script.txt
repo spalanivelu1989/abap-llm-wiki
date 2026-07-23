@@ -12,19 +12,26 @@ There's a mail slot where you drop documents, a bell that rings when new mail ar
 The only thing a human ever has to do is drop a document into the mail slot. Everything else happens automatically. And in the end, anyone can ask the library a question in plain English and get an answer with the sources attached.
 
 So here's the only human step in the entire pipeline.
+
+
 A team member drops a document into a shared OneDrive folder. That's our mail slot. It could be meeting notes, a Word document, a PDF, a slide deck, or even a transcript.
 
-Within about a minute, a small Microsoft service called Power Automate notices the new file. Think of it as a messenger watching the mailbox. As soon as something arrives, it picks up the document and carries it from the Microsoft world into GitHub.
+Within about a minute, a small Microsoft service called Power Automate notices the new file. Think of it as a messenger watching the mailbox. 
+As soon as something arrives, it picks up the document and carries it from the Microsoft world into GitHub.
 
 GitHub is our vault—the wiki's permanent home—where every change is versioned and remembered.
-Before it finishes, the messenger moves the original uploaded file into a Sent folder in OneDrive. That keeps the inbox clean and guarantees the same document is never processed twice.
+Before it finishes, the messenger moves the original uploaded file into a Sent folder in OneDrive. 
+That keeps the inbox clean and guarantees the same document is never processed twice.
 
 The moment the file reaches GitHub, the alarm bell rings.
-GitHub detects the change, spins up a fresh cloud machine, checks out a copy of the wiki, and runs our librarian—a Python script.
-That machine exists for only a few minutes. It does its work and then disappears. There's no server for us to manage. The Python script opens the document and extracts its text.
+GitHub detects the change, spins up a fresh cloud machine, checks out a copy of the wiki, and runs our librarian — a Python script.
+The Python script opens the document and extracts its text.
 
 Before we hand anything to the AI, though, we give it a rulebook.
-Inside the wiki is a file we call the Constitution. It tells the AI exactly how the wiki should be organized—which pages exist, how they're named, how they link together, and what counts as knowledge worth keeping.
+Inside the wiki is a file we call the Constitution. 
+
+It tells the AI exactly how the wiki should be organized—which pages exist, how they're named, how they link together, and what counts as knowledge worth keeping.
+
 We then send Claude three things:
 	•	the Constitution,
 	•	a map of the existing wiki,
@@ -35,9 +42,9 @@ Finally, everything is committed back to GitHub, and you can actually watch the 
 
 So how does the team see all of this?
 Every team member keeps a local copy of the wiki on their laptop. It quietly checks GitHub for updates every five minutes.
-Most people browse the wiki using a free application called Obsidian—our reading room.
-Pages link together just like Wikipedia, search is instant, and there's even a visual graph showing how all the knowledge connects. As soon as the latest changes are pulled, the new decision page appears automatically for everyone.
-And if someone doesn't want to use Obsidian, they can read exactly the same pages directly in GitHub from their browser.
+Most people browse the wiki using a free application called Obsidian — our reading room.
+Pages link together just like Wikipedia, search is instant, and there's even a visual graph showing how all the knowledge connects. 
+As soon as the latest changes are pulled, the new decision page appears automatically for everyone.
 
 Now let's fast-forward a few weeks.
 Someone who never attended that workshop wants to know:
@@ -45,15 +52,8 @@ Someone who never attended that workshop wants to know:
 Instead of searching through folders or interrupting a teammate, they simply ask the wiki in plain English using Claude Code.
 The assistant doesn't guess, and it doesn't search the internet.
 It reads the actual wiki pages stored on that person's machine, and every answer has to include citations that point back to the exact pages it used.
-Here's the result:
-"The custom BAPI wrapper approach was approved on July 15."
-And right below the answer is a link to the decision page—which itself links back to the original meeting where that decision was made.
+
 
 So that's the complete loop we just watched.
 A document dropped into a mail slot became organized, linked knowledge. And weeks later, that same knowledge became a fully sourced answer to a question.
-The total human effort?
-Just two moments: dropping the file into the folder, and spending a couple of minutes reviewing the AI's changes.
-There are three things I'd like you to take away from this.
-First, sharing knowledge becomes as easy as saving a file, which is what makes the process sustainable.
-Second, every AI-generated change is tracked, reviewable, and fully citable. It's AI with a paper trail, not a black box.
-And finally, the architecture stays intentionally simple. It's built from standard services, one Python script, and one rulebook. If we ever want to replace any part of it, it's a small swap—not a complete rebuild.
+
