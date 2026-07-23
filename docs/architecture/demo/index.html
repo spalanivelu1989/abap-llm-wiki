@@ -28,6 +28,13 @@
         background: #05070c;
         display: flex;
         justify-content: center;
+        transition: background 0.25s;
+      }
+      /* The demo defaults to light, so the page around it follows suit —
+         otherwise a light card sits in a near-black frame. Toggled from the
+         theme state; the TSX twin deliberately leaves its host page alone. */
+      body.light-page {
+        background: #eef1f6;
       }
       #root {
         width: 100%;
@@ -1227,12 +1234,12 @@
       const SUBTITLE = "One meeting transcript travels from a OneDrive drop to a cited answer in Claude Code.";
 
       // Dragged node positions persist per demo (keyed by TITLE) so a
-      // decluttered layout survives reloads. Storage can be unavailable or
-      // stale (private mode, cleared NODES entries), so everything is
-      // best-effort: failures fall back to the authored layout.
+      // decluttered layout survives reloads — but only once the viewer
+      // commits them with the 💾 Save layout button, so a reload always
+      // returns to the last saved (or authored) arrangement. Storage can be
+      // unavailable or stale (private mode, cleared NODES entries), so
+      // everything is best-effort: failures fall back to the authored layout.
       const LAYOUT_KEY = 'archflow-layout:' + TITLE;
-      const DEFAULT_POS = {};
-      Object.keys(NODES).forEach((id) => { DEFAULT_POS[id] = { x: NODES[id].x, y: NODES[id].y }; });
       (function loadLayout() {
         try {
           const saved = JSON.parse(localStorage.getItem(LAYOUT_KEY)) || {};
@@ -1347,7 +1354,7 @@
       function invalidateStatuses() { STATUS_CACHE = null; }
 
       function ArchFlowDemo() {
-        const [theme, setTheme] = useState('dark');
+        const [theme, setTheme] = useState('light');
         const [speed, setSpeed] = useState(0.5);
         const [isPlaying, setIsPlaying] = useState(false);
         const [phaseText, setPhaseText] = useState('Ready');
@@ -1374,8 +1381,10 @@
         // True while a ⏭ Step single-step animation runs — jumpTo must not
         // fire then (DOM log-item listeners bypass the disabled-button guards).
         const ffRef = useRef(false);
-        // Set by the mount effect; restores the authored node layout.
-        const resetLayoutRef = useRef(null);
+        // Node cards have been dragged since the last save (enables 💾 Save
+        // layout); flips to a "Saved" confirmation for a moment after saving.
+        const [layoutDirty, setLayoutDirty] = useState(false);
+        const [layoutSaved, setLayoutSaved] = useState(false);
 
         const [isFullscreen, setIsFullscreen] = useState(false);
         const containerRef = useRef(null);
@@ -1395,6 +1404,10 @@
           document.addEventListener('fullscreenchange', handleFullscreenChange);
           return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
         }, []);
+
+        useEffect(() => {
+          document.body.classList.toggle('light-page', theme === 'light');
+        }, [theme]);
 
         useEffect(() => {
           Object.keys(nodeElsRef.current).forEach((id) =>
@@ -1613,7 +1626,11 @@
               if (dragState.id !== id) return;
               dragState.id = null;
               g.classList.remove('dragging');
-              if (dragState.suppressClick) saveLayout();
+              // Dragging is deliberately NOT persisted here — the 💾 Save
+              // layout button is what commits it, so a viewer can shove
+              // cards around to read a busy diagram and reload to get the
+              // saved layout back.
+              if (dragState.suppressClick) setLayoutDirty(true);
             };
             g.addEventListener('pointerup', endDrag);
             g.addEventListener('pointercancel', endDrag);
@@ -1621,19 +1638,6 @@
             nodeEls[id] = g;
           });
           nodeElsRef.current = nodeEls;
-
-          // ⇱ Layout button: forget the saved layout and glide every node
-          // back to its authored position (links re-route along the way).
-          resetLayoutRef.current = () => {
-            try { localStorage.removeItem(LAYOUT_KEY); } catch (e) {}
-            Object.keys(NODES).forEach((id) => {
-              NODES[id].x = DEFAULT_POS[id].x;
-              NODES[id].y = DEFAULT_POS[id].y;
-              nodeEls[id].style.setProperty('--drag-x', (NODES[id].x - basePos[id].x) + 'px');
-              nodeEls[id].style.setProperty('--drag-y', (NODES[id].y - basePos[id].y) + 'px');
-              refreshEdgesFor(id);
-            });
-          };
 
           stageRef.current.appendChild(pulse);
 
@@ -2320,7 +2324,18 @@
               <button onClick={() => jumpTo(idxRef.current - 1)} disabled={isPlaying || isDoneDisabled || progress < 0} title="Back one step">⏮ Back</button>
               <button onClick={handleStep} disabled={isPlaying || isDoneDisabled}>⏭ Step</button>
               <button onClick={() => resetAnimation(true)} disabled={isDoneDisabled}>↻ Restart</button>
-              <button onClick={() => resetLayoutRef.current && resetLayoutRef.current()} title="Move all nodes back to their original positions">⇱ Layout</button>
+              <button
+                onClick={() => {
+                  saveLayout();
+                  setLayoutDirty(false);
+                  setLayoutSaved(true);
+                  setTimeout(() => setLayoutSaved(false), 1600);
+                }}
+                disabled={!layoutDirty}
+                title="Remember where you dragged the cards, so this layout comes back on reload"
+              >
+                {layoutSaved ? '✓ Saved' : '💾 Save layout'}
+              </button>
               <button onClick={restoreAllLinks} disabled={REMOVED_LINKS.size === 0} title="Reconnect every link you removed (click a link on the diagram to remove one)">
                 ⛓ Links{REMOVED_LINKS.size > 0 ? ` (${REMOVED_LINKS.size})` : ''}
               </button>

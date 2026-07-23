@@ -190,14 +190,12 @@ const SUBTITLE = "One meeting transcript travels from a OneDrive drop to a cited
 // ============================================================================
 
 // Dragged node positions persist per demo (keyed by TITLE) so a decluttered
-// layout survives reloads. Storage can be unavailable or stale (private mode,
+// layout survives reloads — but only once the viewer commits them with the
+// 💾 Save layout button, so a reload always returns to the last saved (or
+// authored) arrangement. Storage can be unavailable or stale (private mode,
 // cleared NODES entries), so everything is best-effort: failures fall back to
 // the authored layout.
 const LAYOUT_KEY = "archflow-layout:" + TITLE;
-const DEFAULT_POS = {};
-Object.keys(NODES).forEach((id) => {
-  DEFAULT_POS[id] = { x: NODES[id].x, y: NODES[id].y };
-});
 (function loadLayout() {
   try {
     const saved = JSON.parse(localStorage.getItem(LAYOUT_KEY)) || {};
@@ -326,7 +324,7 @@ function invalidateStatuses() {
 }
 
 export function AbapVaultDemoFlow() {
-  const [theme, setTheme] = useState("dark");
+  const [theme, setTheme] = useState("light");
   const [speed, setSpeed] = useState(0.5);
   const [isPlaying, setIsPlaying] = useState(false);
   const [phaseText, setPhaseText] = useState("Ready");
@@ -353,8 +351,10 @@ export function AbapVaultDemoFlow() {
   // True while a ⏭ Step single-step animation runs — jumpTo must not fire
   // then (DOM log-item listeners bypass the disabled-button guards).
   const ffRef = useRef(false);
-  // Set by the mount effect; restores the authored node layout.
-  const resetLayoutRef = useRef(null);
+  // Node cards have been dragged since the last save (enables 💾 Save
+  // layout); flips to a "Saved" confirmation for a moment after saving.
+  const [layoutDirty, setLayoutDirty] = useState(false);
+  const [layoutSaved, setLayoutSaved] = useState(false);
 
   const [isFullscreen, setIsFullscreen] = useState(false);
   const containerRef = useRef(null);
@@ -686,7 +686,10 @@ export function AbapVaultDemoFlow() {
         if (dragState.id !== id) return;
         dragState.id = null;
         g.classList.remove("dragging");
-        if (dragState.suppressClick) saveLayout();
+        // Dragging is deliberately NOT persisted here — the 💾 Save layout
+        // button is what commits it, so a viewer can shove cards around to
+        // read a busy diagram and reload to get the saved layout back.
+        if (dragState.suppressClick) setLayoutDirty(true);
       };
       g.addEventListener("pointerup", endDrag);
       g.addEventListener("pointercancel", endDrag);
@@ -694,27 +697,6 @@ export function AbapVaultDemoFlow() {
       nodeEls[id] = g;
     });
     nodeElsRef.current = nodeEls;
-
-    // ⇱ Layout button: forget the saved layout and glide every node back to
-    // its authored position (links re-route along the way).
-    resetLayoutRef.current = () => {
-      try {
-        localStorage.removeItem(LAYOUT_KEY);
-      } catch (e) {}
-      Object.keys(NODES).forEach((id) => {
-        NODES[id].x = DEFAULT_POS[id].x;
-        NODES[id].y = DEFAULT_POS[id].y;
-        nodeEls[id].style.setProperty(
-          "--drag-x",
-          NODES[id].x - basePos[id].x + "px",
-        );
-        nodeEls[id].style.setProperty(
-          "--drag-y",
-          NODES[id].y - basePos[id].y + "px",
-        );
-        refreshEdgesFor(id);
-      });
-    };
 
     stageRef.current.appendChild(pulse);
 
@@ -1531,10 +1513,16 @@ export function AbapVaultDemoFlow() {
           ↻ Restart
         </button>
         <button
-          onClick={() => resetLayoutRef.current && resetLayoutRef.current()}
-          title="Move all nodes back to their original positions"
+          onClick={() => {
+            saveLayout();
+            setLayoutDirty(false);
+            setLayoutSaved(true);
+            setTimeout(() => setLayoutSaved(false), 1600);
+          }}
+          disabled={!layoutDirty}
+          title="Remember where you dragged the cards, so this layout comes back on reload"
         >
-          ⇱ Layout
+          {layoutSaved ? "✓ Saved" : "💾 Save layout"}
         </button>
         <button
           onClick={restoreAllLinks}
