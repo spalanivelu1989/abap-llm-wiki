@@ -506,6 +506,12 @@
         color: var(--code-ink);
         overflow-wrap: anywhere;
       }
+      .skill-invoke {
+        color: var(--accent);
+        background: var(--accent-soft);
+        border-color: var(--accent);
+        font-weight: 600;
+      }
 
       .tablewrap {
         overflow-x: auto;
@@ -2770,7 +2776,17 @@ decodeBase64(triggerOutputs()?['headers']?['x-ms-file-name-encoded'])</pre>
             </div>
             <p>
               For team members with Claude Code access, the vault becomes
-              something you can talk to.
+              something you can talk to — not by manually cloning it and
+              launching Claude Code from inside the folder, but through a
+              packaged <a href="https://agentskills.io">Agent Skill</a> called
+              <code>abap-wiki</code>. It ships inside the
+              <a href="https://github.com/t-labs-buy/abap-wiki"
+                ><code>abap-wiki</code></a
+              >
+              repo itself, at <code>.claude/skills/abap-wiki/</code>, and once
+              installed it works from <em>any</em> folder — it keeps its own
+              synced copy of the vault and refreshes it from GitHub every time
+              you ask a question.
             </p>
             <ol class="steps">
               <li>
@@ -2783,24 +2799,43 @@ decodeBase64(triggerOutputs()?['headers']?['x-ms-file-name-encoded'])</pre>
                 <code>npm install -g @anthropic-ai/claude-code</code>.
               </li>
               <li>
-                Always launch it <em>inside</em> the vault folder — it only
-                reads the folder it starts in:
+                Install the <code>abap-wiki</code> skill once, so it works
+                everywhere afterward:
                 <pre>
-cd ~/abap-wiki
-claude</pre>
+mkdir -p ~/.claude/skills
+git clone https://github.com/t-labs-buy/abap-wiki.git /tmp/abap-wiki
+cp -R /tmp/abap-wiki/.claude/skills/abap-wiki ~/.claude/skills/</pre>
+                Already cloned the vault for Obsidian in Phase 4? Skip the
+                temporary clone and copy the skill folder straight out of it
+                instead:
+                <code
+                  >cp -R ~/abap-wiki/.claude/skills/abap-wiki
+                  ~/.claude/skills/</code
+                >. Restart Claude Code if it was already running.
               </li>
               <li>
-                Try: <em>"What zones exist in this vault?"</em>, then something
-                real:
+                Launch <code>claude</code> from anywhere — there's no need to
+                <code>cd</code> into the vault folder any more. Try:
+                <em>"What zones exist in this vault?"</em>, then something real:
                 <em>"Summarize every open decision in the OTC workstream."</em>
+                Claude recognizes vault questions on its own; to force it, say
+                <em>"use the abap-wiki skill"</em> or invoke it explicitly with
+                <code class="skill-invoke">/abap-wiki</code> followed by your
+                question, for example:
+                <pre><span class="skill-invoke">/abap-wiki</span> What did we decide about the credit auto-release job?</pre>
               </li>
             </ol>
             <p>
-              Because <code>CLAUDE.md</code> sits at the vault root, Claude Code
-              automatically reads your constitution on launch — so it answers
-              from synthesized wiki pages (citing them), refuses to treat raw
-              inbox files as truth, and can even write new knowledge back into
-              the vault following your own rules.
+              The skill's instructions (<code>SKILL.md</code>) are what make
+              this reliable: on every question it re-syncs the local copy first,
+              reads <code>meta/index.md</code> to orient, answers only from the
+              synthesized pages in <code>01-standards/</code>,
+              <code>02-workstreams/</code>, <code>03-intelligence/</code> and
+              <code>04-internal/</code> — never from <code>raw/</code> — and
+              cites the page it drew on. It is deliberately
+              <strong>read-only</strong>: it never writes to the vault. New
+              knowledge only enters through the OneDrive drop-zone and ingest
+              pipeline from Phases 5–6.
             </p>
             <div class="qa">
               <p class="q">
@@ -2809,9 +2844,9 @@ claude</pre>
               </p>
               <p>
                 In the <strong>Claude Code terminal</strong> — that's where
-                Query Mode (defined in <code>CLAUDE.md</code>) runs. Obsidian
-                has no AI answering questions; it's the reading and browsing
-                layer. The two complement each other.
+                Query Mode (defined in the <code>abap-wiki</code> skill) runs.
+                Obsidian has no AI answering questions; it's the reading and
+                browsing layer. The two complement each other.
               </p>
               <p>
                 Just ask in plain language, like "ABAP naming conventions". Per
