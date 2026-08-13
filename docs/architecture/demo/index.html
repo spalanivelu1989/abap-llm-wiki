@@ -1239,10 +1239,22 @@
       // returns to the last saved (or authored) arrangement. Storage can be
       // unavailable or stale (private mode, cleared NODES entries), so
       // everything is best-effort: failures fall back to the authored layout.
+      // localStorage is per browser profile, so a layout saved in one Chrome
+      // profile is invisible in another — the same file opened from a
+      // different profile window shows that profile's older layout instead.
+      // The durable arrangement is the one baked into NODES above: ⬇ Export
+      // layout downloads the current coordinates so they can be written into
+      // this file as the authored default. LAYOUT_STAMP is bumped whenever
+      // that happens, which retires every previously saved layout in every
+      // profile — otherwise a stale localStorage entry would keep overriding
+      // the freshly baked one.
+      const LAYOUT_STAMP = "v1";
       const LAYOUT_KEY = 'archflow-layout:' + TITLE;
       (function loadLayout() {
         try {
-          const saved = JSON.parse(localStorage.getItem(LAYOUT_KEY)) || {};
+          const data = JSON.parse(localStorage.getItem(LAYOUT_KEY)) || {};
+          if (data.stamp !== LAYOUT_STAMP) return; // baked layout supersedes it
+          const saved = data.pos || {};
           Object.keys(saved).forEach((id) => {
             if (NODES[id] && typeof saved[id].x === 'number' && typeof saved[id].y === 'number') {
               NODES[id].x = Math.max(4, Math.min(STAGE_W - NW - 4, saved[id].x));
@@ -1251,12 +1263,31 @@
           });
         } catch (e) { /* keep authored layout */ }
       })();
+      function currentLayout() {
+        const pos = {};
+        Object.keys(NODES).forEach((id) => {
+          pos[id] = { x: Math.round(NODES[id].x), y: Math.round(NODES[id].y) };
+        });
+        return pos;
+      }
       function saveLayout() {
         try {
-          const pos = {};
-          Object.keys(NODES).forEach((id) => { pos[id] = { x: NODES[id].x, y: NODES[id].y }; });
-          localStorage.setItem(LAYOUT_KEY, JSON.stringify(pos));
+          localStorage.setItem(LAYOUT_KEY, JSON.stringify({ stamp: LAYOUT_STAMP, pos: currentLayout() }));
         } catch (e) { /* storage unavailable — layout just won't persist */ }
+      }
+      // Hand the arrangement back as a file, so it can be baked into NODES and
+      // stop depending on which browser profile happens to open the demo.
+      function exportLayout() {
+        const payload = { title: TITLE, stamp: LAYOUT_STAMP, pos: currentLayout() };
+        const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'archflow-layout.json';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
       }
 
       // Removed connections ("what breaks if this link goes away?"). The set
@@ -2335,6 +2366,9 @@
                 title="Remember where you dragged the cards, so this layout comes back on reload"
               >
                 {layoutSaved ? '✓ Saved' : '💾 Save layout'}
+              </button>
+              <button onClick={exportLayout} title="Download these coordinates so they can be baked into the file as the default layout (survives browser profiles and machines)">
+                ⬇ Export layout
               </button>
               <button onClick={restoreAllLinks} disabled={REMOVED_LINKS.size === 0} title="Reconnect every link you removed (click a link on the diagram to remove one)">
                 ⛓ Links{REMOVED_LINKS.size > 0 ? ` (${REMOVED_LINKS.size})` : ''}
